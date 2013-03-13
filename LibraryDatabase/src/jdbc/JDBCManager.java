@@ -257,6 +257,14 @@ public class JDBCManager implements ActionListener
 	// **********************************************************
 	// ************************ INSERTS *************************
 	// **********************************************************
+	public void insertBook(Book b){
+		
+	}
+	
+	public void insertBookCopy(BookCopy bc){
+		
+	}
+
 	private void insertBorrower(Borrower b)
 	{
 		PreparedStatement  ps;
@@ -297,10 +305,43 @@ public class JDBCManager implements ActionListener
 		}
 	}
 
+	public void insertBorrowerType(BorrowerType bt){
+		
+	}
+	
+	public void insertBorrowing(Borrowing b){
+		
+	}
 
+	
+	public void insertFine(Fine f){
+		
+	}
+	
+	public void insertHasAuthor(HasAuthor ha){
+		
+	}
+	
+	public void insertHasSubject(HasSubject hs){
+		
+	}
+	
+	public void insertHoldRequest(HoldRequest hr){
+		
+	}
+	
 	// **********************************************************
 	// ************************ DELETES *************************
 	// ********************************************************** 
+	
+	public void deleteBook(Book b){
+		
+	}
+	
+	public void deleteBookCopy(BookCopy bc){
+		
+	}
+	
 	public void deleteBorrower(String bid)
 	{
 		PreparedStatement  ps;
@@ -338,9 +379,43 @@ public class JDBCManager implements ActionListener
 		}
 	}
 
+	public void deleteBorrowerType(BorrowerType bt){
+		
+	}
+	
+	public void deleteBorrowing(Borrowing b){
+		
+	}
+
+	
+	public void deleteFine(Fine f){
+		
+	}
+	
+	public void deleteHasAuthor(HasAuthor ha){
+		
+	}
+	
+	public void deleteHasSubject(HasSubject hs){
+		
+	}
+	
+	public void deleteHoldRequest(HoldRequest hr){
+		
+	}
+
 	// **********************************************************
 	// ********************* FETCH DATA *************************
 	// **********************************************************
+	
+	public ArrayList<Book> getBook(Book b){
+		return null;
+	}
+	
+	public ArrayList<BookCopy> getBookCopy(BookCopy bc){
+		return null;
+	}
+	
 	public ArrayList<Borrower> getBorrower()
 	{
 
@@ -389,8 +464,35 @@ public class JDBCManager implements ActionListener
 		}	
 		return borrowers;
 	}
+	
+
+	public ArrayList<BorrowerType> getBorrowerType(BorrowerType bt){
+		return null;
+	}
+	
+	public ArrayList<Borrowing> getBorrowing(Borrowing b){
+		return null;
+	}
+
+	
+	public ArrayList<Fine> getFine(Fine f){
+		return null;
+	}
+	
+	public ArrayList<HasAuthor> getHasAuthor(HasAuthor ha){
+		return null;
+	}
+	
+	public ArrayList<HasSubject> getHasSubject(HasSubject hs){
+		return null;
+	}
+	
+	public ArrayList<HoldRequest> getHoldRequest(HoldRequest hr){
+		return null;
+	}
 
 
+	// ************************* MAIN ****************************
 	public static void main(String args[])
 	{
 		JDBCManager jdbc = new JDBCManager();
