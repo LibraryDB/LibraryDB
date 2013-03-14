@@ -218,10 +218,10 @@ public class JDBCManager implements ActionListener
 				// Test your methods here
 				switch(choice)
 				{
-				case 1:  insertBorrower(new Borrower("a","b","c","d","e","f","g","h","i")); break;
-				case 2:  deleteBorrower("a"); break;
+				case 1:  insertBookCopy(new BookCopy("a",11,"c")); break;
+				case 2:  deleteBookCopy("a"); break;
 				case 3:  break;
-				case 4:  getBorrower(); break;
+				case 4:  getBookCopy(); break;
 				case 5:  quit = true; break;
 				}
 			}
@@ -258,11 +258,70 @@ public class JDBCManager implements ActionListener
 	// ************************ INSERTS *************************
 	// **********************************************************
 	public void insertBook(Book b){
-		
+		PreparedStatement  ps;
+
+		try
+		{
+			ps = con.prepareStatement("INSERT INTO book VALUES (?,?,?,?,?,?)");
+			ps.setString(1, b.getCallNumber());
+			ps.setString(2, b.getIsbn());
+			ps.setString(3, b.getTitle());
+			ps.setString(4, b.getMainAuthor());
+			ps.setString(5, b.getPublisher());
+			ps.setString(6, b.getYear());
+			ps.executeUpdate();
+
+			// commit work 
+			con.commit();
+
+			ps.close();
+		}
+		catch (SQLException ex)
+		{
+			System.out.println("Message: " + ex.getMessage());
+			try 
+			{
+				// undo the insert
+				con.rollback();	
+			}
+			catch (SQLException ex2)
+			{
+				System.out.println("Message: " + ex2.getMessage());
+				System.exit(-1);
+			}
+		}
 	}
-	
+
 	public void insertBookCopy(BookCopy bc){
-		
+		PreparedStatement ps;
+		try
+		{
+			ps = con.prepareStatement("INSERT INTO bookcopy VALUES (?,?,?)");
+
+			ps.setString(1, bc.getCallNumber());
+			ps.setInt(2, bc.getCopyNo());
+			ps.setString(3, bc.getStatus());
+			ps.executeUpdate();
+
+			// commit work 
+			con.commit();
+
+			ps.close();
+		}
+		catch (SQLException ex)
+		{
+			System.out.println("Message: " + ex.getMessage());
+			try 
+			{
+				// undo the insert
+				con.rollback();	
+			}
+			catch (SQLException ex2)
+			{
+				System.out.println("Message: " + ex2.getMessage());
+				System.exit(-1);
+			}
+		}
 	}
 
 	private void insertBorrower(Borrower b)
@@ -305,43 +364,109 @@ public class JDBCManager implements ActionListener
 		}
 	}
 
+	// Note from Jimmy: parameter type should be primary key
 	public void insertBorrowerType(BorrowerType bt){
-		
-	}
-	
-	public void insertBorrowing(Borrowing b){
-		
+
 	}
 
-	
+	public void insertBorrowing(Borrowing b){
+
+	}
+
+
 	public void insertFine(Fine f){
-		
+
 	}
-	
+
+	// Note from Jimmy: parameter type should be primary key
 	public void insertHasAuthor(HasAuthor ha){
-		
+
 	}
-	
+
 	public void insertHasSubject(HasSubject hs){
-		
+
 	}
-	
+
 	public void insertHoldRequest(HoldRequest hr){
-		
+
 	}
-	
+
 	// **********************************************************
 	// ************************ DELETES *************************
 	// ********************************************************** 
-	
-	public void deleteBook(Book b){
-		
+
+	public void deleteBook(String callNumber){
+		PreparedStatement  ps;
+
+		try
+		{
+			ps = con.prepareStatement("DELETE FROM book WHERE callNumber = ?");
+			ps.setString(1, callNumber);
+
+			int rowCount = ps.executeUpdate();
+
+			if (rowCount == 0)
+			{
+				System.out.println("\nbook " + callNumber + " does not exist!");
+			}
+
+			con.commit();
+
+			ps.close();
+		}
+
+		catch (SQLException ex)
+		{
+			System.out.println("Message: " + ex.getMessage());
+
+			try 
+			{
+				con.rollback();	
+			}
+			catch (SQLException ex2)
+			{
+				System.out.println("Message: " + ex2.getMessage());
+				System.exit(-1);
+			}
+		}
 	}
-	
-	public void deleteBookCopy(BookCopy bc){
-		
+
+	public void deleteBookCopy(String callNumber){
+		PreparedStatement  ps;
+
+		try
+		{
+			ps = con.prepareStatement("DELETE FROM bookcopy WHERE callNumber = ?");
+			ps.setString(1, callNumber);
+
+			int rowCount = ps.executeUpdate();
+
+			if (rowCount == 0)
+			{
+				System.out.println("\nbookcopy " + callNumber + " does not exist!");
+			}
+
+			con.commit();
+
+			ps.close();
+		}
+
+		catch (SQLException ex)
+		{
+			System.out.println("Message: " + ex.getMessage());
+
+			try 
+			{
+				con.rollback();	
+			}
+			catch (SQLException ex2)
+			{
+				System.out.println("Message: " + ex2.getMessage());
+				System.exit(-1);
+			}
+		}
 	}
-	
+
 	public void deleteBorrower(String bid)
 	{
 		PreparedStatement  ps;
@@ -379,43 +504,100 @@ public class JDBCManager implements ActionListener
 		}
 	}
 
-	public void deleteBorrowerType(BorrowerType bt){
-		
-	}
-	
-	public void deleteBorrowing(Borrowing b){
-		
+	public void deleteBorrowerType(){
+
 	}
 
-	
-	public void deleteFine(Fine f){
-		
+	public void deleteBorrowing(){
+
 	}
-	
-	public void deleteHasAuthor(HasAuthor ha){
-		
+
+
+	public void deleteFine(){
+
 	}
-	
-	public void deleteHasSubject(HasSubject hs){
-		
+
+	public void deleteHasAuthor(){
+
 	}
-	
-	public void deleteHoldRequest(HoldRequest hr){
-		
+
+	public void deleteHasSubject(){
+
+	}
+
+	public void deleteHoldRequest(){
+
 	}
 
 	// **********************************************************
 	// ********************* FETCH DATA *************************
 	// **********************************************************
-	
-	public ArrayList<Book> getBook(Book b){
-		return null;
+
+	public ArrayList<Book> getBook(){
+		ArrayList<Book> books = new ArrayList<Book>();
+		Statement  stmt;
+		ResultSet  rs;
+
+		try
+		{
+			stmt = con.createStatement();
+
+			rs = stmt.executeQuery("SELECT * FROM book");
+
+			while(rs.next())
+			{
+
+				Book b = new Book(rs.getString("callnumber"),
+						rs.getString("isbn"),
+						rs.getString("title"),
+						rs.getString("mainauthor"),
+						rs.getString("publisher"),
+						rs.getString("year"));
+				books.add(b);
+				System.out.println("callNumber & title: " + b.getCallNumber() + " " + b.getTitle());
+
+			}
+
+			stmt.close();
+		}
+		catch (SQLException ex)
+		{
+			System.out.println("Message: " + ex.getMessage());
+		}	
+		return books;
 	}
-	
-	public ArrayList<BookCopy> getBookCopy(BookCopy bc){
-		return null;
+
+	public ArrayList<BookCopy> getBookCopy(){
+		ArrayList<BookCopy> bookcopys = new ArrayList<BookCopy>();
+		Statement  stmt;
+		ResultSet  rs;
+
+		try
+		{
+			stmt = con.createStatement();
+
+			rs = stmt.executeQuery("SELECT * FROM bookcopy");
+
+			while(rs.next())
+			{
+
+				BookCopy b = new BookCopy(rs.getString("callnumber"),
+						rs.getInt("copyNo"),
+						rs.getString("status"));
+				bookcopys.add(b);
+				System.out.println("copyno & status: " + b.getCopyNo() + " " + b.getStatus());
+
+			}
+
+			stmt.close();
+		}
+		catch (SQLException ex)
+		{
+			System.out.println("Message: " + ex.getMessage());
+		}	
+		return bookcopys;
 	}
-	
+
 	public ArrayList<Borrower> getBorrower()
 	{
 
@@ -453,7 +635,7 @@ public class JDBCManager implements ActionListener
 						sinOrStNo,expiryDate,type);
 				borrowers.add(b);
 				System.out.println("bid & type: " + bid + " " + type);
-				
+
 			}
 
 			stmt.close();
@@ -464,30 +646,30 @@ public class JDBCManager implements ActionListener
 		}	
 		return borrowers;
 	}
-	
 
-	public ArrayList<BorrowerType> getBorrowerType(BorrowerType bt){
-		return null;
-	}
-	
-	public ArrayList<Borrowing> getBorrowing(Borrowing b){
+
+	public ArrayList<BorrowerType> getBorrowerType(){
 		return null;
 	}
 
-	
-	public ArrayList<Fine> getFine(Fine f){
+	public ArrayList<Borrowing> getBorrowing(){
 		return null;
 	}
-	
-	public ArrayList<HasAuthor> getHasAuthor(HasAuthor ha){
+
+
+	public ArrayList<Fine> getFine(){
 		return null;
 	}
-	
-	public ArrayList<HasSubject> getHasSubject(HasSubject hs){
+
+	public ArrayList<HasAuthor> getHasAuthor(){
 		return null;
 	}
-	
-	public ArrayList<HoldRequest> getHoldRequest(HoldRequest hr){
+
+	public ArrayList<HasSubject> getHasSubject(){
+		return null;
+	}
+
+	public ArrayList<HoldRequest> getHoldRequest(){
 		return null;
 	}
 
