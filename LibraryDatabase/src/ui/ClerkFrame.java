@@ -21,13 +21,12 @@ public class ClerkFrame extends JFrame{
 	
 	public ClerkFrame(){
 		super("Clerk");
-		setBackground(Color.GREEN);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		ClerkPanel cp = new ClerkPanel();
 		add(cp);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		int x = screenSize.width/2 - this.getWidth()/2;
-		int y = screenSize.height/2 - this.getHeight()/2;
+		int x = screenSize.width/2;
+		int y = screenSize.height/2;
 		this.setLocation(x - WIDTH/2,y - HEIGHT/2);
 		setSize(WIDTH,HEIGHT);
 		setVisible(true);

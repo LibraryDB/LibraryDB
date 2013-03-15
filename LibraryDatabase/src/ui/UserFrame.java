@@ -22,8 +22,8 @@ public class UserFrame extends JFrame{
 		
 		// Center the window
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		int x = screenSize.width/2 - WIDTH/2;
-		int y = screenSize.height/2 - HEIGHT/2;
+		int x = screenSize.width/2;
+		int y = screenSize.height/2;
 		this.setLocation(x - WIDTH/2,y - HEIGHT/2);
 		
 		setSize(WIDTH,HEIGHT);

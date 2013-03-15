@@ -14,6 +14,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import transactions.AddBorrower;
+
 
 
 public class ClerkPanel extends JPanel {
@@ -38,6 +40,7 @@ public class ClerkPanel extends JPanel {
 			{
 				//Execute when button is pressed
 				// TODO
+				new AddBorrower();
 				System.out.println("Add new Borrower");
 
 			}
