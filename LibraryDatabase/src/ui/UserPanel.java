@@ -20,7 +20,7 @@ public class UserPanel extends JPanel{
 	
 	public UserPanel(UserFrame uf){
 		
-		super(new GridLayout(4,1));
+		super(new GridLayout(5,1));
 		parentFrame = uf;
 		
 		JLabel label = new JLabel("Welcome!");

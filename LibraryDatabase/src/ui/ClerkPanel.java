@@ -18,42 +18,74 @@ import javax.swing.SwingConstants;
 
 public class ClerkPanel extends JPanel {
 
-	private int WIDTH = 800;
-	private int HEIGHT = 700;
-
 	public ClerkPanel(){
 
-		super();
-		
-		// Allows us to use absolute layout. i.e. setBounds(...) will have an effect, 
-		// You could also use other defined layouts e.g. gridLayout().
-		this.setLayout(null); 
-		
-		
-		JLabel label = new JLabel("Welcome!");
+		super(new GridLayout(5,1)); 
+		init();
+
+	}
+
+	private void init(){
+
+		// Label
+		JLabel label = new JLabel("Hello Clerk!! =D");
 		label.setHorizontalAlignment(SwingConstants.CENTER);
-		label.setBounds(WIDTH/2 - 100, 0 , 200 , 100);
 		
-		JButton addBorrowerButton = new JButton("Add New Borrower");
-		addBorrowerButton.setBounds(WIDTH/8, HEIGHT/2, 200, 70);
-		
+		// Add borrower button
+		JButton addBorrowerButton = new JButton("Add New Borrower");		
 		addBorrowerButton.addActionListener(new ActionListener() {
-			
-		
 			public void actionPerformed(ActionEvent e)
 			{
 				//Execute when button is pressed
 				// TODO
 				System.out.println("Add new Borrower");
-				
+
 			}
 		});
+		
+		// Check out item button
+		JButton checkOutButton = new JButton("Check Out Item");		
+		checkOutButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				//Execute when button is pressed
+				// TODO
+				System.out.println("Check Out Item");
 
+			}
+		});
+		
+		// Process return
+		JButton processReturnButton = new JButton("Process Return");		
+		processReturnButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				//Execute when button is pressed
+				// TODO
+				System.out.println("Process Return");
+
+			}
+		});
+		
+		// Check overdue
+		JButton checkOverdueButton = new JButton("Check Overdue");		
+		checkOverdueButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				//Execute when button is pressed
+				// TODO
+				System.out.println("Check Overdue");
+
+			}
+		});
+		
 		add(label);
 		add(addBorrowerButton);	
-
+		add(checkOutButton);
+		add(processReturnButton);
+		add(checkOverdueButton);
+		
 	}
-	
-	
+
 
 }

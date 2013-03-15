@@ -1,5 +1,6 @@
 package ui;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -15,12 +16,12 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 public class ClerkFrame extends JFrame{
-	private int WIDTH = 800;
-	private int HEIGHT = 700;
+	private int WIDTH = 200;
+	private int HEIGHT = 200;
 	
 	public ClerkFrame(){
 		super("Clerk");
-
+		setBackground(Color.GREEN);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		ClerkPanel cp = new ClerkPanel();
 		add(cp);
