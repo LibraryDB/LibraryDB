@@ -34,7 +34,7 @@ public class JDBCManager
 	/*
 	 * connects to Oracle database named ug using user supplied username and password
 	 */ 
-	private boolean connect(String username, String password)
+	public boolean connect(String username, String password)
 	{
 		String connectURL = "jdbc:oracle:thin:@dbhost.ugrad.cs.ubc.ca:1522:ug"; 
 
@@ -123,7 +123,7 @@ public class JDBCManager
 		}
 	}
 
-	private void insertBorrower(Borrower b)
+	public void insertBorrower(Borrower b)
 	{
 		PreparedStatement  ps;
 
@@ -1015,10 +1015,4 @@ public class JDBCManager
 		return holdRequest;
 	}
 
-
-	// ************************* MAIN ****************************
-	public static void main(String args[])
-	{
-		JDBCManager jdbc = new JDBCManager();
-	}
 }
