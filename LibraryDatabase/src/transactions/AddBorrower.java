@@ -14,6 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import jdbc.JDBCManager;
+
 import ui.UserPanel;
 //test
 public class AddBorrower extends JFrame{
@@ -71,6 +73,8 @@ public class AddBorrower extends JFrame{
 			{
 				//Execute when button is pressed
 				// TODO
+				JDBCManager manager = new JDBCManager();
+				//manager.connect(username, password)
 				System.out.println("Confirmed");
 
 			}
