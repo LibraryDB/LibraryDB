@@ -14,6 +14,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import transactions.SearchBook;
+
 public class UserPanel extends JPanel{
 
 	private UserFrame parentFrame;
@@ -47,7 +49,7 @@ public class UserPanel extends JPanel{
         	public void actionPerformed(ActionEvent e)
         	{
         		parentFrame.dispose();
-        		//new SearchBook();
+        		new BorrowerFrame();
         	}
         });
         
