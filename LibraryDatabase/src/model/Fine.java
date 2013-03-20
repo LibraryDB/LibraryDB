@@ -1,15 +1,5 @@
 package model;
 
-/*
- * Fine (fid, amount, issuedDate, paidDate, borid) 
- * Represents: entity set Fine and relationship set PaidFor.
- * Primary key: (fid)
- * Foreign Keys:
- * (borid) references Borrowing 
- * Constraints: 
- * borid cannot be null
- */
-
 public class Fine {
 	private String fid;
 	private int amount;

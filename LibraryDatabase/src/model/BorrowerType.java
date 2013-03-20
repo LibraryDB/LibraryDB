@@ -1,11 +1,5 @@
 package model;
 
-/*
- * BorrowerType (type, bookTimeLimit) 
- * Represents: the entity set BorrowerType
- * Primary key: (type) 
- */
-
 public class BorrowerType {
 	private String type;
 	private int bookTimeLimit; 

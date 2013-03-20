@@ -1,17 +1,5 @@
 package model;
 
-/*
- * Borrowing(borid, bid, callNumber, copyNo, outDate, inDate) 
- * Represents: entity set Borrowing and relationship sets MadeBy and IsFor.
- * Primary key: (borid)
- * Foreign Keys:
- * (bid) references Borrower 
- * (callNumber , copyNo) references BorrowableCopy (or ItemCopy with a constraint that it has to be Borrowable)
- * Constraints: 
- * bid cannot be null
- * callNumber and copyNo cannot be null
- */
-
 public class Borrowing {
 	private String borid;
 	private String bid;
