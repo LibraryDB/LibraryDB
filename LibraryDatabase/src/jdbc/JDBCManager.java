@@ -607,8 +607,7 @@ public class JDBCManager implements ActionListener
 			}
 		}
 	}
-// Something has to be wrong here, too sleep to figure it out. 
-	// dun think anything's wrong. Just tested eveything, looks fine.
+
 	public void deleteBookCopy(String callNumber){
 		PreparedStatement  ps;
 
