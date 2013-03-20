@@ -21,6 +21,7 @@ public class JDBCManager
 		try 
 		{
 			// Load the Oracle JDBC driver
+			//
 			DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
 		}
 		catch (SQLException ex)
