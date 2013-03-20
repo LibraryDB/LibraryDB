@@ -27,7 +27,11 @@ public class UserPanel extends JPanel{
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		
         JButton clerkButton = new JButton("Clerk");
+        JButton borrowerButton = new JButton("Borrower");
+        
         clerkButton.setVerticalTextPosition(AbstractButton.CENTER);
+        borrowerButton.setVerticalTextPosition(AbstractButton.CENTER);
+        
         clerkButton.addActionListener(new ActionListener() {
         	 
             public void actionPerformed(ActionEvent e)
@@ -37,9 +41,18 @@ public class UserPanel extends JPanel{
                 new ClerkFrame();
             }
         });
+        
+        borrowerButton.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent e)
+        	{
+        		parentFrame.dispose();
+        		//new SearchBook();
+        	}
+        });
 
 		add(label);
 		add(clerkButton);
+		add(borrowerButton);
 	}
 	
 

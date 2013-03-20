@@ -52,11 +52,11 @@ public class Borrowing {
 		return copyNo;
 	}
 	
-	public String outDate(){
+	public String getOutDate(){
 		return outDate;
 	}
 	
-	public String inDate(){
+	public String getInDate(){
 		return inDate;
 	}
 }
