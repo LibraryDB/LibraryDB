@@ -407,13 +407,14 @@ public class JDBCManager
 		}
 	}
 
-	public void deleteBookCopy(String callNumber){
+	public void deleteBookCopy(String callNumber, String copyNo){
 		PreparedStatement  ps;
 
 		try
 		{
-			ps = con.prepareStatement("DELETE FROM bookcopy WHERE callNumber = ?");
+			ps = con.prepareStatement("DELETE FROM bookcopy WHERE callNumber = ? AND copyNo = ?");
 			ps.setString(1, callNumber);
+			ps.setString(2, copyNo);
 
 			int rowCount = ps.executeUpdate();
 
