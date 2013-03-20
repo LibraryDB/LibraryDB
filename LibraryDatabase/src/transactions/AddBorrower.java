@@ -15,7 +15,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import ui.UserPanel;
-
+//test
 public class AddBorrower extends JFrame{
 
 	// dimensions of the window
