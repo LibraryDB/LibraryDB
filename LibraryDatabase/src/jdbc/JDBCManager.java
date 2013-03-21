@@ -124,7 +124,7 @@ public class JDBCManager
 		}
 	}
 
-	public void insertBorrower(Borrower b)
+	public void insertBorrower(Borrower b) throws SQLException
 	{
 		PreparedStatement  ps;
 
@@ -150,15 +150,19 @@ public class JDBCManager
 		}
 		catch (SQLException ex)
 		{
-			System.out.println("Message: " + ex.getMessage());
+			System.out.println("Message1: " + ex.getMessage());
+			throw ex;
+		}
+		finally{
 			try 
 			{
 				// undo the insert
 				con.rollback();	
+				
 			}
 			catch (SQLException ex2)
 			{
-				System.out.println("Message: " + ex2.getMessage());
+				System.out.println("Message2: " + ex2.getMessage());
 				System.exit(-1);
 			}
 		}

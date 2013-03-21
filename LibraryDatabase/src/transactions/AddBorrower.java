@@ -4,12 +4,14 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -74,7 +76,6 @@ public class AddBorrower extends JFrame{
 			public void actionPerformed(ActionEvent e)
 			{
 				//Execute when button is pressed
-				// TODO
 				Borrower b = new Borrower(
 						textFields.get(0).getText(),
 						textFields.get(1).getText(),
@@ -85,11 +86,17 @@ public class AddBorrower extends JFrame{
 						textFields.get(6).getText(),
 						textFields.get(7).getText(),
 						textFields.get(8).getText());
-				LibraryDB.getManager().insertBorrower(b);
-				exitWindow();
-				
-				System.out.println("Confirmed");
-				
+			
+				try {
+					LibraryDB.getManager().insertBorrower(b);
+					exitWindow();
+					System.out.println("Confirmed");
+				} catch (SQLException e1) { 
+					// if we get an error , then pop-up a msg box and reset text boxes. 
+					popMsg("Error, please try again!");
+					for (int i=0;i<9;i++)
+						textFields.get(i).setText("");
+				}
 
 			}
 		});
@@ -99,6 +106,10 @@ public class AddBorrower extends JFrame{
 
 	private void exitWindow(){
 		this.dispose();
+	}
+	
+	private void popMsg(String msg){
+		JOptionPane.showMessageDialog (this, msg);
 	}
 	
 	private String indexToMsg(int i) {
