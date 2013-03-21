@@ -14,8 +14,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import jdbc.JDBCManager;
+import model.Borrower;
 
+
+import ui.LibraryDB;
 import ui.UserPanel;
 //test
 public class AddBorrower extends JFrame{
@@ -23,8 +25,8 @@ public class AddBorrower extends JFrame{
 	// dimensions of the window
 	private int WIDTH = 300;
 	private int HEIGHT = 400;
-	private List<JTextField> textFields = new ArrayList<JTextField>();
-
+	private List<JTextField> textFields = new ArrayList<JTextField>();	
+	
 	public AddBorrower(){
 		super("Add Borrower");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //Exits the window when user clicks "x"
@@ -73,9 +75,21 @@ public class AddBorrower extends JFrame{
 			{
 				//Execute when button is pressed
 				// TODO
-				JDBCManager manager = new JDBCManager();
-				//manager.connect(username, password)
+				Borrower b = new Borrower(
+						textFields.get(0).getText(),
+						textFields.get(1).getText(),
+						textFields.get(2).getText(),
+						textFields.get(3).getText(),
+						textFields.get(4).getText(),
+						textFields.get(5).getText(),
+						textFields.get(6).getText(),
+						textFields.get(7).getText(),
+						textFields.get(8).getText());
+				LibraryDB.getManager().insertBorrower(b);
+				exitWindow();
+				
 				System.out.println("Confirmed");
+				
 
 			}
 		});
@@ -83,6 +97,10 @@ public class AddBorrower extends JFrame{
 		this.add(p);
 	}
 
+	private void exitWindow(){
+		this.dispose();
+	}
+	
 	private String indexToMsg(int i) {
 		switch (i){
 			case 0:	return "bid"; 

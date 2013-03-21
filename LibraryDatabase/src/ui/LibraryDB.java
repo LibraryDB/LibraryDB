@@ -11,11 +11,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+import jdbc.JDBCManager;
+
 
 public class LibraryDB implements ActionListener
 {
 
-
+	private static JDBCManager manager;
 	private Connection con;
 
 	// user is allowed 3 login attempts
@@ -114,16 +116,8 @@ public class LibraryDB implements ActionListener
 		// place the cursor in the text field for the username
 		usernameField.requestFocus();
 
-		try 
-		{
-			// Load the Oracle JDBC driver
-			DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
-		}
-		catch (SQLException ex)
-		{
-			System.out.println("Message: " + ex.getMessage());
-			System.exit(-1);
-		}
+		manager = new JDBCManager();
+		
 	}
 
 
@@ -154,7 +148,7 @@ public class LibraryDB implements ActionListener
 	 */ 
 	public void actionPerformed(ActionEvent e) 
 	{
-		if ( connect(usernameField.getText(), String.valueOf(passwordField.getPassword())) )
+		if ( manager.connect(usernameField.getText(), String.valueOf(passwordField.getPassword())) )
 		{
 			// if the username and password are valid, 
 			// remove the login window and display the User Frame 
@@ -179,6 +173,10 @@ public class LibraryDB implements ActionListener
 
 	}
 
+	public static JDBCManager getManager(){
+		return manager;
+	}
+	
 	public static void main(String args[])
 	{
 		LibraryDB m = new LibraryDB();
