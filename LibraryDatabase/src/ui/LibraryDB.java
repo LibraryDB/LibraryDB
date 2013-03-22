@@ -179,7 +179,7 @@ public class LibraryDB implements ActionListener
 		try {
 			manager.insertBorrower(new Borrower("c","b","c","d","e","f","g","h","student"));
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
 	}
 }

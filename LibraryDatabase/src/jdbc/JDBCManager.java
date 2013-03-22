@@ -735,7 +735,6 @@ public class JDBCManager
 						rs.getString("publisher"),
 						rs.getString("year"));
 				books.add(b);
-				System.out.println("callNumber & title: " + b.getCallNumber() + " " + b.getTitle());
 
 			}
 
@@ -766,7 +765,6 @@ public class JDBCManager
 						rs.getInt("copyNo"),
 						rs.getString("status"));
 				bookcopys.add(b);
-				System.out.println("copyno & status: " + b.getCopyNo() + " " + b.getStatus());
 
 			}
 
@@ -815,7 +813,6 @@ public class JDBCManager
 				Borrower b = new Borrower(bid,password,name,address,phone,emailAddress,
 						sinOrStNo,expiryDate,type);
 				borrowers.add(b);
-				System.out.println("bid & type: " + bid + " " + type);
 
 			}
 
@@ -846,7 +843,6 @@ public class JDBCManager
 				BorrowerType bt = new BorrowerType(rs.getString("type"),
 						rs.getInt("bookTimeLimit"));
 				borrowertypes.add(bt);
-				System.out.println("borrowerType & bookTimeLimit: " + bt.getType() + " " + bt.getBookTimeLimit());
 
 			}
 
@@ -880,10 +876,6 @@ public class JDBCManager
 						rs.getString("outDate"), 
 						rs.getString("inDate"));
 				borrowings.add(b);
-				System.out.println("borid, callNumber, outDate & inDate: " + b.getBorid() + " " 
-						+ b.getCallNumber() + " "
-						+ b.getOutDate() + " "
-						+ b.getInDate());
 
 			}
 
@@ -917,10 +909,6 @@ public class JDBCManager
 						rs.getString("paidDate"),
 						rs.getString("borid"));
 				fines.add(f);
-				System.out.println("fid, amount, issueDate & paidDate: " + f.getFid() + " " 
-						+ f.getAmount() + " "
-						+ f.getIssueDate() + " "
-						+ f.getPaidDate());
 
 			}
 
@@ -948,7 +936,6 @@ public class JDBCManager
 			{
 				HasAuthor h = new HasAuthor(rs.getString("callNumber"), rs.getString("name"));
 				hasAuthor.add(h);
-				System.out.println("Call Number, & Name: " + h.getCallNumber() + " " + h.getName());
 			}
 
 			stmt.close();
@@ -975,7 +962,6 @@ public class JDBCManager
 			{
 				HasSubject h = new HasSubject(rs.getString("callNumber"), rs.getString("subjcet"));
 				hasSubjects.add(h);
-				System.out.println("Call Number & Subject: " + h.getCallNumber() + " " + h.getSubject());
 			}
 
 			stmt.close();
@@ -1006,10 +992,6 @@ public class JDBCManager
 						rs.getInt("issueDate"));
 
 				holdRequest.add(h);
-				System.out.println("hid, bid, Call Number & Issue Date: " + h.getHoldId() + " " 
-						+ h.getBorrowerId() + " "
-						+ h.getCallNumber() + " "
-						+ h.getIssueDate());
 
 			}
 

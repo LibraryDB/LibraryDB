@@ -88,17 +88,6 @@ public class CheckOutHelper extends JFrame{
 		textFields.add(tf2);
 		p.add(tf2);
 
-//		JLabel label3 = new JLabel("outDate (yyyy/mm/dd): ");
-//		label3.setBounds(0, HEIGHT*3/scale, WIDTH/3, HEIGHT/scale);
-//		label3.setHorizontalAlignment(SwingConstants.RIGHT);
-//		label3.setVerticalAlignment(SwingConstants.CENTER);
-//		p.add(label3);
-//
-//		JTextField tf3 = new JTextField();
-//		tf3.setBounds(WIDTH/2, HEIGHT*3/scale + disp , WIDTH/3 , HEIGHT/scale - 2*disp);
-//		textFields.add(tf3);
-//		p.add(tf3);
-
 		JButton submitButton = new JButton("Submit");
 		submitButton.setBounds(WIDTH/4, HEIGHT*4/scale, WIDTH/2, HEIGHT/scale);
 		submitButton.addActionListener(new ActionListener() {
@@ -116,22 +105,29 @@ public class CheckOutHelper extends JFrame{
 
 	private void onClick(){
 
+		// fetches the text in the text boxes.
 		String borid = textFields.get(0).getText().trim();
 		String bid = textFields.get(1).getText().trim();
-		String outDate;// = textFields.get(2).getText();
+		
+		String outDate;
 		int timeLimit = getTimeLimit(bid);
 		
+		// Find the current date
 		Date date = new Date();
 		Calendar currentCal = new GregorianCalendar(TimeZone.getTimeZone("PTC")) ;
 		currentCal.setTime(date);
 		outDate = calendarToString(currentCal);
 		
+		// currentCal will now store the due date
 		currentCal.add(Calendar.DATE, timeLimit);
 		
 		for (int i=0;i<callNumbers.size();i++){
 			Borrowing b = new Borrowing(borid,bid,callNumbers.get(i),copyNos.get(i),outDate,null);
 			try {
+				// create new tuple in borrowing table
 				LibraryDB.getManager().insertBorrowing(b);
+				
+				// set the status of the checked out books to "out"
 				LibraryDB.getManager().updateBookCopy(b.getCallNumber(), b.getCopyNo(), "out");
 			} catch (SQLException e1) { 
 				determineError(e1);
@@ -148,6 +144,7 @@ public class CheckOutHelper extends JFrame{
 		this.dispose();
 	}
 	
+	// Converts Calendar to String in the format of "yyyy/mm/dd"
 	private String calendarToString(Calendar calendar) {
 		int year = calendar.get(Calendar.YEAR);
 		int month = calendar.get(Calendar.MONTH) + 1;
@@ -156,15 +153,19 @@ public class CheckOutHelper extends JFrame{
 		return result;
 	}
 
+	// Returns the time limit for borrower with borrow id = bid.
 	private int getTimeLimit(String bid){
 		List<BorrowerType> types = LibraryDB.getManager().getBorrowerType();
 		List<Borrower> borrowers = LibraryDB.getManager().getBorrower();
 		String type = null;
+		
+		// Find out the type of the borrower (student,faculty , or staff)
 		for (Borrower borrower : borrowers){
 			if (borrower.getBid().equals(bid))
 				type = borrower.getType();
 		}
 		
+		// returns the time limit
 		for (BorrowerType bType : types){
 			if (bType.getType().equals(type))
 				return bType.getBookTimeLimit();		
@@ -173,16 +174,21 @@ public class CheckOutHelper extends JFrame{
 	}
 	
 	private void determineError(SQLException e){
-		if (e.getMessage().contains("ORA-01400"))
+		
+		if (e.getMessage().contains("ORA-01400")) // Null value error when attribute should be non-null
 			popMsg("Error! \nOne of the values are not given. \nPlease try again.");
-		if (e.getMessage().contains("ORA-00001"))
+		
+		if (e.getMessage().contains("ORA-00001")) // Primary Key Constraint
 			popMsg("Error! \nborid already exists! \nPlease try again.");
-		if (e.getMessage().contains("ORA-02291"))
+		
+		if (e.getMessage().contains("ORA-02291")) // Foreign Key Constraint
 			popMsg("Error! \nbid does not exist! \nPlease try again.");
-		System.out.println(e.getMessage());
-
+		
+		else // otherwise, I would like to know what the error is!
+			System.out.println(e.getMessage());
 	}
-	private void popMsg(String msg){
+	
+	private void popMsg(String msg){ 
 		JOptionPane.showMessageDialog (this, msg);
 	}
 

@@ -12,6 +12,8 @@ import javax.swing.SwingConstants;
 
 import transactions.AddBorrower;
 import transactions.CheckOut;
+import transactions.CheckOverdue;
+import transactions.ProcessReturn;
 
 
 
@@ -35,10 +37,7 @@ public class ClerkPanel extends JPanel {
 		addBorrowerButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				//Execute when button is pressed
-				// TODO
 				new AddBorrower();
-				System.out.println("Add new Borrower");
 
 			}
 		});
@@ -48,10 +47,7 @@ public class ClerkPanel extends JPanel {
 		checkOutButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				//Execute when button is pressed
-				// TODO
 				new CheckOut();
-				System.out.println("Check Out Item");
 
 			}
 		});
@@ -61,8 +57,7 @@ public class ClerkPanel extends JPanel {
 		processReturnButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				//Execute when button is pressed
-				// TODO
+				new ProcessReturn();
 				System.out.println("Process Return");
 
 			}
@@ -73,8 +68,7 @@ public class ClerkPanel extends JPanel {
 		checkOverdueButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				//Execute when button is pressed
-				// TODO
+				new CheckOverdue();
 				System.out.println("Check Overdue");
 
 			}

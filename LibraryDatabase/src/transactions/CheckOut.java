@@ -88,10 +88,9 @@ public class CheckOut extends JFrame{
         textArea.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(textArea);
         scrollPane.setBounds(WIDTH/6, HEIGHT*3/8 - disp, 2*WIDTH/3, HEIGHT*3/8);
-        //setPreferredSize(new Dimension(450, 110));
         add(scrollPane, BorderLayout.CENTER);
 
-		// Add confirm button
+        // Add Book Button
 		JButton addBookButton = new JButton("Add Book");
 		addBookButton.setBounds(WIDTH/8, 6*HEIGHT/8, WIDTH/4, HEIGHT/12);
 		addBookButton.addActionListener(new ActionListener() {
@@ -102,11 +101,13 @@ public class CheckOut extends JFrame{
 		});
 		p.add(addBookButton);
 		
+		// Next Button
 		JButton continueButton = new JButton("Next");
 		continueButton.setBounds(WIDTH*5/8, 6*HEIGHT/8, WIDTH/4, HEIGHT/12);
 		continueButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
+				// Must check out at least one book
 				if (callNumbers.size() == 0) {
 					popMsg("Need to enter some books!");
 					return;
@@ -121,7 +122,7 @@ public class CheckOut extends JFrame{
 	}
 
 	private void addBookOnClick(){
-		//Execute when button is pressed
+		
 		String callNumber = textFields.get(0).getText().trim();
 		int copyNo;
 		if (!isNumeric(textFields.get(1).getText().trim())){
@@ -130,13 +131,13 @@ public class CheckOut extends JFrame{
 		}
 		copyNo = Integer.parseInt(textFields.get(1).getText().trim());
 		
-		// Check if Book exists in the library
+		// Check if the bookcopy exists.
 		if(!LibraryDB.getManager().hasBookCopy(callNumber, copyNo)){
 			popMsg("Book does not exist in library!");
 			return;
 		}
 		
-		// Check if book was put onto the list already
+		// Check if the bookcopy was put onto the list already
 		for (int i=0;i<copyNos.size();i++){
 			if ((copyNos.get(i) == copyNo) && callNumbers.get(i).matches(callNumber)){
 				popMsg("BookCopy already added to list");
@@ -144,12 +145,11 @@ public class CheckOut extends JFrame{
 			}			
 		}
 		
+		// check if bookcopy is available for borrowing, i.e. status = in.
 		if (!LibraryDB.getManager().isBookCopyIn(callNumber,copyNo)){
 			popMsg("Sorry! This book is not available for borrowing.");
 			return;
 		}
-		
-
 		
 		copyNos.add(copyNo);
 		callNumbers.add(callNumber);
@@ -174,7 +174,6 @@ public class CheckOut extends JFrame{
 	
 	// if we get an error , pop-up a msg box and reset text boxes. 
 	private void resetTextField(){
-		//popMsg("Error, please try again!");
 		for (int i=0;i<2;i++)
 			textFields.get(i).setText("");
 	}
