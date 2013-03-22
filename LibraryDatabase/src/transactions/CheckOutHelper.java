@@ -110,7 +110,12 @@ public class CheckOutHelper extends JFrame{
 		String bid = textFields.get(1).getText().trim();
 		
 		String outDate;
-		int timeLimit = getTimeLimit(bid);
+		int timeLimit = 0;
+		try {
+			timeLimit = LibraryDB.getManager().getTimeLimit(bid);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
 		
 		// Find the current date
 		Date date = new Date();
@@ -122,7 +127,7 @@ public class CheckOutHelper extends JFrame{
 		currentCal.add(Calendar.DATE, timeLimit);
 		
 		for (int i=0;i<callNumbers.size();i++){
-			Borrowing b = new Borrowing(borid,bid,callNumbers.get(i),copyNos.get(i),outDate,null);
+			Borrowing b = new Borrowing(borid.concat("" + i),bid,callNumbers.get(i),copyNos.get(i),outDate,null);
 			try {
 				// create new tuple in borrowing table
 				LibraryDB.getManager().insertBorrowing(b);
@@ -153,25 +158,6 @@ public class CheckOutHelper extends JFrame{
 		return result;
 	}
 
-	// Returns the time limit for borrower with borrow id = bid.
-	private int getTimeLimit(String bid){
-		List<BorrowerType> types = LibraryDB.getManager().getBorrowerType();
-		List<Borrower> borrowers = LibraryDB.getManager().getBorrower();
-		String type = null;
-		
-		// Find out the type of the borrower (student,faculty , or staff)
-		for (Borrower borrower : borrowers){
-			if (borrower.getBid().equals(bid))
-				type = borrower.getType();
-		}
-		
-		// returns the time limit
-		for (BorrowerType bType : types){
-			if (bType.getType().equals(type))
-				return bType.getBookTimeLimit();		
-		}
-		return 0;
-	}
 	
 	private void determineError(SQLException e){
 		

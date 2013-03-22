@@ -1048,6 +1048,7 @@ public class JDBCManager
 	//************************ OTHER *******************************
 	//**************************************************************
 
+	// Determines whether or not the book exists
 	public boolean hasBookCopy(String callNumber, int copyNo){
 		PreparedStatement ps;
 
@@ -1067,7 +1068,7 @@ public class JDBCManager
 		return false;
 	}
 
-
+	// Determines whether or not the bookcopy's status is "in"
 	public boolean isBookCopyIn(String callNumber, int copyNo) {
 		PreparedStatement ps;
 		ResultSet rs;
@@ -1091,7 +1092,39 @@ public class JDBCManager
 		return false;
 	}
 
+	// returns the bookTimeLimit for borrower with borrower id = bid
+	public int getTimeLimit(String bid) throws SQLException{
+		PreparedStatement ps,ps2;
+		ResultSet rs,rs2;
+		String type;
+		
+		ps = con.prepareStatement("SELECT type FROM borrower WHERE bid = ?");
+		ps.setString(1, bid);
+		rs = ps.executeQuery();
+		
+		if (rs.next()) {
+			type = rs.getString("type");
+		}
+		else {
+			throw new SQLException("No borrower matches!");
+		}	
+		
+		ps.close();
+		rs.close();
+		
+		ps2 = con.prepareStatement("SELECT bookTimeLimit FROM borrowertype WHERE type = ?");
+		ps2.setString(1, type);
+		rs2 = ps2.executeQuery();
+		
+		if (rs2.next()){
+			int result = rs2.getInt("bookTimeLimit");
+			ps2.close();
+			rs2.close();
+			return result;
+		}
+		else throw new SQLException("type is invalid");	
 
+	}
 
 
 

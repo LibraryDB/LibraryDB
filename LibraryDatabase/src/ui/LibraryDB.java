@@ -174,8 +174,10 @@ public class LibraryDB implements ActionListener
 		manager.insertBook(new Book("QA1","82746383","The Monster","Someone","pluto","1991"));
 		manager.insertBookCopy(new BookCopy("QA1",1,"in"));
 		manager.insertBookCopy(new BookCopy("QA1",2,"in"));
-		manager.insertBookCopy(new BookCopy("QA1",3,"out"));
+		manager.insertBookCopy(new BookCopy("QA1",3,"in"));
+		manager.insertBookCopy(new BookCopy("QA1",4,"in"));
 		manager.insertBookCopy(new BookCopy("QA1",5,"in"));
+		manager.insertBookCopy(new BookCopy("QA1",6,"in"));
 		try {
 			manager.insertBorrower(new Borrower("c","b","c","d","e","f","g","h","student"));
 		} catch (SQLException e) {
