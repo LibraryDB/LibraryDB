@@ -119,7 +119,7 @@ public class CheckOutHelper extends JFrame{
 		
 		// Find the current date
 		Date date = new Date();
-		Calendar currentCal = new GregorianCalendar(TimeZone.getTimeZone("PTC")) ;
+		Calendar currentCal = new GregorianCalendar(TimeZone.getTimeZone("PST")) ;
 		currentCal.setTime(date);
 		outDate = calendarToString(currentCal);
 		

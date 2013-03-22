@@ -1125,6 +1125,31 @@ public class JDBCManager
 		else throw new SQLException("type is invalid");	
 
 	}
+	
+	public ArrayList<Borrowing> getOutBorrowings(){
+		ArrayList<Borrowing> result = new ArrayList<Borrowing>();
+		PreparedStatement ps;
+		ResultSet rs;
+		
+		try {
+			ps = con.prepareStatement("SELECT * FROM borrowing WHERE inDate is null");
+			rs = ps.executeQuery();
+			while (rs.next()){
+				result.add(new Borrowing(
+						rs.getString("borid"),
+						rs.getString("bid"),
+						rs.getString("callnumber"),
+						rs.getInt("copyno"),
+						rs.getString("outdate"),
+						null));
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return result;
+
+	}
 
 
 
