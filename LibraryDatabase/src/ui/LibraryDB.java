@@ -8,6 +8,11 @@ import java.io.*;
 // for the login window
 import javax.swing.*;
 
+import model.Book;
+import model.BookCopy;
+import model.Borrower;
+import model.BorrowerType;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -122,28 +127,6 @@ public class LibraryDB implements ActionListener
 
 
 	/*
-	 * connects to Oracle database named ug using user supplied username and password
-	 */ 
-	private boolean connect(String username, String password)
-	{
-		String connectURL = "jdbc:oracle:thin:@dbhost.ugrad.cs.ubc.ca:1522:ug"; 
-
-		try 
-		{
-			con = DriverManager.getConnection(connectURL,username,password);
-
-			System.out.println("\nConnected to Oracle!");
-			return true;
-		}
-		catch (SQLException ex)
-		{
-			System.out.println("Message: " + ex.getMessage());
-			return false;
-		}
-	}
-
-
-	/*
 	 * event handler for login window
 	 */ 
 	public void actionPerformed(ActionEvent e) 
@@ -153,7 +136,8 @@ public class LibraryDB implements ActionListener
 			// if the username and password are valid, 
 			// remove the login window and display the User Frame 
 			loginFrame.dispose();
-			userFrame = new UserFrame();     
+			userFrame = new UserFrame();  
+			initTableValues(); //TODO
 		}
 		else
 		{
@@ -179,6 +163,23 @@ public class LibraryDB implements ActionListener
 	
 	public static void main(String args[])
 	{
-		LibraryDB m = new LibraryDB();
+		new LibraryDB();
+		
+	}
+	
+	private void initTableValues(){
+		manager.insertBorrowerType(new BorrowerType("student",14));
+		manager.insertBorrowerType(new BorrowerType("faculty",84));
+		manager.insertBorrowerType(new BorrowerType("staff",42));		
+		manager.insertBook(new Book("QA1","82746383","The Monster","Someone","pluto","1991"));
+		manager.insertBookCopy(new BookCopy("QA1",1,"in"));
+		manager.insertBookCopy(new BookCopy("QA1",2,"in"));
+		manager.insertBookCopy(new BookCopy("QA1",3,"out"));
+		manager.insertBookCopy(new BookCopy("QA1",5,"in"));
+		try {
+			manager.insertBorrower(new Borrower("c","b","c","d","e","f","g","h","student"));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

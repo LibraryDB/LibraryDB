@@ -1,20 +1,17 @@
 
 package ui;
 
-import java.awt.Component;
-import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.AbstractButton;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import transactions.AddBorrower;
+import transactions.CheckOut;
 
 
 
@@ -53,6 +50,7 @@ public class ClerkPanel extends JPanel {
 			{
 				//Execute when button is pressed
 				// TODO
+				new CheckOut();
 				System.out.println("Check Out Item");
 
 			}

@@ -28,7 +28,7 @@ public class AddBorrower extends JFrame{
 	private int WIDTH = 300;
 	private int HEIGHT = 400;
 	private List<JTextField> textFields = new ArrayList<JTextField>();	
-	
+
 	public AddBorrower(){
 		super("Add Borrower");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //Exits the window when user clicks "x"
@@ -43,7 +43,7 @@ public class AddBorrower extends JFrame{
 		setSize(WIDTH,HEIGHT);
 		setVisible(true);
 	}
-	
+
 	private void createLabel(JPanel p,int i){
 		JLabel label = new JLabel(indexToMsg(i) + ": ");
 		label.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -51,7 +51,7 @@ public class AddBorrower extends JFrame{
 		label.setBounds(0, i*HEIGHT/11, 3*WIDTH/7, HEIGHT/11);
 		p.add(label);
 	}
-	
+
 	private void createTextField(JPanel p, int i){
 		JTextField tf = new JTextField();
 		int tf_y = i*HEIGHT/11;
@@ -60,7 +60,7 @@ public class AddBorrower extends JFrame{
 		textFields.add(tf);
 		p.add(tf);
 	}
-	
+
 	private void initPanel(){
 		JPanel p = new JPanel();
 		p.setLayout(null);
@@ -77,25 +77,22 @@ public class AddBorrower extends JFrame{
 			{
 				//Execute when button is pressed
 				Borrower b = new Borrower(
-						textFields.get(0).getText(),
-						textFields.get(1).getText(),
-						textFields.get(2).getText(),
-						textFields.get(3).getText(),
-						textFields.get(4).getText(),
-						textFields.get(5).getText(),
-						textFields.get(6).getText(),
-						textFields.get(7).getText(),
-						textFields.get(8).getText());
-			
+						textFields.get(0).getText().trim(),
+						textFields.get(1).getText().trim(),
+						textFields.get(2).getText().trim(),
+						textFields.get(3).getText().trim(),
+						textFields.get(4).getText().trim(),
+						textFields.get(5).getText().trim(),
+						textFields.get(6).getText().trim(),
+						textFields.get(7).getText().trim(),
+						textFields.get(8).getText().trim());
+
 				try {
 					LibraryDB.getManager().insertBorrower(b);
 					exitWindow();
-					System.out.println("Confirmed");
+					System.out.println("Submit");
 				} catch (SQLException e1) { 
-					// if we get an error , then pop-up a msg box and reset text boxes. 
-					popMsg("Error, please try again!");
-					for (int i=0;i<9;i++)
-						textFields.get(i).setText("");
+					determineError(e1);
 				}
 
 			}
@@ -104,27 +101,38 @@ public class AddBorrower extends JFrame{
 		this.add(p);
 	}
 
+	// if we get an error , pop-up a msg box and reset text boxes. 
+	private void determineError(SQLException e){
+		if (e.getMessage().contains("ORA-01400"))
+			popMsg("Error! \nOne of the values are not given. \nPlease try again.");
+		if (e.getMessage().contains("ORA-00001"))
+			popMsg("Error! \nbid already exists! \nPlease try again.");
+		if (e.getMessage().contains("ORA-02291"))
+			popMsg("Error! \ntype must be one of: \nstudent , faculty , or staff");
+
+	}
+
 	private void exitWindow(){
 		this.dispose();
 	}
-	
+
 	private void popMsg(String msg){
 		JOptionPane.showMessageDialog (this, msg);
 	}
-	
+
 	private String indexToMsg(int i) {
 		switch (i){
-			case 0:	return "bid"; 
-			case 1:	return "password";
-			case 2: return "name";
-			case 3: return "address";
-			case 4: return "phone";
-			case 5: return "email address";
-			case 6: return "sin or student #";
-			case 7: return "expiry date";
-			case 8: return "type";
+		case 0:	return "bid"; 
+		case 1:	return "password";
+		case 2: return "name";
+		case 3: return "address";
+		case 4: return "phone";
+		case 5: return "email address";
+		case 6: return "sin or student #";
+		case 7: return "expiry date";
+		case 8: return "type";
 		}
 		return "";
-				
+
 	}
 }

@@ -1,5 +1,6 @@
 package jdbc;
 // We need to import the java.sql package to use JDBC
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -158,7 +159,7 @@ public class JDBCManager
 			{
 				// undo the insert
 				con.rollback();	
-				
+
 			}
 			catch (SQLException ex2)
 			{
@@ -168,7 +169,6 @@ public class JDBCManager
 		}
 	}
 
-	// Note from Jimmy: parameter type should be primary key
 	public void insertBorrowerType(BorrowerType bt){
 		PreparedStatement ps;
 		try
@@ -200,7 +200,7 @@ public class JDBCManager
 		}
 	}
 
-	public void insertBorrowing(Borrowing b){
+	public void insertBorrowing(Borrowing b) throws SQLException{
 		PreparedStatement  ps;
 
 		try
@@ -222,9 +222,11 @@ public class JDBCManager
 		catch (SQLException ex)
 		{
 			System.out.println("Message: " + ex.getMessage());
+			throw ex;
+		}
+		finally{
 			try 
 			{
-				// undo the insert
 				con.rollback();	
 			}
 			catch (SQLException ex2)
@@ -270,7 +272,6 @@ public class JDBCManager
 		}
 	}
 
-	// Note from Jimmy: parameter type should be primary key
 	public void insertHasAuthor(HasAuthor ha){
 		// CallNumber, Name (Both primary keys)
 		PreparedStatement  ps;
@@ -880,9 +881,9 @@ public class JDBCManager
 						rs.getString("inDate"));
 				borrowings.add(b);
 				System.out.println("borid, callNumber, outDate & inDate: " + b.getBorid() + " " 
-				+ b.getCallNumber() + " "
-				+ b.getOutDate() + " "
-				+ b.getInDate());
+						+ b.getCallNumber() + " "
+						+ b.getOutDate() + " "
+						+ b.getInDate());
 
 			}
 
@@ -917,9 +918,9 @@ public class JDBCManager
 						rs.getString("borid"));
 				fines.add(f);
 				System.out.println("fid, amount, issueDate & paidDate: " + f.getFid() + " " 
-				+ f.getAmount() + " "
-				+ f.getIssueDate() + " "
-				+ f.getPaidDate());
+						+ f.getAmount() + " "
+						+ f.getIssueDate() + " "
+						+ f.getPaidDate());
 
 			}
 
@@ -1003,12 +1004,12 @@ public class JDBCManager
 						rs.getString("borrowerId"),
 						rs.getString("callNumber"),
 						rs.getInt("issueDate"));
-				
+
 				holdRequest.add(h);
 				System.out.println("hid, bid, Call Number & Issue Date: " + h.getHoldId() + " " 
-				+ h.getBorrowerId() + " "
-				+ h.getCallNumber() + " "
-				+ h.getIssueDate());
+						+ h.getBorrowerId() + " "
+						+ h.getCallNumber() + " "
+						+ h.getIssueDate());
 
 			}
 
@@ -1020,5 +1021,97 @@ public class JDBCManager
 		}	
 		return holdRequest;
 	}
+
+	//**************************************************************
+	//************************ UPDATES *****************************
+	//**************************************************************
+
+	public void updateBookCopy(String callNumber,int copyNo,String status){
+		PreparedStatement ps;
+		ResultSet rs;
+
+		try {
+			ps = con.prepareStatement("UPDATE bookcopy SET status = ? WHERE callnumber = ? AND copyno = ?");
+			ps.setString(1, status);
+			ps.setString(2,callNumber);
+			ps.setInt(3, copyNo);
+
+			int rowCount = ps.executeUpdate();
+			if (rowCount == 0)
+			{
+				System.out.println("bookcopy does not exist!");
+			}
+
+			con.commit();
+
+			ps.close();
+		}
+		catch (SQLException ex)
+		{
+			System.out.println("Message: " + ex.getMessage());
+
+			try 
+			{
+				con.rollback();	
+			}
+			catch (SQLException ex2)
+			{
+				System.out.println("Message: " + ex2.getMessage());
+				System.exit(-1);
+			}
+		}
+	}
+
+	//**************************************************************
+	//************************ OTHER *******************************
+	//**************************************************************
+
+	public boolean hasBookCopy(String callNumber, int copyNo){
+		PreparedStatement ps;
+
+		try
+		{
+			ps = con.prepareStatement("SELECT * FROM bookcopy WHERE callNumber = ? AND copyNo = ?");
+			ps.setString(1, callNumber);
+			ps.setInt(2, copyNo);
+			int rowCount = ps.executeUpdate();
+			if (rowCount > 0) return true;
+			ps.close();
+		}
+		catch (SQLException ex)
+		{
+			System.out.println("Message: " + ex.getMessage());
+		}	
+		return false;
+	}
+
+
+	public boolean isBookCopyIn(String callNumber, int copyNo) {
+		PreparedStatement ps;
+		ResultSet rs;
+
+		try
+		{
+			ps = con.prepareStatement("SELECT status FROM bookcopy WHERE callNumber = ? AND copyNo = ?");
+			ps.setString(1, callNumber);
+			ps.setInt(2, copyNo);
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				if (rs.getString("status").equals("in")) 
+					return true;
+			}
+			ps.close();
+		}
+		catch (SQLException ex)
+		{
+			System.out.println("Message from IsBookCopyIn: " + ex.getMessage());
+		}	
+		return false;
+	}
+
+
+
+
+
 
 }
