@@ -143,13 +143,8 @@ public class CheckOverdue extends JFrame{
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 		        if (e.getValueIsAdjusting() == false) {
-		        	 
-		            if (list.getSelectedIndex() == -1) {
-		            	addButton.setEnabled(false);
-		 
-		            } else {
-		            	addButton.setEnabled(true);
-		            }
+		        	 System.out.println(listModel.getSize());
+		        	 checkIndex();
 		        }
 			}
         	
@@ -159,8 +154,10 @@ public class CheckOverdue extends JFrame{
         MouseListener mouseListener = new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 1) {
+                	addButton.setEnabled(true);
                     currentIndex = list.locationToIndex(e.getPoint());
                     System.out.println("clicked on Item " + currentIndex);
+                    checkIndex();
                  }
             }
         };
@@ -172,6 +169,16 @@ public class CheckOverdue extends JFrame{
         
 		this.add(p);
 		
+	}
+	
+	// Set addButton enable according to the validity of the index.
+	private void checkIndex(){
+        if (currentIndex == -1 || currentIndex >= listModel.getSize()) {
+        	addButton.setEnabled(false);
+
+        } else {
+        	addButton.setEnabled(true);
+        }
 	}
 	
 	protected void onClickAddSelected() {
