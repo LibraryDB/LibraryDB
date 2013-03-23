@@ -69,8 +69,6 @@ public class ClerkPanel extends JPanel {
 			public void actionPerformed(ActionEvent e)
 			{
 				new CheckOverdue();
-				System.out.println("Check Overdue");
-
 			}
 		});
 		

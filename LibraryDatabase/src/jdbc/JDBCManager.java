@@ -1007,10 +1007,42 @@ public class JDBCManager
 	//************************ UPDATES *****************************
 	//**************************************************************
 
+	public void updateBorrowingInDate(int borid, String inDate){
+		PreparedStatement ps;
+		
+		try {
+			ps = con.prepareStatement("UPDATE borrowing SET inDate = ? WHERE borid = ?");
+			ps.setString(1, inDate);
+			ps.setInt(2, borid);
+			int rowCount = ps.executeUpdate();
+			if (rowCount == 0)
+			{
+				System.out.println("borrowing does not exist!");
+			}
+
+			con.commit();
+
+			ps.close();	
+		}
+		catch (SQLException ex)
+		{
+			System.out.println("Message: " + ex.getMessage());
+
+			try 
+			{
+				con.rollback();	
+			}
+			catch (SQLException ex2)
+			{
+				System.out.println("Message: " + ex2.getMessage());
+				System.exit(-1);
+			}
+		}
+	}
+	
 	public void updateBookCopy(String callNumber,int copyNo,String status){
 		PreparedStatement ps;
-		ResultSet rs;
-
+		
 		try {
 			ps = con.prepareStatement("UPDATE bookcopy SET status = ? WHERE callnumber = ? AND copyno = ?");
 			ps.setString(1, status);
@@ -1067,8 +1099,8 @@ public class JDBCManager
 		return false;
 	}
 
-	// Determines whether or not the bookcopy's status is "in"
-	public boolean isBookCopyIn(String callNumber, int copyNo) {
+	// Determines whether or not the bookcopy's status is String status
+	public boolean isBookCopyStatus(String callNumber, int copyNo, String status) {
 		PreparedStatement ps;
 		ResultSet rs;
 
@@ -1079,7 +1111,7 @@ public class JDBCManager
 			ps.setInt(2, copyNo);
 			rs = ps.executeQuery();
 			if (rs.next()) {
-				if (rs.getString("status").equals("in")) 
+				if (rs.getString("status").equals(status)) 
 					return true;
 			}
 			ps.close();
@@ -1148,6 +1180,60 @@ public class JDBCManager
 		
 		return result;
 
+	}
+	
+	public Borrowing getBorrowing(String callNumber, int copyNo){
+		Borrowing b;
+		PreparedStatement ps;
+		ResultSet rs;
+		
+		try {
+			ps = con.prepareStatement("SELECT * FROM borrowing WHERE inDate is null AND callnumber = ? AND copyno = ?");
+			ps.setString(1, callNumber);
+			ps.setInt(2, copyNo);
+			rs = ps.executeQuery();
+			if (rs.next()){
+				b = new Borrowing(
+						rs.getInt("borid"),
+						rs.getInt("bid"),
+						rs.getString("callnumber"),
+						rs.getInt("copyno"),
+						rs.getString("outdate"),
+						null);
+				return b;
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return null;
+		
+	}
+	
+	public ArrayList<HoldRequest> getHoldRequests(String callNumber){
+		PreparedStatement ps;
+		ResultSet rs;
+		ArrayList<HoldRequest> result = new ArrayList<HoldRequest>();
+		
+		try {
+			ps = con.prepareStatement("SELECT * FROM holdrequest WHERE callnumber = ?");
+			ps.setString(1, callNumber);
+			rs = ps.executeQuery();
+			
+			while (rs.next()){
+				result.add(new HoldRequest(
+						rs.getInt("hid"),
+						rs.getInt("bid"),
+						callNumber,
+						rs.getString("issueDate")
+						));
+			}
+					
+		}catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return result;
 	}
 
 

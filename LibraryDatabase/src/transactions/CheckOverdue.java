@@ -210,13 +210,13 @@ public class CheckOverdue extends JFrame{
 		result = LibraryDB.getManager().getOutBorrowings();
 		ArrayList<Borrowing> toRemove = new ArrayList<Borrowing>();
 		for (Borrowing b : result){
-			if (isOverDue(b)) toRemove.add(b);
+			if (isNotOverDue(b)) toRemove.add(b);
 		}
 		result.removeAll(toRemove);
 		return result;
 	}
 
-	private boolean isOverDue(Borrowing b) {
+	private boolean isNotOverDue(Borrowing b) {
 		int timeLimit = 0;
 		Calendar currentCal = new GregorianCalendar(TimeZone.getTimeZone("PST"));
 		

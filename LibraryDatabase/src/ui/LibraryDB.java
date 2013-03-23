@@ -13,6 +13,7 @@ import model.BookCopy;
 import model.Borrower;
 import model.BorrowerType;
 import model.Borrowing;
+import model.HoldRequest;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -183,11 +184,12 @@ public class LibraryDB implements ActionListener
 		try {
 
 			manager.insertBorrower(new Borrower(0,"b","c","d",604,"f",735,"2014/01/01","student"));
-			manager.insertBorrowing(new Borrowing(0,2,"QA1",1,"2013/01/01",null));
+			manager.insertBorrowing(new Borrowing(0,2,"QA1",1,"2013/01/01",null)); 
 			manager.insertBorrowing(new Borrowing(0,2,"QA1",2,"2013/03/19",null));
 			manager.insertBorrowing(new Borrowing(0,2,"QA1",3,"2013/03/19","in"));
-			manager.insertBorrowing(new Borrowing(0,3,"QA1",4,"2013/03/01",null));
-			manager.insertBorrowing(new Borrowing(0,3,"QA1",5,"2013/03/02",null));
+			manager.insertBorrowing(new Borrowing(0,2,"QA1",4,"2013/03/01",null));
+			manager.insertBorrowing(new Borrowing(0,2,"QA1",5,"2013/03/02",null));
+			manager.insertHoldRequest(new HoldRequest(0,2,"QA1","2013/03/22"));
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}

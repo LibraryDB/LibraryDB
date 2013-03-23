@@ -146,7 +146,7 @@ public class CheckOut extends JFrame{
 		}
 		
 		// check if bookcopy is available for borrowing, i.e. status = in.
-		if (!LibraryDB.getManager().isBookCopyIn(callNumber,copyNo)){
+		if (!LibraryDB.getManager().isBookCopyStatus(callNumber,copyNo,"in")){
 			popMsg("Sorry! This book is not available for borrowing.");
 			return;
 		}
