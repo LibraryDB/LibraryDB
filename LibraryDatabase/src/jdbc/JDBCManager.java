@@ -1235,6 +1235,25 @@ public class JDBCManager
 		
 		return result;
 	}
+	
+	// bid must be a valid borrower ID
+	public String getEmail(int bid){
+		PreparedStatement ps;
+		ResultSet rs;
+		
+		try {
+			ps = con.prepareStatement("Select emailaddress from borrower where bid = ?");
+			ps.setInt(1, bid);
+			rs = ps.executeQuery();
+			if (rs.next()){
+				return rs.getString("emailaddress");
+			}
+			
+		}catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		return null;
+	}
 
 
 	
