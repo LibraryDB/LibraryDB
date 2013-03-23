@@ -1,38 +1,40 @@
 package model;
 
+import java.sql.Date;
+
 public class HoldRequest {
 	// HoldRequest (Hid, Bid, CallNumber, IssueDate)
 	// hid is primary key
 	// (bid) is foreign key referencing Borrower
 	// (CallNumber) is foreign key referencing Book
 	
-	private String holdId;
-	private String borrowerId;
+	private int hid;
+	private int bid;
 	private String callNumber;
-	private Integer issueDate;
+	private String issueDate;
 	
-	public HoldRequest(String holdId, String borrowerId, String callNumber,
-			Integer issueDate) {
-		this.holdId = holdId;
-		this.borrowerId = borrowerId;
+	public HoldRequest(int holdId, int borrowerId, String callNumber,
+			String issueDate) {
+		hid = holdId;
+		bid = borrowerId;
 		this.callNumber = callNumber;
 		this.issueDate = issueDate;
 	}
 
-	public String getHoldId() {
-		return holdId;
+	public int getHoldId() {
+		return hid;
 	}
 
-	public void setHoldId(String holdId) {
-		this.holdId = holdId;
+	public void setHoldId(int holdId) {
+		this.hid = holdId;
 	}
 
-	public String getBorrowerId() {
-		return borrowerId;
+	public int getBorrowerId() {
+		return bid;
 	}
 
-	public void setBorrowerId(String borrowerId) {
-		this.borrowerId = borrowerId;
+	public void setBorrowerId(int borrowerId) {
+		this.bid = borrowerId;
 	}
 
 	public String getCallNumber() {
@@ -43,11 +45,11 @@ public class HoldRequest {
 		this.callNumber = callNumber;
 	}
 
-	public Integer getIssueDate() {
+	public String getIssueDate() {
 		return issueDate;
 	}
 
-	public void setIssueDate(Integer issueDate) {
+	public void setIssueDate(String issueDate) {
 		this.issueDate = issueDate;
 	}
 

@@ -43,7 +43,7 @@ public class CheckOverdue extends JFrame{
 	private JButton send2SelectedButton;
 	private JButton addButton;
 	private List<Borrowing> overdues;
-	private List<String> selected;
+	private List<Integer> selected;
 	final JTextArea textArea = new JTextArea(5, 12);
 	private int currentIndex = -1; // the index of the current selected item on the list
 	
@@ -52,7 +52,7 @@ public class CheckOverdue extends JFrame{
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //Exits the window when user clicks on "x"
 		
 		overdues = getOverdueItems();
-		selected = new ArrayList<String>();
+		selected = new ArrayList<Integer>();
 		
 		initPanel();
 

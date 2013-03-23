@@ -1,23 +1,25 @@
 package model;
 
+import java.sql.Date;
+
 public class Borrower {
-	private String bid;
+	private int bid;
 	private String password;
 	private String name;
 	private String address;
-	private String phone;
+	private int phone;
 	private String emailAddress;
-	private String sinOrStNo;
+	private int sinOrStNo;
 	private String expiryDate;
 	private String type;
 	
-	public Borrower(String bid, 
+	public Borrower(int bid, 
 			String password,
 			String name,
 			String address,
-			String phone,
+			int phone,
 			String emailAddress,
-			String sinOrStNo,
+			int sinOrStNo,
 			String expiryDate,
 			String type)
 	{
@@ -32,7 +34,7 @@ public class Borrower {
 		this.type = type;
 	}
 	
-	public String getBid(){
+	public int getBid(){
 		return bid;
 	}
 	
@@ -48,7 +50,7 @@ public class Borrower {
 		return address;
 	}
 	
-	public String getPhone(){
+	public int getPhone(){
 		return phone;
 	}
 	
@@ -56,7 +58,7 @@ public class Borrower {
 		return emailAddress;
 	}
 	
-	public String getSinOrStNo(){
+	public int getSinOrStNo(){
 		return sinOrStNo;
 	}
 	

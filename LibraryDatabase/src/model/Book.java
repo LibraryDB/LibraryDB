@@ -7,9 +7,9 @@ public class Book {
 	String title;
 	String mainAuthor;
 	String publisher;
-	String year;
+	int year;
 	
-	public Book(String callNumber, String isbn, String title, String mainAuthor, String publisher, String year){
+	public Book(String callNumber, String isbn, String title, String mainAuthor, String publisher, int year){
 		this.callNumber = callNumber;
 		this.isbn = isbn;
 		this.title = title;
@@ -18,7 +18,7 @@ public class Book {
 		this.year = year;
 	}
 	
-	public String getYear(){
+	public int getYear(){
 		return year;
 	}
 	

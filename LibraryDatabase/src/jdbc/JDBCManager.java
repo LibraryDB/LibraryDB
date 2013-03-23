@@ -2,6 +2,8 @@ package jdbc;
 // We need to import the java.sql package to use JDBC
 import java.io.IOException;
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import model.*;
@@ -69,7 +71,7 @@ public class JDBCManager
 			ps.setString(3, b.getTitle());
 			ps.setString(4, b.getMainAuthor());
 			ps.setString(5, b.getPublisher());
-			ps.setString(6, b.getYear());
+			ps.setInt(6, b.getYear());
 			ps.executeUpdate();
 
 			// commit work 
@@ -131,17 +133,16 @@ public class JDBCManager
 
 		try
 		{
-			ps = con.prepareStatement("INSERT INTO borrower VALUES (?,?,?,?,?,?,?,?,?)");
+			ps = con.prepareStatement("INSERT INTO borrower VALUES (bid_counter.nextval,?,?,?,?,?,?,?,?)");
 
-			ps.setString(1, b.getBid());
-			ps.setString(2, b.getPassword());
-			ps.setString(3, b.getName());
-			ps.setString(4, b.getAddress());
-			ps.setString(5, b.getPhone());
-			ps.setString(6, b.getEmailAddress());
-			ps.setString(7, b.getSinOrStNo());
-			ps.setString(8, b.getExpiryDate());
-			ps.setString(9, b.getType());
+			ps.setString(1, b.getPassword());
+			ps.setString(2, b.getName());
+			ps.setString(3, b.getAddress());
+			ps.setInt(4, b.getPhone());
+			ps.setString(5, b.getEmailAddress());
+			ps.setInt(6, b.getSinOrStNo());
+			ps.setString(7, b.getExpiryDate());
+			ps.setString(8, b.getType());
 			ps.executeUpdate();
 
 			// commit work 
@@ -205,13 +206,12 @@ public class JDBCManager
 
 		try
 		{
-			ps = con.prepareStatement("INSERT INTO borrowing VALUES (?,?,?,?,?,?)");
-			ps.setString(1, b.getBorid());
-			ps.setString(2, b.getBid());
-			ps.setString(3, b.getCallNumber());
-			ps.setInt(4, b.getCopyNo());
-			ps.setString(5, b.getOutDate());
-			ps.setString(6, b.getInDate());
+			ps = con.prepareStatement("INSERT INTO borrowing VALUES (borid_counter.nextval,?,?,?,?,?)");
+			ps.setInt(1, b.getBid());
+			ps.setString(2, b.getCallNumber());
+			ps.setInt(3, b.getCopyNo());
+			ps.setString(4, b.getOutDate());
+			ps.setString(5, b.getInDate());
 			ps.executeUpdate();
 
 			// commit work 
@@ -243,12 +243,11 @@ public class JDBCManager
 
 		try
 		{
-			ps = con.prepareStatement("INSERT INTO fine VALUES (?,?,?,?,?)");
-			ps.setString(1, f.getFid());
-			ps.setInt(2, f.getAmount());
-			ps.setString(3, f.getIssueDate());
-			ps.setString(4, f.getPaidDate());
-			ps.setString(5, f.getBorid());
+			ps = con.prepareStatement("INSERT INTO fine VALUES (fid_counter.nextval,?,?,?,?)");
+			ps.setInt(1, f.getAmount());
+			ps.setString(2, f.getIssueDate());
+			ps.setString(3, f.getPaidDate());
+			ps.setInt(4, f.getBorid());
 			ps.executeUpdate();
 
 			// commit work 
@@ -344,11 +343,10 @@ public class JDBCManager
 
 		try
 		{
-			ps = con.prepareStatement("INSERT INTO holdRequest VALUES (?,?,?,?)");
-			ps.setString(1, hr.getHoldId());
-			ps.setString(2, hr.getBorrowerId());
-			ps.setString(3, hr.getCallNumber());
-			ps.setInt(4, hr.getIssueDate());
+			ps = con.prepareStatement("INSERT INTO holdRequest VALUES (hid_counter.nextval,?,?,?)");
+			ps.setInt(1, hr.getBorrowerId());
+			ps.setString(2, hr.getCallNumber());
+			ps.setString(3,hr.getIssueDate());
 			ps.executeUpdate();
 
 			// commit work 
@@ -413,14 +411,14 @@ public class JDBCManager
 		}
 	}
 
-	public void deleteBookCopy(String callNumber, String copyNo){
+	public void deleteBookCopy(String callNumber, int copyNo){
 		PreparedStatement  ps;
 
 		try
 		{
 			ps = con.prepareStatement("DELETE FROM bookcopy WHERE callNumber = ? AND copyNo = ?");
 			ps.setString(1, callNumber);
-			ps.setString(2, copyNo);
+			ps.setInt(2, copyNo);
 
 			int rowCount = ps.executeUpdate();
 
@@ -450,14 +448,14 @@ public class JDBCManager
 		}
 	}
 
-	public void deleteBorrower(String bid)
+	public void deleteBorrower(int bid)
 	{
 		PreparedStatement  ps;
 
 		try
 		{
 			ps = con.prepareStatement("DELETE FROM borrower WHERE bid = ?");
-			ps.setString(1, bid);
+			ps.setInt(1, bid);
 
 			int rowCount = ps.executeUpdate();
 
@@ -524,13 +522,13 @@ public class JDBCManager
 
 	}
 
-	public void deleteBorrowing(String borid){
+	public void deleteBorrowing(int borid){
 		PreparedStatement  ps;
 
 		try
 		{
 			ps = con.prepareStatement("DELETE FROM borrowing WHERE borid = ?");
-			ps.setString(1, borid);
+			ps.setInt(1, borid);
 
 			int rowCount = ps.executeUpdate();
 
@@ -562,13 +560,13 @@ public class JDBCManager
 	}
 
 
-	public void deleteFine(String fid){
+	public void deleteFine(int fid){
 		PreparedStatement  ps;
 
 		try
 		{
 			ps = con.prepareStatement("DELETE FROM fine WHERE fid = ?");
-			ps.setString(1, fid);
+			ps.setInt(1, fid);
 
 			int rowCount = ps.executeUpdate();
 
@@ -733,7 +731,7 @@ public class JDBCManager
 						rs.getString("title"),
 						rs.getString("mainauthor"),
 						rs.getString("publisher"),
-						rs.getString("year"));
+						rs.getInt("year"));
 				books.add(b);
 
 			}
@@ -790,26 +788,27 @@ public class JDBCManager
 
 			rs = stmt.executeQuery("SELECT * FROM borrower");
 
-			String bid;
+			int bid;
 			String password;
 			String name;
 			String address;
-			String phone;
+			int phone;
 			String emailAddress;
-			String sinOrStNo;
+			int sinOrStNo;
 			String expiryDate;
 			String type;
 			while(rs.next())
 			{
-				bid = rs.getString("bid");
+				bid = rs.getInt("bid");
 				password = rs.getString("password");
 				name = rs.getString("name");
 				address = rs.getString("address");
-				phone = rs.getString("phone");
+				phone = rs.getInt("phone");
 				emailAddress = rs.getString("emailAddress");
-				sinOrStNo = rs.getString("sinOrStNo");
+				sinOrStNo = rs.getInt("sinOrStNo");
 				expiryDate = rs.getString("expiryDate");
 				type = rs.getString("type");
+				
 				Borrower b = new Borrower(bid,password,name,address,phone,emailAddress,
 						sinOrStNo,expiryDate,type);
 				borrowers.add(b);
@@ -818,7 +817,7 @@ public class JDBCManager
 
 			stmt.close();
 		}
-		catch (SQLException ex)
+		catch (Exception ex)
 		{
 			System.out.println("Message: " + ex.getMessage());
 		}	
@@ -869,8 +868,8 @@ public class JDBCManager
 			while(rs.next())
 			{
 
-				Borrowing b = new Borrowing(rs.getString("borid"),
-						rs.getString("bid"),
+				Borrowing b = new Borrowing(rs.getInt("borid"),
+						rs.getInt("bid"),
 						rs.getString("callNumber"), 
 						rs.getInt("copyNo"), 
 						rs.getString("outDate"), 
@@ -903,11 +902,11 @@ public class JDBCManager
 			while(rs.next())
 			{
 
-				Fine f = new Fine(rs.getString("fid"),
+				Fine f = new Fine(rs.getInt("fid"),
 						rs.getInt("amount"),
 						rs.getString("issueDate"),
 						rs.getString("paidDate"),
-						rs.getString("borid"));
+						rs.getInt("borid"));
 				fines.add(f);
 
 			}
@@ -960,7 +959,7 @@ public class JDBCManager
 
 			while(rs.next())
 			{
-				HasSubject h = new HasSubject(rs.getString("callNumber"), rs.getString("subjcet"));
+				HasSubject h = new HasSubject(rs.getString("callNumber"), rs.getString("subject"));
 				hasSubjects.add(h);
 			}
 
@@ -986,10 +985,10 @@ public class JDBCManager
 
 			while(rs.next())
 			{
-				HoldRequest h = new HoldRequest(rs.getString("holdId"),
-						rs.getString("borrowerId"),
+				HoldRequest h = new HoldRequest(rs.getInt("holdId"),
+						rs.getInt("borrowerId"),
 						rs.getString("callNumber"),
-						rs.getInt("issueDate"));
+						rs.getString("issueDate"));
 
 				holdRequest.add(h);
 
@@ -1093,13 +1092,13 @@ public class JDBCManager
 	}
 
 	// returns the bookTimeLimit for borrower with borrower id = bid
-	public int getTimeLimit(String bid) throws SQLException{
+	public int getTimeLimit(int bid) throws SQLException{
 		PreparedStatement ps,ps2;
 		ResultSet rs,rs2;
 		String type;
 		
 		ps = con.prepareStatement("SELECT type FROM borrower WHERE bid = ?");
-		ps.setString(1, bid);
+		ps.setInt(1, bid);
 		rs = ps.executeQuery();
 		
 		if (rs.next()) {
@@ -1136,8 +1135,8 @@ public class JDBCManager
 			rs = ps.executeQuery();
 			while (rs.next()){
 				result.add(new Borrowing(
-						rs.getString("borid"),
-						rs.getString("bid"),
+						rs.getInt("borid"),
+						rs.getInt("bid"),
 						rs.getString("callnumber"),
 						rs.getInt("copyno"),
 						rs.getString("outdate"),

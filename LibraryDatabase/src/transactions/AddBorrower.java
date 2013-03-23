@@ -49,6 +49,7 @@ public class AddBorrower extends JFrame{
 		label.setHorizontalAlignment(SwingConstants.RIGHT);
 		label.setVerticalAlignment(SwingConstants.CENTER);
 		label.setBounds(0, i*HEIGHT/11, 3*WIDTH/7, HEIGHT/11);
+		if (i==0)label.setVisible(false);
 		p.add(label);
 	}
 
@@ -58,6 +59,7 @@ public class AddBorrower extends JFrame{
 		int tf_h = HEIGHT/15;
 		tf.setBounds(WIDTH/2, tf_y + (HEIGHT/11 - tf_h)/2 , WIDTH/3 , tf_h);
 		textFields.add(tf);
+		if (i==0)tf.setVisible(false);
 		p.add(tf);
 	}
 
@@ -75,15 +77,28 @@ public class AddBorrower extends JFrame{
 		confirmButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
+				String sPhone = textFields.get(4).getText().trim();
+				String sSinOrStNo = textFields.get(6).getText().trim();
+				
+				if (!isNumeric(sPhone)) {
+					popMsg("phone needs to be a number!");
+					return;
+				}
+				
+				if (!isNumeric(sSinOrStNo)) {
+					popMsg("SinOrStNo needs to be a number!");
+					return;
+				}
+				
 				//Execute when button is pressed
 				Borrower b = new Borrower(
-						textFields.get(0).getText().trim(),
+						0,
 						textFields.get(1).getText().trim(),
 						textFields.get(2).getText().trim(),
 						textFields.get(3).getText().trim(),
-						textFields.get(4).getText().trim(),
+						Integer.parseInt(sPhone),
 						textFields.get(5).getText().trim(),
-						textFields.get(6).getText().trim(),
+						Integer.parseInt(sSinOrStNo),
 						textFields.get(7).getText().trim(),
 						textFields.get(8).getText().trim());
 
@@ -99,6 +114,8 @@ public class AddBorrower extends JFrame{
 		});
 		p.add(confirmButton);
 		this.add(p);
+		
+		
 	}
 
 	// if we get an error , pop-up a msg box and reset text boxes. 
@@ -135,4 +152,20 @@ public class AddBorrower extends JFrame{
 		return "";
 
 	}
+	
+	// check if str is numeric
+	private boolean isNumeric(String str)  
+	{  
+	  try  
+	  {  
+	    int i = Integer.parseInt(str);  
+	  }  
+	  catch(NumberFormatException nfe)  
+	  {  
+	    return false;  
+	  }  
+	  return true;  
+	}
 }
+
+

@@ -1,18 +1,20 @@
 package model;
 
+import java.sql.Date;
+
 public class Fine {
-	private String fid;
+	private int fid;
 	private int amount;
 	private String issueDate;
 	private String paidDate;
-	private String borid;
+	private int borid;
 	
 	public Fine (
-			String fid,
+			int fid,
 			int amount,
 			String issueDate,
 			String paidDate,
-			String borid) 
+			int borid) 
 	{
 		this.fid = fid;
 		this.amount = amount;
@@ -21,7 +23,7 @@ public class Fine {
 		this.borid = borid;
 	}
 	
-	public String getFid(){
+	public int getFid(){
 		return fid;
 	}
 	
@@ -37,7 +39,7 @@ public class Fine {
 		return paidDate;
 	}
 	
-	public String getBorid(){
+	public int getBorid(){
 		return borid;
 	}
 }

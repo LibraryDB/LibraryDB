@@ -66,15 +66,16 @@ public class CheckOutHelper extends JFrame{
 		label0.setVerticalAlignment(SwingConstants.CENTER);
 		p.add(label0);
 
-		JLabel label1 = new JLabel("borid: ");
-		label1.setBounds(0, HEIGHT/scale, WIDTH/3, HEIGHT/scale);
-		label1.setHorizontalAlignment(SwingConstants.RIGHT);
-		label1.setVerticalAlignment(SwingConstants.CENTER);
-		p.add(label1);
+//		JLabel label1 = new JLabel("borid: ");
+//		label1.setBounds(0, HEIGHT/scale, WIDTH/3, HEIGHT/scale);
+//		label1.setHorizontalAlignment(SwingConstants.RIGHT);
+//		label1.setVerticalAlignment(SwingConstants.CENTER);
+//		p.add(label1);
 
 		JTextField tf1 = new JTextField();
 		tf1.setBounds(WIDTH/2, HEIGHT/scale + disp , WIDTH/3 , HEIGHT/scale - 2*disp);
 		textFields.add(tf1);
+		tf1.setVisible(false);
 		p.add(tf1);
 
 		JLabel label2 = new JLabel("bid: ");
@@ -106,8 +107,7 @@ public class CheckOutHelper extends JFrame{
 	private void onClick(){
 
 		// fetches the text in the text boxes.
-		String borid = textFields.get(0).getText().trim();
-		String bid = textFields.get(1).getText().trim();
+		int bid = Integer.parseInt(textFields.get(1).getText().trim());
 		
 		String outDate;
 		int timeLimit = 0;
@@ -127,7 +127,7 @@ public class CheckOutHelper extends JFrame{
 		currentCal.add(Calendar.DATE, timeLimit);
 		
 		for (int i=0;i<callNumbers.size();i++){
-			Borrowing b = new Borrowing(borid.concat("" + i),bid,callNumbers.get(i),copyNos.get(i),outDate,null);
+			Borrowing b = new Borrowing(0,bid,callNumbers.get(i),copyNos.get(i),outDate,null);
 			try {
 				// create new tuple in borrowing table
 				LibraryDB.getManager().insertBorrowing(b);

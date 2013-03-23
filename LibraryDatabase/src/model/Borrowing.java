@@ -1,16 +1,18 @@
 package model;
 
+import java.sql.Date;
+
 public class Borrowing {
-	private String borid;
-	private String bid;
+	private int borid;
+	private int bid;
 	private String callNumber;
 	private int copyNo;
 	private String outDate;
 	private String inDate;
 	
 	public Borrowing(
-			String borid,
-			String bid,
+			int borid,
+			int bid,
 			String callNumber,
 			int copyNo,
 			String outDate,
@@ -24,11 +26,11 @@ public class Borrowing {
 		this.inDate = inDate;
 	}
 	
-	public String getBorid(){
+	public int getBorid(){
 		return borid;
 	}
 	
-	public String getBid(){
+	public int getBid(){
 		return bid;
 	}
 	
