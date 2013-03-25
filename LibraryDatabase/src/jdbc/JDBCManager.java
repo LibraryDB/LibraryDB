@@ -744,6 +744,18 @@ public class JDBCManager
 		}	
 		return books;
 	}
+	
+	public ArrayList<Book> searchBook(String callNumber) {
+		ArrayList<Book> searchbook = new ArrayList<Book>();
+		PreparedStatement  ps;
+		try {
+			ps = con.prepareStatement("select * from book where callnumber = ?");
+			ps.setString(1, callNumber);
+		} catch (SQLException ex) {
+			System.out.println("Message: " + ex.getMessage());
+		}
+		return searchbook;
+	}
 
 	public ArrayList<BookCopy> getBookCopy(){
 		ArrayList<BookCopy> bookcopys = new ArrayList<BookCopy>();

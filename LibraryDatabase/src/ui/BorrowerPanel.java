@@ -14,8 +14,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import transactions.SearchBook;
-
+import transactions.SearchBooks;
+import transactions.CheckAccount;
+import transactions.HoldRequest;
+import transactions.PayFine;
 
 
 public class BorrowerPanel extends JPanel {
@@ -38,9 +40,7 @@ public class BorrowerPanel extends JPanel {
 		addBorrowerButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				//Execute when button is pressed
-				// TODO
-				new SearchBook();
+				new SearchBooks();
 				System.out.println("Add new Borrower");
 
 			}
@@ -51,8 +51,7 @@ public class BorrowerPanel extends JPanel {
 		checkOutButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				//Execute when button is pressed
-				// TODO
+				new CheckAccount();
 				System.out.println("Check Out Item");
 
 			}
@@ -63,8 +62,7 @@ public class BorrowerPanel extends JPanel {
 		processReturnButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				//Execute when button is pressed
-				// TODO
+				new HoldRequest();
 				System.out.println("Place a hold request");
 
 			}
@@ -75,8 +73,7 @@ public class BorrowerPanel extends JPanel {
 		checkOverdueButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				//Execute when button is pressed
-				// TODO
+				new PayFine();
 				System.out.println("Pay Fine");
 
 			}

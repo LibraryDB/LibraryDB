@@ -2,9 +2,7 @@ package transactions;
 
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
-
 import java.sql.*;
 
 public class SearchBook extends JFrame implements ActionListener {
@@ -22,10 +20,10 @@ public class SearchBook extends JFrame implements ActionListener {
 	private JScrollPane jsp;
 	private Object data1[][];
 	private Container c;
-	private int WIDTH = 200;
-	private int HEIGHT = 200;
+	private int WIDTH = 400;
+	private int HEIGHT = 300;
 	
-	public SearchBook () {
+	public SearchBook() {
 
 		
 		super ("Search Books");
@@ -72,25 +70,12 @@ public class SearchBook extends JFrame implements ActionListener {
 		getContentPane().add (pBook, BorderLayout.CENTER);
 		c=getContentPane();
 
-		/*try {
-		//Connection con=null;
-			//	Class.forName ("sun.jdbc.odbc.JdbcOdbcDriver");
-			//String loc = "jdbc:odbc:Library";
-			//con = DriverManager.getConnection (loc);
-		}
-		catch (SQLException sqlex) {			//If Problem then Show the User a Message.
- 			JOptionPane.showMessageDialog (null, "A Problem Occurs While Loading Form.");
- 			dispose ();				//Closing the Form.
-	 	}*/
-
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int x = screenSize.width/2;
 		int y = screenSize.height/2;
 		this.setLocation(x - WIDTH/2,y - HEIGHT/2);
 		setSize(WIDTH,HEIGHT);
 		setVisible(true);
-		
-
 	}
 	
 	public void actionPerformed (ActionEvent ae) {
@@ -98,7 +83,7 @@ public class SearchBook extends JFrame implements ActionListener {
 		Object obj = ae.getSource();
 
 		if (obj == btnFind) {		//If Find Button Pressed.
-
+			//if search field is not provided
 			if (txtSearch.getText().equals ("")) {
 				JOptionPane.showMessageDialog (this, "Search Field not Provided.");
 				txtSearch.requestFocus ();
@@ -110,7 +95,7 @@ public class SearchBook extends JFrame implements ActionListener {
 				int num;
 				boolean found = false;				//To Confirm the Book's Id Existance.
 				Connection con=null;
-				String url="jdbc:odbc:NitLibrary";	// connect to our db
+				String url="jdbc:odbc:LibraryDB";	// connect to our db
 				Statement st=null;
 				try {	//SELECT Query to Retrieved the Record.
 					Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
