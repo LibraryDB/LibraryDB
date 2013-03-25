@@ -20,13 +20,13 @@ import model.Book;
 import model.Borrower;
 import ui.LibraryDB;
 
-public class addBook extends JFrame{
+public class AddBook extends JFrame{
 	
 	private int WIDTH = 300;
 	private int HEIGHT = 400;
 	private List<JTextField> textFields = new ArrayList<JTextField>();
 	
-	public addBook() {
+	public AddBook() {
 		super("Add Book");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		initPanel();
