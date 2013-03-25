@@ -66,6 +66,7 @@ public class CheckOverdue extends JFrame{
 		setVisible(true);
 	}
 	
+	// Creates the list of overdue bookcopies to be displayed in the textbox
 	private void initList(){
 		
         listModel = new DefaultListModel();
@@ -77,10 +78,6 @@ public class CheckOverdue extends JFrame{
         		        	" " + b.getCopyNo();
         	listModel.addElement(msg);
         }
-
-
-
-        
 	}
 	
 	private void initPanel(){
@@ -171,7 +168,7 @@ public class CheckOverdue extends JFrame{
 		
 	}
 	
-	// Set addButton enable according to the validity of the index.
+	// Set addButton enable if the currentIndex is invalid, i.e, equal to -1 or larger than current size.
 	private void checkIndex(){
         if (currentIndex == -1 || currentIndex >= listModel.getSize()) {
         	addButton.setEnabled(false);
@@ -194,6 +191,7 @@ public class CheckOverdue extends JFrame{
 		if (!selected.contains(b)) selected.add(b.getBid());
 	}
 	
+	// Send email buttons
 	private void onClickSendSelected() {
 		// TODO Auto-generated method stub
 		
@@ -216,7 +214,7 @@ public class CheckOverdue extends JFrame{
 		return result;
 	}
 
-	private boolean isNotOverDue(Borrowing b) {
+	private boolean isNotOverDue(Borrowing b) { // checks if book is not overdue... dun feel like refactoring
 		int timeLimit = 0;
 		Calendar currentCal = new GregorianCalendar(TimeZone.getTimeZone("PST"));
 		
@@ -227,8 +225,8 @@ public class CheckOverdue extends JFrame{
 			return false;
 		}
 		
-		Calendar dueCal = stringToCalendar(b.getOutDate());
-		dueCal.add(Calendar.DATE, timeLimit);
+		Calendar dueCal = stringToCalendar(b.getOutDate());// get current time
+		dueCal.add(Calendar.DATE, timeLimit); 				// dueCal is now current time + timeLimit = due date
 		if (dueCal.after(currentCal)) return true;	
 		System.out.println(b.getBid());
 		return false;

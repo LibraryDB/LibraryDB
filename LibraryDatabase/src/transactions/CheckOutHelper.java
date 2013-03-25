@@ -66,16 +66,11 @@ public class CheckOutHelper extends JFrame{
 		label0.setVerticalAlignment(SwingConstants.CENTER);
 		p.add(label0);
 
-//		JLabel label1 = new JLabel("borid: ");
-//		label1.setBounds(0, HEIGHT/scale, WIDTH/3, HEIGHT/scale);
-//		label1.setHorizontalAlignment(SwingConstants.RIGHT);
-//		label1.setVerticalAlignment(SwingConstants.CENTER);
-//		p.add(label1);
 
 		JTextField tf1 = new JTextField();
 		tf1.setBounds(WIDTH/2, HEIGHT/scale + disp , WIDTH/3 , HEIGHT/scale - 2*disp);
 		textFields.add(tf1);
-		tf1.setVisible(false);
+		tf1.setVisible(false); // too lazy to do more refactoring, looking for shortcuts :P
 		p.add(tf1);
 
 		JLabel label2 = new JLabel("bid: ");

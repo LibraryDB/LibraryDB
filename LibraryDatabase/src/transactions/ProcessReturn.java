@@ -65,6 +65,7 @@ public class ProcessReturn extends JFrame{
 		label1.setVerticalAlignment(SwingConstants.CENTER);
 		p.add(label1);
 
+		// call number text field
 		JTextField tf1 = new JTextField();
 		tf1.setBounds(WIDTH/2, HEIGHT/scale + disp , WIDTH/3 , HEIGHT/scale - 2*disp);
 		textFields.add(tf1);
@@ -76,6 +77,7 @@ public class ProcessReturn extends JFrame{
 		label2.setVerticalAlignment(SwingConstants.CENTER);
 		p.add(label2);
 
+		// copy number text field
 		JTextField tf2 = new JTextField();
 		tf2.setBounds(WIDTH/2, HEIGHT*2/scale + disp , WIDTH/3 , HEIGHT/scale - 2*disp);
 		textFields.add(tf2);
@@ -107,6 +109,7 @@ public class ProcessReturn extends JFrame{
 		}
 		copyNo = Integer.parseInt(textFields.get(1).getText().trim());
 
+		// check if book exists
 		if(!LibraryDB.getManager().hasBookCopy(callNumber, copyNo)){
 			popMsg("Book does not exist in library!");
 			return;

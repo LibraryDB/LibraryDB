@@ -139,7 +139,8 @@ public class LibraryDB implements ActionListener
 			// remove the login window and display the User Frame 
 			loginFrame.dispose();
 			userFrame = new UserFrame();  
-			initTableValues(); //TODO
+			initTableValues(); 
+			//TODO
 		}
 		else
 		{

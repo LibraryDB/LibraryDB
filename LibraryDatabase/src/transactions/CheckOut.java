@@ -51,6 +51,7 @@ public class CheckOut extends JFrame{
 		setVisible(true);
 	}
 
+	// initializes the JPanel
 	private void initPanel(){
 		int scale = 10;
 		int disp = 10;
@@ -68,6 +69,7 @@ public class CheckOut extends JFrame{
 		label1.setVerticalAlignment(SwingConstants.CENTER);
 		p.add(label1);
 		
+		// Call number textfield
 		JTextField tf1 = new JTextField();
 		tf1.setBounds(WIDTH/2, HEIGHT/scale + disp , WIDTH/3 , HEIGHT/scale - 2*disp);
 		textFields.add(tf1);
@@ -79,12 +81,13 @@ public class CheckOut extends JFrame{
 		label2.setVerticalAlignment(SwingConstants.CENTER);
 		p.add(label2);
 		
+		// Copy no textfield
 		JTextField tf2 = new JTextField();
 		tf2.setBounds(WIDTH/2, HEIGHT*2/scale + disp , WIDTH/3 , HEIGHT/scale - 2*disp);
 		textFields.add(tf2);
 		p.add(tf2);
 		
-        
+        // The textArea for a list of books
         textArea.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(textArea);
         scrollPane.setBounds(WIDTH/6, HEIGHT*3/8 - disp, 2*WIDTH/3, HEIGHT*3/8);
