@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import transactions.SearchBook;
-import transactions.addBook;
+import transactions.AddBook;
 
 public class LibrarianPanel extends JPanel{
 	public LibrarianPanel(){
@@ -32,7 +32,7 @@ public class LibrarianPanel extends JPanel{
 			public void actionPerformed(ActionEvent e)
 			{
 				//Execute when button is pressed
-				new addBook();
+				new AddBook();
 				System.out.println("Add new Book");
 
 			}
