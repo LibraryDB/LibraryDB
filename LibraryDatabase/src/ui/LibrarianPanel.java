@@ -9,8 +9,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import transactions.SearchBook;
 import transactions.AddBook;
+import transactions.SearchBook;
+//import transactions.addBook;
+//import transactions.addBook;
 
 public class LibrarianPanel extends JPanel{
 	public LibrarianPanel(){

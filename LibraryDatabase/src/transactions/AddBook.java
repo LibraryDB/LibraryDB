@@ -87,10 +87,14 @@ public class AddBook extends JFrame{
 						textFields.get(4).getText().trim(),
 						textFields.get(5).getText().trim(),
 						Integer.parseInt(year));
-
-				LibraryDB.getManager().insertBook(b);
-				exitWindow();
-				System.out.println("Submit");
+				
+				try {
+					LibraryDB.getManager().insertBook(b);
+					exitWindow();
+					System.out.println("Submit");
+				} catch (SQLException e1) { 
+					determineError(e1);
+				}
 
 			}
 		});
@@ -104,9 +108,9 @@ public class AddBook extends JFrame{
 		if (e.getMessage().contains("ORA-01400"))
 			popMsg("Error! \nOne of the values are not given. \nPlease try again.");
 		if (e.getMessage().contains("ORA-00001"))
-			popMsg("Error! \nbid already exists! \nPlease try again.");
-		if (e.getMessage().contains("ORA-02291"))
-			popMsg("Error! \ntype must be one of: \nstudent , faculty , or staff");
+			popMsg("Error! \ncall number already exists! \nPlease try again.");
+	//	if (e.getMessage().contains("ORA-02291"))
+		//	popMsg("Error! \ntype must be one of: \nstudent , faculty , or staff");
 
 	}
 

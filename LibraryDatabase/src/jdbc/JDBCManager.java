@@ -60,7 +60,7 @@ public class JDBCManager
 	// **********************************************************
 	// ************************ INSERTS *************************
 	// **********************************************************
-	public void insertBook(Book b){
+	public void insertBook(Book b) throws SQLException{
 		PreparedStatement  ps;
 
 		try
@@ -86,6 +86,7 @@ public class JDBCManager
 			{
 				// undo the insert
 				con.rollback();	
+				throw ex;
 			}
 			catch (SQLException ex2)
 			{
