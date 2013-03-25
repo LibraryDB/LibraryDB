@@ -5,7 +5,11 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -79,17 +83,23 @@ public class AddBorrower extends JFrame{
 			{
 				String sPhone = textFields.get(4).getText().trim();
 				String sSinOrStNo = textFields.get(6).getText().trim();
-				
+				String expiryDate = textFields.get(7).getText().trim();
+
+				if (!isValidDate(expiryDate)) {
+					popMsg("Expiry Date is not a valid date!");
+					return;
+				}
+
 				if (!isNumeric(sPhone)) {
 					popMsg("phone needs to be a number!");
 					return;
 				}
-				
+
 				if (!isNumeric(sSinOrStNo)) {
 					popMsg("SinOrStNo needs to be a number!");
 					return;
 				}
-				
+
 				//Execute when button is pressed
 				Borrower b = new Borrower(
 						0,
@@ -99,7 +109,7 @@ public class AddBorrower extends JFrame{
 						Integer.parseInt(sPhone),
 						textFields.get(5).getText().trim(),
 						Integer.parseInt(sSinOrStNo),
-						textFields.get(7).getText().trim(),
+						expiryDate,
 						textFields.get(8).getText().trim());
 
 				try {
@@ -114,8 +124,22 @@ public class AddBorrower extends JFrame{
 		});
 		p.add(confirmButton);
 		this.add(p);
-		
-		
+
+
+	}
+
+	final static String DATE_FORMAT = "yyyy/MM/dd";
+	
+	protected boolean isValidDate(String date) {
+
+		try {
+			DateFormat df = new SimpleDateFormat(DATE_FORMAT);
+			df.setLenient(false);
+			df.parse(date);
+			return true;
+		} catch (ParseException e) {
+			return false;
+		}
 	}
 
 	// if we get an error , pop-up a msg box and reset text boxes. 
@@ -146,25 +170,25 @@ public class AddBorrower extends JFrame{
 		case 4: return "phone";
 		case 5: return "email address";
 		case 6: return "sin or student #";
-		case 7: return "expiry date";
+		case 7: return "expiry date (yyyy/mm/dd)";
 		case 8: return "type";
 		}
 		return "";
 
 	}
-	
+
 	// check if str is numeric
 	private boolean isNumeric(String str)  
 	{  
-	  try  
-	  {  
-	    int i = Integer.parseInt(str);  
-	  }  
-	  catch(NumberFormatException nfe)  
-	  {  
-	    return false;  
-	  }  
-	  return true;  
+		try  
+		{  
+			int i = Integer.parseInt(str);  
+		}  
+		catch(NumberFormatException nfe)  
+		{  
+			return false;  
+		}  
+		return true;  
 	}
 }
 
