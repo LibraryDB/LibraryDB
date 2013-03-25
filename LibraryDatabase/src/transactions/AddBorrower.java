@@ -100,6 +100,7 @@ public class AddBorrower extends JFrame{
 					return;
 				}
 
+				
 				//Execute when button is pressed
 				Borrower b = new Borrower(
 						0,
