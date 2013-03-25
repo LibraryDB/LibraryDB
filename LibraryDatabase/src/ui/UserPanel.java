@@ -34,6 +34,7 @@ public class UserPanel extends JPanel{
         
         clerkButton.setVerticalTextPosition(AbstractButton.CENTER);
         borrowerButton.setVerticalTextPosition(AbstractButton.CENTER);
+        librarianButton.setVerticalTextPosition(AbstractButton.CENTER);
         
         clerkButton.addActionListener(new ActionListener() {
         	 
@@ -56,13 +57,14 @@ public class UserPanel extends JPanel{
         librarianButton.addActionListener(new ActionListener() {
         	public void actionPerformed (ActionEvent e) {
         		parentFrame.dispose();
-        		//new LibrarianFrame();
+        		new LibrarianFrame();
         	}
         });
 
 		add(label);
 		add(clerkButton);
 		add(borrowerButton);
+		add(librarianButton);
 	}
 	
 
