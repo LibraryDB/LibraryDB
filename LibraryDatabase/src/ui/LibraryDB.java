@@ -174,7 +174,7 @@ public class LibraryDB implements ActionListener
 		manager.insertBorrowerType(new BorrowerType("student",14));
 		manager.insertBorrowerType(new BorrowerType("faculty",84));
 		manager.insertBorrowerType(new BorrowerType("staff",42));		
-		manager.insertBook(new Book("QA1","82746383","The Monster","Someone","pluto",1991));
+		
 		manager.insertBookCopy(new BookCopy("QA1",1,"out"));
 		manager.insertBookCopy(new BookCopy("QA1",2,"out"));
 		manager.insertBookCopy(new BookCopy("QA1",3,"in"));
@@ -191,6 +191,7 @@ public class LibraryDB implements ActionListener
 			manager.insertBorrowing(new Borrowing(0,2,"QA1",4,"2013/03/01",null));
 			manager.insertBorrowing(new Borrowing(0,2,"QA1",5,"2013/03/02",null));
 			manager.insertHoldRequest(new HoldRequest(0,2,"QA1","2013/03/22"));
+			manager.insertBook(new Book("QA1","82746383","The Monster","Someone","pluto",1991));
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
