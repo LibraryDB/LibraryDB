@@ -1134,6 +1134,54 @@ public class JDBCManager
 		}	
 		return false;
 	}
+	
+//	// Determines whether or not the borrower ID exists
+//	public boolean hasBorrower(int bid){
+//		PreparedStatement ps;
+//		try
+//		{
+//			ps = con.prepareStatement("SELECT * FROM borrower WHERE bid = ?");
+//			ps.setString(1, bid);
+//			int rowCount = ps.executeUpdate();
+//			if (rowCount > 0) return true;
+//			ps.close();
+//		}
+//		catch (SQLException ex)
+//		{
+//			System.out.println("Message: " + ex.getMessage());
+//		}	
+//		return false;
+//	}
+		
+	// check if password and borrowerid are matched
+	public boolean checkPassword(String password, int bid){
+		PreparedStatement ps;
+		ResultSet rs;
+		String correctPassword;
+		try
+		{
+			ps = con.prepareStatement("SELECT password FROM borrower WHERE bid = ?");
+			ps.setInt(1, bid);
+			rs = ps.executeQuery();
+			
+			if (rs.next()){
+				correctPassword = rs.getString("password");
+				if (password == correctPassword){
+					return true;
+				}
+				else 
+					return false;
+			}
+			else {
+				throw new SQLException("User doesn't exist!");
+			}
+		}
+		catch (SQLException ex)
+		{
+			System.out.println("Message: " + ex.getMessage());
+		}
+		return false;
+	}
 
 	// returns the bookTimeLimit for borrower with borrower id = bid
 	public int getTimeLimit(int bid) throws SQLException{

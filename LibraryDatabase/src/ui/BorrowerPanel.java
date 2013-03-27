@@ -52,7 +52,7 @@ public class BorrowerPanel extends JPanel {
 			public void actionPerformed(ActionEvent e)
 			{
 				new CheckAccount();
-				System.out.println("Check Out Item");
+				System.out.println("Check Account");
 
 			}
 		});
