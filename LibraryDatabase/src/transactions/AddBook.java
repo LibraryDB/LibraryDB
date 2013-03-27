@@ -17,6 +17,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import model.Book;
+import model.BookCopy;
 import model.Borrower;
 import ui.LibraryDB;
 
@@ -88,15 +89,39 @@ public class AddBook extends JFrame{
 						textFields.get(5).getText().trim(),
 						Integer.parseInt(year));
 				
-				try {
-					LibraryDB.getManager().insertBook(b);
-					exitWindow();
-					System.out.println("Submit");
-				} catch (SQLException e1) { 
-					determineError(e1);
+				BookCopy bcUpdate = new BookCopy(
+						textFields.get(1).getText().trim(),
+						0, "in");
+				System.out.println("Book has been created");
+				String callNumber = b.getCallNumber();
+				Integer countBook = LibraryDB.getManager().countBook(callNumber);
+				if (countBook > 0) { // returns true if book exists
+						try {
+							Integer countBookCopy = LibraryDB.getManager().countBookCopy(callNumber);
+							System.out.println(countBookCopy);
+							BookCopy bc = new BookCopy(b.getCallNumber(), countBookCopy + 1, "in"); // insert book copy instead
+							LibraryDB.getManager().insertBookCopy(bc);
+							System.out.println("This is happening 1");
+							exitWindow();
+							System.out.println("Submit book copy");
+						} catch (SQLException e1) { 
+							determineError(e1);
+						}
+					}
+					else {
+						try {
+							System.out.println("We are trying!");
+							LibraryDB.getManager().insertBook(b); // just insert the book if callnumber doesnt exist
+							exitWindow();
+							System.out.println("Submit book");
+							} catch (SQLException e1) { 
+								determineError(e1);
+							}
+					}
 				}
 
-			}
+
+			
 		});
 		p.add(confirmButton);
 		this.add(p);
