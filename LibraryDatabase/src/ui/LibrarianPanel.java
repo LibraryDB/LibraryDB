@@ -51,6 +51,7 @@ public class LibrarianPanel extends JPanel{
 				//Execute when button is pressed
 				// TODO
 				//new generatePopular();
+				new InsertYearAndNumberFrame();
 				System.out.println("Generating most popular items");
 
 			}
