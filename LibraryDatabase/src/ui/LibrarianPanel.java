@@ -41,17 +41,6 @@ public class LibrarianPanel extends JPanel{
 			}
 		});
 		
-		JButton addCopyButton = new JButton("Add Book Copy");
-		addCopyButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e)
-			{
-				//Execute when button is pressed
-				// TODO
-				//new addBook();
-				System.out.println("Add new Copy of Existing Book");
-
-			}
-		});
 		
 		// Check Account button
 		JButton reportPopularButton = new JButton("Report: Most Popular Items");		
@@ -80,7 +69,6 @@ public class LibrarianPanel extends JPanel{
 		});
 				
 		add(label);
-		add(addCopyButton);
 		add(addBookButton);	
 		add(reportCheckedOut);
 		add(reportPopularButton);
