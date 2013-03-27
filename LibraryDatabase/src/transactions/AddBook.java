@@ -112,7 +112,11 @@ public class AddBook extends JFrame{
 						try {
 							System.out.println("We are trying!");
 							LibraryDB.getManager().insertBook(b); // just insert the book if callnumber doesnt exist
-							//LibraryDB.getManager().insertBookCopy(bcUpdate);
+							// Jimmy: Not quite, we do need to insert a bookcopy. 
+							// A Book isn't exactly a physical object, it's just a call number
+							// A bookcopy is, when we add a new book(which really means bookcopy), check if it currently exists
+							// If not, then add a record for the new callnumber (in book) and then add the new physical book (bookcopy)
+							LibraryDB.getManager().insertBookCopy(bcUpdate);
 							exitWindow();
 							System.out.println("Submit book");
 							} catch (SQLException e1) { 
