@@ -168,7 +168,7 @@ public class CheckOut extends JFrame{
 		
 		String message = "These books are due on " + calendarToString(currentCal) + " :\n";
 		for (int i=0;i<callNumbers.size();i++){
-			message += callNumbers.get(i) + copyNos.get(i) + "\n";
+			message += callNumbers.get(i) + " C" + copyNos.get(i) + "\n";
 		}
 		
 		// deletes the holdrequests
