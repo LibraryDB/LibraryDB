@@ -112,7 +112,7 @@ public class AddBook extends JFrame{
 						try {
 							System.out.println("We are trying!");
 							LibraryDB.getManager().insertBook(b); // just insert the book if callnumber doesnt exist
-							LibraryDB.getManager().insertBookCopy(bcUpdate);
+							//LibraryDB.getManager().insertBookCopy(bcUpdate);
 							exitWindow();
 							System.out.println("Submit book");
 							} catch (SQLException e1) { 
