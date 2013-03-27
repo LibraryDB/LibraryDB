@@ -1,8 +1,8 @@
 package model;
 
 public class BookCopy {
-	String callNumber;
-	int copyNo;
+	String callNumber; // primary key
+	int copyNo; // primary key
 	String status;
 
 	public BookCopy(String callNumber, int copyNo, String status){

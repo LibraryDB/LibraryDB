@@ -1183,6 +1183,8 @@ public class JDBCManager
 
 	}
 	
+
+	
 	public Borrowing getBorrowing(String callNumber, int copyNo){
 		Borrowing b;
 		PreparedStatement ps;

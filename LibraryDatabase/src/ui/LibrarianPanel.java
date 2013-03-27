@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import transactions.AddBook;
+import transactions.ReportCheckedOut;
 import transactions.SearchBook;
 //import transactions.addBook;
 //import transactions.addBook;
@@ -72,7 +73,7 @@ public class LibrarianPanel extends JPanel{
 			{
 				//Execute when button is pressed
 				// TODO
-				//new checkedOutItems();
+				new ReportCheckedOut();
 				System.out.println("Generating all checked out items");
 
 			}
