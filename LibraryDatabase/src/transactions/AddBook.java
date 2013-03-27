@@ -116,7 +116,11 @@ public class AddBook extends JFrame{
 							// A Book isn't exactly a physical object, it's just a call number
 							// A bookcopy is, when we add a new book(which really means bookcopy), check if it currently exists
 							// If not, then add a record for the new callnumber (in book) and then add the new physical book (bookcopy)
-							LibraryDB.getManager().insertBookCopy(bcUpdate);
+							
+							
+							// Jimmy responding to your comment, I commented it out, but you might not have noticed the change when
+							// you were pushing
+							//LibraryDB.getManager().insertBookCopy(bcUpdate);
 							exitWindow();
 							System.out.println("Submit book");
 							} catch (SQLException e1) { 
