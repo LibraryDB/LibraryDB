@@ -1035,6 +1035,18 @@ public class JDBCManager
 		}	
 		return hasSubjects;
 	}
+	
+	public Boolean checkSubject(String callNumber, String subject) {
+		ArrayList<HasSubject> hasSubject = getHasSubject();
+		for (int i = 0; i < hasSubject.size(); i++) {
+			if (hasSubject.get(i).getCallNumber() == callNumber) {
+				if (hasSubject.get(i).getSubject() == subject) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
 	public ArrayList<HoldRequest> getHoldRequest(){
 		ArrayList<HoldRequest> holdRequest = new ArrayList<HoldRequest>();

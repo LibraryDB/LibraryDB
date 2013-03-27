@@ -63,7 +63,8 @@ public class LibrarianPanel extends JPanel{
 			{
 				//Execute when button is pressed
 				// TODO
-				new ReportCheckedOut();
+				//new ReportCheckedOut();
+				new InsertSubjectFrame();
 				System.out.println("Generating all checked out items");
 
 			}
