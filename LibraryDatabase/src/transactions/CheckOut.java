@@ -23,6 +23,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import model.BookCopy;
 import model.Borrower;
 import model.Borrowing;
 
@@ -158,7 +159,7 @@ public class CheckOut extends JFrame{
 				LibraryDB.getManager().insertBorrowing(b);
 				
 				// set the status of the checked out books to "out"
-				LibraryDB.getManager().updateBookCopy(b.getCallNumber(), b.getCopyNo(), "out");
+				LibraryDB.getManager().updateBookCopy(b.getCallNumber(), b.getCopyNo(), BookCopy.OUT);
 			} catch (SQLException e1) { 
 				determineError(e1);
 				return;
@@ -207,12 +208,12 @@ public class CheckOut extends JFrame{
 		}
 		
 		// check if bookcopy is available for borrowing, i.e. status = in.
-		if (LibraryDB.getManager().isBookCopyStatus(callNumber,copyNo,"out")){
+		if (LibraryDB.getManager().isBookCopyStatus(callNumber,copyNo,BookCopy.OUT)){
 			popMsg("Sorry! This book is not available for borrowing.");
 			return;
 		}
 		
-		if (LibraryDB.getManager().isBookCopyStatus(callNumber,copyNo,"on-hold")){
+		if (LibraryDB.getManager().isBookCopyStatus(callNumber,copyNo,BookCopy.ON_HOLD)){
 			if (!isAvailableToBorrower(callNumber)){
 				popMsg("Sorry! This book is not available for borrowing.");
 				return;

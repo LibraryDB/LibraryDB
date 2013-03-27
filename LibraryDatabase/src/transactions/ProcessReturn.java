@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import model.BookCopy;
 import model.Borrowing;
 import model.Fine;
 import model.HoldRequest;
@@ -116,7 +117,7 @@ public class ProcessReturn extends JFrame{
 		}
 
 		// check if bookcopy is available for borrowing, i.e. status = out.
-		if (!LibraryDB.getManager().isBookCopyStatus(callNumber,copyNo,"out")){
+		if (!LibraryDB.getManager().isBookCopyStatus(callNumber,copyNo,BookCopy.OUT)){
 			popMsg("Sorry! This book is not out, please double check call number and copyNo.");
 			return;
 		}
@@ -142,7 +143,7 @@ public class ProcessReturn extends JFrame{
 		// Check if on-hold
 		newStatus = getNewStatus(callNumber);
 
-		if (newStatus.matches("on-hold")){
+		if (newStatus.matches(BookCopy.ON_HOLD)){
 			msg += "Book is placed on-hold. \n";
 		}
 		LibraryDB.getManager().updateBookCopy(callNumber, copyNo, newStatus);
@@ -190,7 +191,7 @@ public class ProcessReturn extends JFrame{
 
 	private String getNewStatus(String callNumber) {
 		List<HoldRequest> requests = LibraryDB.getManager().getHoldRequests(callNumber);
-		if (requests.size() >= 1) return "on-hold";
+		if (requests.size() >= 1) return BookCopy.ON_HOLD;
 		return "in";
 	}
 
