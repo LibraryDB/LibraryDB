@@ -808,6 +808,18 @@ public class JDBCManager
 		}	
 		return books;
 	}
+	
+	public ArrayList<Book> searchBook(String callNumber) {
+		ArrayList<Book> searchbook = new ArrayList<Book>();
+		PreparedStatement  ps;
+		try {
+			ps = con.prepareStatement("select * from book where callnumber = ?");
+			ps.setString(1, callNumber);
+		} catch (SQLException ex) {
+			System.out.println("Message: " + ex.getMessage());
+		}
+		return searchbook;
+	}
 
 	public ArrayList<BookCopy> getBookCopy(){
 		ArrayList<BookCopy> bookcopys = new ArrayList<BookCopy>();
@@ -1196,6 +1208,54 @@ public class JDBCManager
 		{
 			System.out.println("Message from IsBookCopyIn: " + ex.getMessage());
 		}	
+		return false;
+	}
+	
+//	// Determines whether or not the borrower ID exists
+//	public boolean hasBorrower(int bid){
+//		PreparedStatement ps;
+//		try
+//		{
+//			ps = con.prepareStatement("SELECT * FROM borrower WHERE bid = ?");
+//			ps.setString(1, bid);
+//			int rowCount = ps.executeUpdate();
+//			if (rowCount > 0) return true;
+//			ps.close();
+//		}
+//		catch (SQLException ex)
+//		{
+//			System.out.println("Message: " + ex.getMessage());
+//		}	
+//		return false;
+//	}
+		
+	// check if password and borrowerid are matched
+	public boolean checkPassword(String password, int bid){
+		PreparedStatement ps;
+		ResultSet rs;
+		String correctPassword;
+		try
+		{
+			ps = con.prepareStatement("SELECT password FROM borrower WHERE bid = ?");
+			ps.setInt(1, bid);
+			rs = ps.executeQuery();
+			
+			if (rs.next()){
+				correctPassword = rs.getString("password");
+				if (password == correctPassword){
+					return true;
+				}
+				else 
+					return false;
+			}
+			else {
+				throw new SQLException("User doesn't exist!");
+			}
+		}
+		catch (SQLException ex)
+		{
+			System.out.println("Message: " + ex.getMessage());
+		}
 		return false;
 	}
 
