@@ -12,6 +12,7 @@ import javax.swing.SwingConstants;
 
 import transactions.AddBorrower;
 import transactions.CheckOut;
+import transactions.CheckOutHelper;
 import transactions.CheckOverdue;
 import transactions.ProcessReturn;
 
@@ -47,7 +48,7 @@ public class ClerkPanel extends JPanel {
 		checkOutButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				new CheckOut();
+				new CheckOutHelper();
 
 			}
 		});

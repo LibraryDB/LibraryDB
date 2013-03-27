@@ -137,9 +137,9 @@ public class DisplayTable extends JFrame{
 			ArrayList<HoldRequest> hrs = LibraryDB.getManager().getHoldRequest();
 			for (HoldRequest b: hrs){
 				textArea.append("hid: " + b.getHoldId()
-						+ "bid: " + b.getBorrowerId()
-						+ "callNumber: " + b.getCallNumber()
-						+ "issueDate: " + b.getIssueDate());
+						+ " || bid: " + b.getBorrowerId()
+						+ " || callNumber: " + b.getCallNumber()
+						+ " || issueDate: " + b.getIssueDate() + "\n");
 				
 			}
 			break;

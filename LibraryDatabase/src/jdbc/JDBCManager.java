@@ -741,7 +741,7 @@ public class JDBCManager
 
 		try
 		{
-			ps = con.prepareStatement("DELETE FROM holdrequest WHERE holdId = ?");
+			ps = con.prepareStatement("DELETE FROM holdrequest WHERE hid = ?");
 			ps.setString(1, hid);
 
 			int rowCount = ps.executeUpdate();
@@ -1073,8 +1073,8 @@ public class JDBCManager
 
 			while(rs.next())
 			{
-				HoldRequest h = new HoldRequest(rs.getInt("holdId"),
-						rs.getInt("borrowerId"),
+				HoldRequest h = new HoldRequest(rs.getInt("hid"),
+						rs.getInt("bid"),
 						rs.getString("callNumber"),
 						rs.getString("issueDate"));
 
@@ -1211,23 +1211,6 @@ public class JDBCManager
 		return false;
 	}
 	
-//	// Determines whether or not the borrower ID exists
-//	public boolean hasBorrower(int bid){
-//		PreparedStatement ps;
-//		try
-//		{
-//			ps = con.prepareStatement("SELECT * FROM borrower WHERE bid = ?");
-//			ps.setString(1, bid);
-//			int rowCount = ps.executeUpdate();
-//			if (rowCount > 0) return true;
-//			ps.close();
-//		}
-//		catch (SQLException ex)
-//		{
-//			System.out.println("Message: " + ex.getMessage());
-//		}	
-//		return false;
-//	}
 		
 	// check if password and borrowerid are matched
 	public boolean checkPassword(String password, int bid){
@@ -1242,7 +1225,7 @@ public class JDBCManager
 			
 			if (rs.next()){
 				correctPassword = rs.getString("password");
-				if (password == correctPassword){
+				if (password.equals(correctPassword)){
 					return true;
 				}
 				else 
@@ -1394,7 +1377,45 @@ public class JDBCManager
 	}
 
 
+	public String getHidOfHoldRequest(String callNumber,int bid){
+		PreparedStatement ps;
+		ResultSet rs;
+
+		try
+		{
+			ps = con.prepareStatement("SELECT hid FROM holdrequest WHERE bid = ? AND callNumber = ?");
+			ps.setInt(1, bid);
+			ps.setString(2, callNumber);
+			rs = ps.executeQuery();
+			if(rs.next()) return rs.getString("hid");
+			
+			ps.close();
+		}
+		catch (SQLException ex)
+		{
+			System.out.println("Message: " + ex.getMessage());
+		}	
+		return null;
+	}
 	
+	public boolean isValidBid(int bid){
+		PreparedStatement ps;
+
+		try
+		{
+			ps = con.prepareStatement("SELECT * FROM borrower WHERE bid = ?");
+			ps.setInt(1, bid);
+			int rowCount = ps.executeUpdate();
+			if (rowCount > 0) return true;
+			ps.close();
+		}
+		catch (SQLException ex)
+		{
+			System.out.println("Message: " + ex.getMessage());
+		}	
+		return false;
+	
+	}
 
 
 }

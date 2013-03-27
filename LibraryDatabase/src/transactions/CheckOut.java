@@ -7,7 +7,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -34,10 +38,13 @@ public class CheckOut extends JFrame{
 	private List<JTextField> textFields = new ArrayList<JTextField>();	
 	private List<Integer> copyNos = new ArrayList<Integer>();
 	private List<String> callNumbers = new ArrayList<String>();
+	private List<String> hids = new ArrayList<String>();
 	final JTextArea textArea = new JTextArea(5, 20);
+	int bid;
 
-	public CheckOut(){
+	public CheckOut(int bid){
 		super("Add Borrower");
+		this.bid = bid;
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //Exits the window when user clicks "x"
 		initPanel();
 
@@ -105,18 +112,13 @@ public class CheckOut extends JFrame{
 		p.add(addBookButton);
 		
 		// Next Button
-		JButton continueButton = new JButton("Next");
+		JButton continueButton = new JButton("Check Out");
 		continueButton.setBounds(WIDTH*5/8, 6*HEIGHT/8, WIDTH/4, HEIGHT/12);
 		continueButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				// Must check out at least one book
-				if (callNumbers.size() == 0) {
-					popMsg("Need to enter some books!");
-					return;
-				}
-				new CheckOutHelper(callNumbers,copyNos);
-				exitWindow();
+				onClick();
+				
 			}
 		});
 		p.add(continueButton);
@@ -124,6 +126,62 @@ public class CheckOut extends JFrame{
 		this.add(p);
 	}
 
+	private void onClick(){
+		String outDate;
+		int timeLimit = 0;
+		
+		// Must check out at least one book
+		if (callNumbers.size() == 0) {
+			popMsg("Need to enter some books!");
+			return;
+		}
+		
+		try {
+			timeLimit = LibraryDB.getManager().getTimeLimit(bid);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		
+		// Find the current date
+		Date date = new Date();
+		Calendar currentCal = new GregorianCalendar(TimeZone.getTimeZone("PST")) ;
+		currentCal.setTime(date);
+		outDate = calendarToString(currentCal);
+		
+		// currentCal will now store the due date
+		currentCal.add(Calendar.DATE, timeLimit);
+		
+		for (int i=0;i<callNumbers.size();i++){
+			Borrowing b = new Borrowing(0,bid,callNumbers.get(i),copyNos.get(i),outDate,null);
+			try {
+				// create new tuple in borrowing table
+				LibraryDB.getManager().insertBorrowing(b);
+				
+				// set the status of the checked out books to "out"
+				LibraryDB.getManager().updateBookCopy(b.getCallNumber(), b.getCopyNo(), "out");
+			} catch (SQLException e1) { 
+				determineError(e1);
+				return;
+			}
+		}		
+		
+		String message = "These books are due on " + calendarToString(currentCal) + " :\n";
+		for (int i=0;i<callNumbers.size();i++){
+			message += callNumbers.get(i) + copyNos.get(i) + "\n";
+		}
+		
+		// deletes the holdrequests
+		for (String hid: hids){
+			System.out.println(hid);
+			LibraryDB.getManager().deleteHoldRequest(hid);
+		}
+		
+		popMsg(message);
+		this.dispose();
+	}
+	
+	
+	
 	private void addBookOnClick(){
 		
 		String callNumber = textFields.get(0).getText().trim();
@@ -149,9 +207,16 @@ public class CheckOut extends JFrame{
 		}
 		
 		// check if bookcopy is available for borrowing, i.e. status = in.
-		if (!LibraryDB.getManager().isBookCopyStatus(callNumber,copyNo,"in")){
+		if (LibraryDB.getManager().isBookCopyStatus(callNumber,copyNo,"out")){
 			popMsg("Sorry! This book is not available for borrowing.");
 			return;
+		}
+		
+		if (LibraryDB.getManager().isBookCopyStatus(callNumber,copyNo,"on-hold")){
+			if (!isAvailableToBorrower(callNumber)){
+				popMsg("Sorry! This book is not available for borrowing.");
+				return;
+			}
 		}
 		
 		copyNos.add(copyNo);
@@ -161,6 +226,15 @@ public class CheckOut extends JFrame{
 		System.out.println(callNumbers.size());
 	}
 	
+	private boolean isAvailableToBorrower(String callNumber) {
+		String hid = LibraryDB.getManager().getHidOfHoldRequest(callNumber, bid);
+		if (!hid.equals(null)) {
+			hids.add(hid);
+			return true;
+		}
+		return false;
+	}
+
 	// check if str is numeric
 	private boolean isNumeric(String str)  
 	{  
@@ -181,10 +255,32 @@ public class CheckOut extends JFrame{
 			textFields.get(i).setText("");
 	}
 
-	private void exitWindow(){
-		this.dispose();
-	}
+	// Converts Calendar to String in the format of "yyyy/mm/dd"
+		private String calendarToString(Calendar calendar) {
+			int year = calendar.get(Calendar.YEAR);
+			int month = calendar.get(Calendar.MONTH) + 1;
+			int day = calendar.get(Calendar.DAY_OF_MONTH);
+			String result = year + "/"+ month + "/" + day;
+			return result;
+		}
 
+		
+		private void determineError(SQLException e){
+			
+			if (e.getMessage().contains("ORA-01400")) // Null value error when attribute should be non-null
+				popMsg("Error! \nOne of the values are not given. \nPlease try again.");
+			
+			if (e.getMessage().contains("ORA-00001")) // Primary Key Constraint
+				popMsg("Error! \nborid already exists! \nPlease try again.");
+			
+			if (e.getMessage().contains("ORA-02291")) // Foreign Key Constraint
+				popMsg("Error! \nbid does not exist! \nPlease try again.");
+			
+			else // otherwise, I would like to know what the error is!
+				System.out.println(e.getMessage());
+		}
+		
+	
 	private void popMsg(String msg){
 		JOptionPane.showMessageDialog (this, msg);
 	}

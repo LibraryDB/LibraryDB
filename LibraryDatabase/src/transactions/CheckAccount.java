@@ -103,10 +103,6 @@ public class CheckAccount extends JFrame{
 		
 		int bid = Integer.parseInt(textFields.get(0).getText().trim());
 		String password;
-//		if (!isNumeric(textFields.get(1).getText().trim())){
-//			popMsg("copyNo must be a number!");
-//			return;
-//		}
 		password = textFields.get(1).getText().trim();
 		
 		// Check if borrower ID and password match.
@@ -116,51 +112,12 @@ public class CheckAccount extends JFrame{
 		}
 		
 		new CheckAccountHelper(bid,password);
-//		// Check if the bookcopy was put onto the list already
-//		for (int i=0;i<copyNos.size();i++){
-//			if ((copyNos.get(i) == copyNo) && callNumbers.get(i).matches(callNumber)){
-//				popMsg("BookCopy already added to list");
-//				return;
-//			}			
-//		}
-//		
-//		// check if bookcopy is available for borrowing, i.e. status = in.
-//		if (!LibraryDB.getManager().isBookCopyStatus(callNumber,copyNo,"in")){
-//			popMsg("Sorry! This book is not available for borrowing.");
-//			return;
-//		}
-//		
-//		copyNos.add(copyNo);
-//		callNumbers.add(callNumber);
-//		textArea.append(callNumber + " " + copyNo + "\n");
-//		resetTextField();
-//		System.out.println(callNumbers.size());
 	}
 	
 	public void cancelOnClick(){
 		this.dispose();
 	}
-	
-//	// check if str is numeric
-//	private boolean isNumeric(String str)  
-//	{  
-//	  try  
-//	  {  
-//	    int i = Integer.parseInt(str);  
-//	  }  
-//	  catch(NumberFormatException nfe)  
-//	  {  
-//	    return false;  
-//	  }  
-//	  return true;  
-//	}
-//	
-//	// if we get an error , pop-up a msg box and reset text boxes. 
-//	private void resetTextField(){
-//		for (int i=0;i<2;i++)
-//			textFields.get(i).setText("");
-//	}
-	
+		
 	private void popMsg(String msg){
 		JOptionPane.showMessageDialog (this, msg);
 	}

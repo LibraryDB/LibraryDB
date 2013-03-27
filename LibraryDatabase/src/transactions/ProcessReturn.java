@@ -149,8 +149,6 @@ public class ProcessReturn extends JFrame{
 		
 		popMsg(msg);
 		this.dispose();
-
-
 	}
 	
 	private Calendar stringToCalendar(String str){
