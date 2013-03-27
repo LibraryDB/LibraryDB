@@ -3,6 +3,7 @@ package transactions;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
@@ -48,14 +49,37 @@ public class ReportCheckedOut extends JFrame{
 	private void initList(){
 		
         listModel = new DefaultListModel();
-        for (int i=0;i<checkedOutBooks.size();i++){
+//        for (int i=0;i<checkedOutBooks.size();i++){
+//        	Borrowing b = checkedOutBooks.get(i);
+//        	String msg = 
+//        			"CallNumber " + b.getCallNumber() + 
+//        			" Checked Out: " + b.getOutDate() + 
+//        		        	" Due Date:" + b.getInDate();
+//        	listModel.addElement(msg);
+//        }
+        
+        DefaultListModel allCallNumber = new DefaultListModel();
+        ArrayList<String> allCallNumberAsString = new ArrayList<String>();
+        for (int i = 0; i < checkedOutBooks.size(); i++) {
         	Borrowing b = checkedOutBooks.get(i);
-        	String msg = 
-        			"CallNumber " + b.getCallNumber() + 
-        			" Checked Out: " + b.getOutDate() + 
-        		        	" Due Date:" + b.getInDate();
-        	listModel.addElement(msg);
+        	String callNumber = b.getCallNumber();
+        	allCallNumber.addElement(callNumber);
+        	allCallNumberAsString.add(callNumber);
         }
+        Collections.sort(allCallNumberAsString);
+        for (int i = 0; i < allCallNumberAsString.size(); i++) {
+        	for (int j = 0; j < checkedOutBooks.size(); j++) {
+        		if (allCallNumberAsString.get(i) == checkedOutBooks.get(j).getCallNumber()) {
+        			Borrowing b = checkedOutBooks.get(j);
+        			String msg = 
+                			"CallNumber " + b.getCallNumber() + 
+                			" Checked Out: " + b.getOutDate() + 
+                		        	" Due Date:" + b.getInDate();
+                	listModel.addElement(msg);
+        		}
+        	}
+        }
+        
 	}
 	
 	private void initPanel(){
