@@ -20,6 +20,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -193,13 +194,14 @@ public class CheckOverdue extends JFrame{
 	
 	// Send email buttons
 	private void onClickSendSelected() {
-		// TODO Auto-generated method stub
-		
+		int n = selected.size();
+		popMsg("Email Sent to the borrowers of the " + n + " selected Borrowings");	
+		this.dispose();
 	}
 
 	private void onClickSendAll() {
-		// TODO Auto-generated method stub
-		
+		popMsg("Email sent to the borrowers of all " + overdues.size() + " Borrowings");
+		this.dispose();
 	}
 	
 	// Returns list of overdue Borrowings
@@ -242,5 +244,9 @@ public class CheckOverdue extends JFrame{
 		cal.set(year, month, date);
 		return cal;
 		
+	}
+	
+	private void popMsg(String msg){
+		JOptionPane.showMessageDialog (this, msg);
 	}
 }

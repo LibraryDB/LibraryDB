@@ -17,6 +17,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import model.Book;
+import model.BookCopy;
 import model.Borrower;
 import ui.LibraryDB;
 
@@ -87,12 +88,41 @@ public class AddBook extends JFrame{
 						textFields.get(4).getText().trim(),
 						textFields.get(5).getText().trim(),
 						Integer.parseInt(year));
+				
+				BookCopy bcUpdate = new BookCopy(
+						textFields.get(1).getText().trim(),
+						1, "in");
+				System.out.println("Book has been created");
+				String callNumber = b.getCallNumber();
+				Integer countBook = LibraryDB.getManager().countBook(callNumber);
+				if (countBook > 0) { // returns true if book exists
+						try {
+							Integer countBookCopy = LibraryDB.getManager().countBookCopy(callNumber);
+							System.out.println(countBookCopy);
+							BookCopy bc = new BookCopy(b.getCallNumber(), countBookCopy + 1, "in"); // insert book copy instead
+							LibraryDB.getManager().insertBookCopy(bc);
+							System.out.println("This is happening 1");
+							exitWindow();
+							System.out.println("Submit book copy");
+						} catch (SQLException e1) { 
+							determineError(e1);
+						}
+					}
+					else {
+						try {
+							System.out.println("We are trying!");
+							LibraryDB.getManager().insertBook(b); // just insert the book if callnumber doesnt exist
+							LibraryDB.getManager().insertBookCopy(bcUpdate);
+							exitWindow();
+							System.out.println("Submit book");
+							} catch (SQLException e1) { 
+								determineError(e1);
+							}
+					}
+				}
 
-				LibraryDB.getManager().insertBook(b);
-				exitWindow();
-				System.out.println("Submit");
 
-			}
+			
 		});
 		p.add(confirmButton);
 		this.add(p);
@@ -104,9 +134,9 @@ public class AddBook extends JFrame{
 		if (e.getMessage().contains("ORA-01400"))
 			popMsg("Error! \nOne of the values are not given. \nPlease try again.");
 		if (e.getMessage().contains("ORA-00001"))
-			popMsg("Error! \nbid already exists! \nPlease try again.");
-		if (e.getMessage().contains("ORA-02291"))
-			popMsg("Error! \ntype must be one of: \nstudent , faculty , or staff");
+			popMsg("Error! \ncall number already exists! \nPlease try again.");
+	//	if (e.getMessage().contains("ORA-02291"))
+		//	popMsg("Error! \ntype must be one of: \nstudent , faculty , or staff");
 
 	}
 

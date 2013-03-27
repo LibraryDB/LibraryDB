@@ -60,7 +60,7 @@ public class JDBCManager
 	// **********************************************************
 	// ************************ INSERTS *************************
 	// **********************************************************
-	public void insertBook(Book b){
+	public void insertBook(Book b) throws SQLException{
 		PreparedStatement  ps;
 
 		try
@@ -86,6 +86,7 @@ public class JDBCManager
 			{
 				// undo the insert
 				con.rollback();	
+				throw ex;
 			}
 			catch (SQLException ex2)
 			{
@@ -94,8 +95,39 @@ public class JDBCManager
 			}
 		}
 	}
+	public Integer countBook(String callNumber){
+		PreparedStatement  ps;
 
-	public void insertBookCopy(BookCopy bc){
+		try
+		{
+			ps = con.prepareStatement("SELECT * FROM book WHERE callnumber = ?");
+			ps.setString(1, callNumber);
+
+			int rowCount = ps.executeUpdate();
+
+			return rowCount;
+
+
+		}
+
+		catch (SQLException ex)
+		{
+			System.out.println("Message: " + ex.getMessage());
+
+			try 
+			{
+				con.rollback();	
+			}
+			catch (SQLException ex2)
+			{
+				System.out.println("Message: " + ex2.getMessage());
+				System.exit(-1);
+			}
+		}
+		return 0;
+	}
+
+	public void insertBookCopy(BookCopy bc) throws SQLException{
 		PreparedStatement ps;
 		try
 		{
@@ -126,7 +158,39 @@ public class JDBCManager
 			}
 		}
 	}
+	public Integer countBookCopy(String callNumber){
+		PreparedStatement  ps;
 
+		try
+		{
+			ps = con.prepareStatement("SELECT * FROM bookcopy WHERE callNumber = ?");
+			ps.setString(1, callNumber);
+			
+			int rowCount = ps.executeUpdate();
+
+			return rowCount;
+
+
+		}
+
+		catch (SQLException ex)
+		{
+			System.out.println("Message: " + ex.getMessage());
+
+			try 
+			{
+				con.rollback();	
+			}
+			catch (SQLException ex2)
+			{
+				System.out.println("Message: " + ex2.getMessage());
+				System.exit(-1);
+			}
+		}
+		return 0;
+		
+	
+	}
 	public void insertBorrower(Borrower b) throws SQLException
 	{
 		PreparedStatement  ps;
@@ -1241,6 +1305,8 @@ public class JDBCManager
 		return result;
 
 	}
+	
+
 	
 	public Borrowing getBorrowing(String callNumber, int copyNo){
 		Borrowing b;

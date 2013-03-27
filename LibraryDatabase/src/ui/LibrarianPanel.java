@@ -9,8 +9,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import transactions.SearchBook;
 import transactions.AddBook;
+import transactions.ReportCheckedOut;
+import transactions.ReportCheckedOutHelper;
+import transactions.SearchBook;
+//import transactions.addBook;
+//import transactions.addBook;
 
 public class LibrarianPanel extends JPanel{
 	public LibrarianPanel(){
@@ -38,17 +42,6 @@ public class LibrarianPanel extends JPanel{
 			}
 		});
 		
-		JButton addCopyButton = new JButton("Add Book Copy");
-		addCopyButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e)
-			{
-				//Execute when button is pressed
-				// TODO
-				//new addBook();
-				System.out.println("Add new Copy of Existing Book");
-
-			}
-		});
 		
 		// Check Account button
 		JButton reportPopularButton = new JButton("Report: Most Popular Items");		
@@ -70,14 +63,13 @@ public class LibrarianPanel extends JPanel{
 			{
 				//Execute when button is pressed
 				// TODO
-				//new checkedOutItems();
+				new ReportCheckedOut();
 				System.out.println("Generating all checked out items");
 
 			}
 		});
 				
 		add(label);
-		add(addCopyButton);
 		add(addBookButton);	
 		add(reportCheckedOut);
 		add(reportPopularButton);

@@ -138,8 +138,9 @@ public class LibraryDB implements ActionListener
 			// if the username and password are valid, 
 			// remove the login window and display the User Frame 
 			loginFrame.dispose();
-			userFrame = new UserFrame();  
-			initTableValues(); 
+			userFrame = new UserFrame();
+			new DisplayDB();
+			//initTableValues(); 
 			//TODO
 		}
 		else
@@ -174,16 +175,13 @@ public class LibraryDB implements ActionListener
 		manager.insertBorrowerType(new BorrowerType("student",14));
 		manager.insertBorrowerType(new BorrowerType("faculty",84));
 		manager.insertBorrowerType(new BorrowerType("staff",42));		
-		manager.insertBook(new Book("QA1","82746383","The Monster","Someone","pluto",1991));
-		manager.insertBookCopy(new BookCopy("QA1",1,"out"));
-		manager.insertBookCopy(new BookCopy("QA1",2,"out"));
-		manager.insertBookCopy(new BookCopy("QA1",3,"in"));
-		manager.insertBookCopy(new BookCopy("QA1",4,"out"));
-		manager.insertBookCopy(new BookCopy("QA1",5,"out"));
-		manager.insertBookCopy(new BookCopy("QA1",6,"in"));
+		
+
 		
 		try {
 
+			manager.insertBook(new Book("QA1","82746383","The Monster","Someone","pluto",1991));
+			
 			manager.insertBorrower(new Borrower(0,"b","c","d",604,"f",735,"2014/01/01","student"));
 			manager.insertBorrowing(new Borrowing(0,2,"QA1",1,"2013/01/01",null)); 
 			manager.insertBorrowing(new Borrowing(0,2,"QA1",2,"2013/03/19",null));
@@ -191,6 +189,14 @@ public class LibraryDB implements ActionListener
 			manager.insertBorrowing(new Borrowing(0,2,"QA1",4,"2013/03/01",null));
 			manager.insertBorrowing(new Borrowing(0,2,"QA1",5,"2013/03/02",null));
 			manager.insertHoldRequest(new HoldRequest(0,2,"QA1","2013/03/22"));
+			
+			manager.insertBookCopy(new BookCopy("QA1",1,"out"));
+			manager.insertBookCopy(new BookCopy("QA1",2,"out"));
+			manager.insertBookCopy(new BookCopy("QA1",3,"in"));
+			manager.insertBookCopy(new BookCopy("QA1",4,"out"));
+			manager.insertBookCopy(new BookCopy("QA1",5,"out"));
+			manager.insertBookCopy(new BookCopy("QA1",6,"in"));
+			
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
