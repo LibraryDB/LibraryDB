@@ -120,7 +120,9 @@ public class AddBook extends JFrame{
 							
 							// Jimmy responding to your comment, I commented it out, but you might not have noticed the change when
 							// you were pushing
-							//LibraryDB.getManager().insertBookCopy(bcUpdate);
+							
+							// So yeah, I was saying this line SHOULD BE HERE because we do want to make a new tuple for bookcopy. 
+							LibraryDB.getManager().insertBookCopy(bcUpdate);
 							exitWindow();
 							System.out.println("Submit book");
 							} catch (SQLException e1) { 
