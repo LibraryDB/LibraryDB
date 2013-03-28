@@ -959,7 +959,7 @@ public class JDBCManager
 		try
 		{
 			stmt = con.createStatement();
-			rs = stmt.executeQuery("SELECT * FROM fine WHERE bid=?");
+			rs = stmt.executeQuery("SELECT * FROM fine WHERE fid=?");
 
 			while(rs.next())
 			{
