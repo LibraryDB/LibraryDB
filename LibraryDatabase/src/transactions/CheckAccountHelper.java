@@ -7,6 +7,8 @@ import javax.swing.*;
 
 import model.Book;
 import model.Borrower;
+import model.Borrowing;
+import model.Fine;
 import ui.LibraryDB;
 
 import java.sql.*;
@@ -56,6 +58,16 @@ public class CheckAccountHelper extends JFrame {
 		JTextArea ta0 = new JTextArea();
 		ta0.setBounds(scale, HEIGHT*1/scale , WIDTH-2*scale , HEIGHT*2/scale);
 		ta0.setEditable(false);
+		ArrayList<Borrowing> borrowings = LibraryDB.getManager().getBorrowingByID(bid);
+		for (Borrowing borrowing: borrowings){
+			ArrayList<Book> books = LibraryDB.getManager().searchBookByCallID(borrowing.getCallNumber());
+			Book book = books.get(0);
+			ta0.append("Call No.: " + borrowing.getCallNumber()
+					+ " || Copy No.: " + borrowing.getBid() 
+					+ " || Title: " + book.getTitle()
+					+ " || Out Date: " + borrowing.getOutDate() 
+					+ "\n");
+		}
 		textAreas.add(ta0);
 		p.add(ta0);
 		
@@ -69,6 +81,16 @@ public class CheckAccountHelper extends JFrame {
 		JTextArea ta1 = new JTextArea();
 		ta1.setBounds(scale, HEIGHT*4/scale , WIDTH-2*scale , HEIGHT*2/scale);
 		ta1.setEditable(false);
+		ArrayList<Fine> fines = LibraryDB.getManager().getFineByID(bid);
+		for (Fine fine: fines){
+			// show fines that are not paid yet
+			if (fine.getPaidDate() == null){
+				ta1.append("Fine ID: " + fine.getFid()
+						+ " || Amount: " + fine.getAmount() 
+						+ " || Issue Date: " + fine.getIssueDate() 
+						+ "\n");
+			}
+		}
 		textAreas.add(ta1);
 		p.add(ta1);
 		
@@ -96,12 +118,12 @@ public class CheckAccountHelper extends JFrame {
 		ta2.setEditable(false);
 		ArrayList<Book> books = LibraryDB.getManager().getBookOnHold(bid);
 		for (Book book : books){
-			ta2.append("callNumber: " + book.getCallNumber()
-					+ " || isbn: " + book.getIsbn() 
-					+ " || title: " + book.getTitle()
-					+ " || mainAuthor: " + book.getMainAuthor()
-					+ " || publisher: " + book.getPublisher()
-					+ " || year: " + book.getYear() + "\n");
+			ta2.append("Call Number: " + book.getCallNumber()
+					+ " || ISBN: " + book.getIsbn() 
+					+ " || Title: " + book.getTitle()
+					+ " || Main Author: " + book.getMainAuthor()
+					+ " || Publisher: " + book.getPublisher()
+					+ " || Year: " + book.getYear() + "\n");
 		}
 		textAreas.add(ta2);
 		p.add(ta2);

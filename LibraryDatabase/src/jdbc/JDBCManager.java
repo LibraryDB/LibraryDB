@@ -949,18 +949,17 @@ public class JDBCManager
 		}	
 		return borrowings;
 	}
-
-
+	
+	
 	public ArrayList<Fine> getFine(){
 		ArrayList<Fine> fines = new ArrayList<Fine>();
-		Statement  stmt;
+		Statement stmt;
 		ResultSet  rs;
 
 		try
 		{
 			stmt = con.createStatement();
-
-			rs = stmt.executeQuery("SELECT * FROM fine");
+			rs = stmt.executeQuery("SELECT * FROM fine WHERE bid=?");
 
 			while(rs.next())
 			{
@@ -975,6 +974,39 @@ public class JDBCManager
 			}
 
 			stmt.close();
+		}
+		catch (SQLException ex)
+		{
+			System.out.println("Message: " + ex.getMessage());
+		}	
+		return fines;
+	}
+
+	// get Fine record by BorrowerID
+	public ArrayList<Fine> getFineByID(int bid){
+		ArrayList<Fine> fines = new ArrayList<Fine>();
+		PreparedStatement ps;
+		ResultSet  rs;
+
+		try
+		{
+			ps = con.prepareStatement("SELECT * FROM fine WHERE bid=?");
+			ps.setInt(1, bid);
+			rs = ps.executeQuery();
+
+			while(rs.next())
+			{
+
+				Fine f = new Fine(rs.getInt("fid"),
+						rs.getInt("amount"),
+						rs.getString("issueDate"),
+						rs.getString("paidDate"),
+						rs.getInt("borid"));
+				fines.add(f);
+
+			}
+
+			ps.close();
 		}
 		catch (SQLException ex)
 		{
@@ -1288,7 +1320,39 @@ public class JDBCManager
 
 	}
 	
+	// get Borrowing record by Borrower ID
+	public ArrayList<Borrowing> getBorrowingByID(int bid){
+		ArrayList<Borrowing> borrowings = new ArrayList<Borrowing>();
+		PreparedStatement  ps;
+		ResultSet  rs;
 
+		try
+		{
+			ps = con.prepareStatement("SELECT * FROM borrowing WHERE bid = ?");
+			ps.setInt(1, bid);
+			rs = ps.executeQuery();
+
+			while(rs.next())
+			{
+
+				Borrowing b = new Borrowing(rs.getInt("borid"),
+						rs.getInt("bid"),
+						rs.getString("callNumber"), 
+						rs.getInt("copyNo"), 
+						rs.getString("outDate"), 
+						rs.getString("inDate"));
+				borrowings.add(b);
+
+			}
+
+			ps.close();
+		}
+		catch (SQLException ex)
+		{
+			System.out.println("Message: " + ex.getMessage());
+		}	
+		return borrowings;
+	}
 	
 	public Borrowing getBorrowing(String callNumber, int copyNo){
 		Borrowing b;
@@ -1381,8 +1445,6 @@ public class JDBCManager
 		ResultSet  rs;
 		String callNumber;
 		
-		System.out.println(bid);
-
 		try
 		{
 			ps = con.prepareStatement("SELECT callNumber FROM holdrequest WHERE bid = ?");
@@ -1391,7 +1453,7 @@ public class JDBCManager
 
 			while(rs.next())
 			{
-				callNumber = rs.getString(0);
+				callNumber = rs.getString(1);
 				books = this.searchBookByCallID(callNumber);
 			}
 
