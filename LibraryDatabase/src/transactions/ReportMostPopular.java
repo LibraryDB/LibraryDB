@@ -37,6 +37,9 @@ public class ReportMostPopular extends JFrame{
 	private Integer year;
 	private Integer number;
 	private List<Book> uniqueBooks;
+	private List<String> callNumberList = new ArrayList<String>();
+	//List<Integer> callNumberFreqList = new ArrayList<Integer>();
+	private Map<String, Integer> map = new HashMap<String, Integer>();
 	
 	public ReportMostPopular(Integer year, Integer number) {
 		super("Report of most popular items");
@@ -97,25 +100,43 @@ public class ReportMostPopular extends JFrame{
 	}
 	
 	private List<Book> createListByCount() {
-		//List<String> callNumberList = new ArrayList<String>();
-		//List<Integer> callNumberFreqList = new ArrayList<Integer>();
-		Map<String, Integer> map = new HashMap<String, Integer>();
-		Map<String, Integer> sMap = new TreeMap<String, Integer>();
-		
+
+			
 		for (int i = 0; i < checkedOutBooksInYear.size(); i++) {
 			Borrowing b = checkedOutBooksInYear.get(i);
 			String currentCallNumber = b.getCallNumber();
 			Integer currentCallNumberFrequency = countUniqueItems(currentCallNumber);
-//			callNumberList.add(currentCallNumber);
+			
 //			callNumberFreqList.add(currentCallNumberFrequency);
-			map.put(currentCallNumber, currentCallNumberFrequency);
+			if (currentCallNumberFrequency > number) {
+				map.put(currentCallNumber, currentCallNumberFrequency);
+				callNumberList.add(currentCallNumber);
+			}
+			
 		}
-		sMap.putAll(map);
 		return null;
 	}
 	
+	private String max() {
+		Integer max = 0;
+		Integer max_c = 0;
+		String callNumber = null;
+		String callNumber_c;
+		for (int i = 0; i < callNumberList.size(); i++) {
+			max_c = map.get(callNumberList.get(i));
+			if (Math.max(max_c, max) == max_c) {
+				callNumber = callNumberList.get(i);
+			}
+		}
+		//map.remove(callNumber);
+		return callNumber;
+	}
+	
 	private void initList(){
+		
+		
 		listModel = new DefaultListModel();
+		
 	        for (int i=0;i<checkedOutBooksInYear.size();i++){
 	        	Borrowing b = checkedOutBooksInYear.get(i);
 //	        	if (LibraryDB.getManager().checkSubject(b.getCallNumber(), subject)) {
