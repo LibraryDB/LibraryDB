@@ -14,7 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import transactions.SearchBooks;
+import transactions.SearchBook;
 import transactions.CheckAccount;
 import transactions.HoldRequest;
 import transactions.PayFine;
@@ -40,7 +40,7 @@ public class BorrowerPanel extends JPanel {
 		addBorrowerButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				new SearchBooks();
+				new SearchBook();
 				System.out.println("Add new Borrower");
 
 			}

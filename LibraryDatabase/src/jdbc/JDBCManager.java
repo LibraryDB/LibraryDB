@@ -983,15 +983,15 @@ public class JDBCManager
 	}
 
 	// get Fine record by BorrowerID
-	public ArrayList<Fine> getFineByID(int bid){
+	public ArrayList<Fine> getFineByID(int borid){
 		ArrayList<Fine> fines = new ArrayList<Fine>();
 		PreparedStatement ps;
 		ResultSet  rs;
 
 		try
 		{
-			ps = con.prepareStatement("SELECT * FROM fine WHERE bid=?");
-			ps.setInt(1, bid);
+			ps = con.prepareStatement("SELECT * FROM fine WHERE borid=?");
+			ps.setInt(1, borid);
 			rs = ps.executeQuery();
 
 			while(rs.next())

@@ -75,26 +75,26 @@ public class CheckAccount extends JFrame{
 		p.add(tf2);
 		
         // Confirm Button
-		JButton addBookButton = new JButton("Confirm");
-		addBookButton.setBounds(WIDTH/8, 5*HEIGHT/8, WIDTH/4, HEIGHT/10);
-		addBookButton.addActionListener(new ActionListener() {
+		JButton confirmButton = new JButton("Confirm");
+		confirmButton.setBounds(WIDTH/8, 5*HEIGHT/8, WIDTH/4, HEIGHT/10);
+		confirmButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
 				confirmOnClick();	
 			}
 		});
-		p.add(addBookButton);
+		p.add(confirmButton);
 		
 		// Cancel Button
-		JButton continueButton = new JButton("Cancel");
-		continueButton.setBounds(WIDTH*5/8, 5*HEIGHT/8, WIDTH/4, HEIGHT/10);
-		continueButton.addActionListener(new ActionListener() {
+		JButton cancelButton = new JButton("Cancel");
+		cancelButton.setBounds(WIDTH*5/8, 5*HEIGHT/8, WIDTH/4, HEIGHT/10);
+		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
 				cancelOnClick();
 			}
 		});
-		p.add(continueButton);
+		p.add(cancelButton);
 		
 		this.add(p);
 	}
@@ -111,7 +111,7 @@ public class CheckAccount extends JFrame{
 			return;
 		}
 		
-		new CheckAccountHelper(bid,password);
+		new CheckAccountHelper(bid);
 	}
 	
 	public void cancelOnClick(){

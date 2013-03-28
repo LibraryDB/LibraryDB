@@ -23,12 +23,10 @@ public class CheckAccountHelper extends JFrame {
 	private List<JTextArea> textAreas = new ArrayList<JTextArea>();
 	private List<JTextField> textFields = new ArrayList<JTextField>();	
 	private int bid;
-	private String password;
 		
-	public CheckAccountHelper(int bid, String password) {
+	public CheckAccountHelper(int bid) {
 		super("Account Information");
 		this.bid = bid;
-		this.password = password;
 		
 		initPanel();
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //Exits the window when user clicks "x"
@@ -81,11 +79,13 @@ public class CheckAccountHelper extends JFrame {
 		JTextArea ta1 = new JTextArea();
 		ta1.setBounds(scale, HEIGHT*4/scale , WIDTH-2*scale , HEIGHT*2/scale);
 		ta1.setEditable(false);
-		ArrayList<Fine> fines = LibraryDB.getManager().getFineByID(bid);
+		int borid = LibraryDB.getManager().getBorrowingByID(bid).get(0).getBorid();
+		ArrayList<Fine> fines = LibraryDB.getManager().getFineByID(borid);
 		for (Fine fine: fines){
 			// show fines that are not paid yet
 			if (fine.getPaidDate() == null){
 				ta1.append("Fine ID: " + fine.getFid()
+						+ " || Borrowing ID: " + fine.getBorid()
 						+ " || Amount: " + fine.getAmount() 
 						+ " || Issue Date: " + fine.getIssueDate() 
 						+ "\n");
