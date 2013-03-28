@@ -807,18 +807,6 @@ public class JDBCManager
 		}	
 		return books;
 	}
-	
-	public ArrayList<Book> searchBook(String callNumber) {
-		ArrayList<Book> searchbook = new ArrayList<Book>();
-		PreparedStatement  ps;
-		try {
-			ps = con.prepareStatement("select * from book where callnumber = ?");
-			ps.setString(1, callNumber);
-		} catch (SQLException ex) {
-			System.out.println("Message: " + ex.getMessage());
-		}
-		return searchbook;
-	}
 
 	public ArrayList<BookCopy> getBookCopy(){
 		ArrayList<BookCopy> bookcopys = new ArrayList<BookCopy>();
@@ -1354,6 +1342,66 @@ public class JDBCManager
 		}
 		
 		return result;
+	}
+	
+	// search a book by its callNumber
+	public ArrayList<Book> searchBookByCallID(String callNumber) {
+		ArrayList<Book> books = new ArrayList<Book>();
+		PreparedStatement  ps;
+		ResultSet rs;
+		
+		try {
+			ps = con.prepareStatement("select * from book where callnumber = ?");
+			ps.setString(1, callNumber);
+			rs = ps.executeQuery();
+			
+			while(rs.next())
+			{
+
+				Book b = new Book(rs.getString("callnumber"),
+						rs.getString("isbn"),
+						rs.getString("title"),
+						rs.getString("mainauthor"),
+						rs.getString("publisher"),
+						rs.getInt("year"));
+				books.add(b);
+
+			}
+			ps.close();
+		} catch (SQLException ex) {
+			System.out.println("Message: " + ex.getMessage());
+		}
+		return books;
+	}
+	
+	// given a borrower ID, return the list of books the borrower put an OnHold request
+	public ArrayList<Book> getBookOnHold(int bid){
+		ArrayList<Book> books = new ArrayList<Book>();
+		PreparedStatement ps;
+		ResultSet  rs;
+		String callNumber;
+		
+		System.out.println(bid);
+
+		try
+		{
+			ps = con.prepareStatement("SELECT callNumber FROM holdrequest WHERE bid = ?");
+			ps.setInt(1, bid);
+			rs = ps.executeQuery();
+
+			while(rs.next())
+			{
+				callNumber = rs.getString(0);
+				books = this.searchBookByCallID(callNumber);
+			}
+
+			ps.close();
+		}
+		catch (SQLException ex)
+		{
+			System.out.println("Message: " + ex.getMessage());
+		}	
+		return books;
 	}
 	
 	// bid must be a valid borrower ID
