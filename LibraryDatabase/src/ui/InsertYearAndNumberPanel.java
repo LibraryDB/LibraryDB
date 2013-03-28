@@ -14,6 +14,7 @@ import javax.swing.SwingConstants;
 
 import transactions.ReportCheckedOut;
 import transactions.ReportCheckedOutHelper;
+import transactions.ReportMostPopular;
 
 public class InsertYearAndNumberPanel extends JPanel{
 	private List<JTextField> textFields = new ArrayList<JTextField>();	
@@ -36,15 +37,13 @@ public class InsertYearAndNumberPanel extends JPanel{
 			public void actionPerformed(ActionEvent e)
 			{
 				//Execute when button is pressed
-				String subjectText = textFields.get(0).getText().trim();
+				Integer year = Integer.parseInt(textFields.get(0).getText().trim());
+				Integer number = Integer.parseInt(textFields.get(1).getText().trim());
 				
-				System.out.println(subjectText + subjectText.length());
-				if (subjectText.length() != 0) {
-					new ReportCheckedOutHelper(subjectText);
-				}
-				else
-					new ReportCheckedOut();
+				System.out.println(year + " " + number);
+				//new ReportCheckedOut();
 				//new AddBook();
+				new ReportMostPopular(year, number);
 				System.out.println("Possibly insert subject");
 
 			}
