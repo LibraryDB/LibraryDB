@@ -2,9 +2,11 @@ package jdbc;
 // We need to import the java.sql package to use JDBC
 import java.io.IOException;
 import java.sql.*;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import model.*;
 
@@ -949,6 +951,60 @@ public class JDBCManager
 		}	
 		return borrowings;
 	}
+	
+	//=============================================================
+	//final static String DATE_FORMAT = "yyyy/MM/dd";
+	public ArrayList<Borrowing> getBorrowingByYear(Integer year) {
+		ArrayList<Borrowing> borrowings = new ArrayList<Borrowing>();
+		Statement  stmt;
+		ResultSet  rs;
+
+		try
+		{
+			stmt = con.createStatement();
+
+			rs = stmt.executeQuery("SELECT * FROM borrowing");
+
+			while(rs.next())
+			{
+				
+				Integer out = stringToCalendarYear(rs.getString("outDate"));
+				Integer in = stringToCalendarYear(rs.getString("inDate"));
+				
+				if (in == year & out == year) {
+					Borrowing b = new Borrowing(rs.getInt("borid"),
+							rs.getInt("bid"),
+							rs.getString("callNumber"), 
+							rs.getInt("copyNo"), 
+							rs.getString("outDate"), 
+							rs.getString("inDate"));
+					borrowings.add(b);
+				}
+
+				
+
+			}
+
+			stmt.close();
+		}
+		catch (SQLException ex)
+		{
+			System.out.println("Message: " + ex.getMessage());
+		}
+		return borrowings;
+		
+	}
+	private Integer stringToCalendarYear(String str){
+		String parts[] = str.split("/");
+		int year = Integer.parseInt(parts[0]);
+		int month = Integer.parseInt(parts[1]) - 1;
+		int date = Integer.parseInt(parts[2]);
+		Calendar cal = Calendar.getInstance();
+		cal.set(year, month, date);
+		return year;
+		
+	}
+	//=======================================
 	
 	
 	public ArrayList<Fine> getFine(){
