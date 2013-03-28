@@ -1056,7 +1056,7 @@ public class JDBCManager
 		{
 			stmt = con.createStatement();
 
-			rs = stmt.executeQuery("SELECT * FROM fine");
+			rs = stmt.executeQuery("SELECT * FROM holdrequest");
 
 			while(rs.next())
 			{

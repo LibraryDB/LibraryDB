@@ -13,6 +13,7 @@ import model.BookCopy;
 import model.Borrower;
 import model.BorrowerType;
 import model.Borrowing;
+import model.Fine;
 import model.HoldRequest;
 
 import java.awt.*;
@@ -181,21 +182,27 @@ public class LibraryDB implements ActionListener
 		try {
 
 			manager.insertBook(new Book("QA1","82746383","The Monster","Someone","pluto",1991));
-			
+			manager.insertBook(new Book("QA2","18274","NHL","Jimmy Zhang","Sidney Crosby",2014));
 			manager.insertBorrower(new Borrower(0,"b","c","d",604,"f",735,"2014/01/01","student"));
+			manager.insertBorrower(new Borrower(0,"password","Jimmy Zhang","Surrey",604720,"jimmy@zhang.com",735,"9999/01/01","faculty"));
 			manager.insertBookCopy(new BookCopy("QA1",1,BookCopy.OUT));
 			manager.insertBookCopy(new BookCopy("QA1",2,BookCopy.OUT));
 			manager.insertBookCopy(new BookCopy("QA1",3,BookCopy.ON_HOLD));
 			manager.insertBookCopy(new BookCopy("QA1",4,BookCopy.OUT));
 			manager.insertBookCopy(new BookCopy("QA1",5,BookCopy.OUT));
 			manager.insertBookCopy(new BookCopy("QA1",6,BookCopy.ON_HOLD));
+			manager.insertBookCopy(new BookCopy("QA2",1,BookCopy.IN));
 			
+			manager.insertBorrowing(new Borrowing(0,3,"QA2",1,"2013/01/02","2013/02/26"));
 			manager.insertBorrowing(new Borrowing(0,2,"QA1",1,"2013/01/01",null)); 
 			manager.insertBorrowing(new Borrowing(0,2,"QA1",2,"2013/03/19",null));
 			manager.insertBorrowing(new Borrowing(0,2,"QA1",3,"2013/03/19","2013/03/20"));
 			manager.insertBorrowing(new Borrowing(0,2,"QA1",4,"2013/03/01",null));
 			manager.insertBorrowing(new Borrowing(0,2,"QA1",5,"2013/03/02",null));
 			manager.insertHoldRequest(new HoldRequest(0,2,"QA1","2013/03/22"));
+			manager.insertHoldRequest(new HoldRequest(0,3,"QA2","2013/03/10"));
+			manager.insertFine(new Fine(0, 0, "2013/03/03", null, 3));
+			manager.insertFine(new Fine(0, 10,"2013/01/16","2013/02/26",2));
 			
 
 			

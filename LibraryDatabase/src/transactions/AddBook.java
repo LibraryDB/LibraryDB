@@ -112,6 +112,16 @@ public class AddBook extends JFrame{
 						try {
 							System.out.println("We are trying!");
 							LibraryDB.getManager().insertBook(b); // just insert the book if callnumber doesnt exist
+							// Jimmy: Not quite, we do need to insert a bookcopy. 
+							// A Book isn't exactly a physical object, it's just a call number
+							// A bookcopy is, when we add a new book(which really means bookcopy), check if it currently exists
+							// If not, then add a record for the new callnumber (in book) and then add the new physical book (bookcopy)
+							
+							
+							// Jimmy responding to your comment, I commented it out, but you might not have noticed the change when
+							// you were pushing
+							
+							// So yeah, I was saying this line SHOULD BE HERE because we do want to make a new tuple for bookcopy. 
 							LibraryDB.getManager().insertBookCopy(bcUpdate);
 							exitWindow();
 							System.out.println("Submit book");
