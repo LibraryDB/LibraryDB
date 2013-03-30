@@ -1494,6 +1494,67 @@ public class JDBCManager
 		return books;
 	}
 	
+	// search a book by its Author
+	public ArrayList<Book> searchBookByAuthor(String author) {
+		ArrayList<Book> books = new ArrayList<Book>();
+		PreparedStatement  ps;
+		ResultSet rs;
+		
+		try {
+			ps = con.prepareStatement("select * from book where mainauthor = ? ");
+			ps.setString(1, author);
+			rs = ps.executeQuery();
+			
+			System.out.println(author);
+			
+			while(rs.next())
+			{
+				Book b = new Book(rs.getString("callnumber"),
+						rs.getString("isbn"),
+						rs.getString("title"),
+						rs.getString("mainauthor"),
+						rs.getString("publisher"),
+						rs.getInt("year"));
+				books.add(b);
+			}
+			ps.close();
+		} catch (SQLException ex) {
+			System.out.println("Message: " + ex.getMessage());
+		}
+		return books;
+	}
+	
+	// search a book by subject
+	public ArrayList<HasSubject> getSubject(String subject) {
+		ArrayList<HasSubject> hasSubjects = new ArrayList<HasSubject>();
+		PreparedStatement  ps;
+		ResultSet  rs;
+
+		try
+		{
+			ps = con.prepareStatement("SELECT * FROM hassubject WHERE subject = ?");
+
+			rs = ps.executeQuery();
+			
+			ps.setString(1, subject);
+			rs = ps.executeQuery();
+
+			while(rs.next())
+			{
+				HasSubject h = new HasSubject(rs.getString("callNumber"), rs.getString("subject"));
+				hasSubjects.add(h);
+			}
+
+			ps.close();
+		}
+		catch (SQLException ex)
+		{
+			System.out.println("Message: " + ex.getMessage());
+		}	
+		return hasSubjects;
+	}
+		
+	
 	// given a borrower ID, return the list of books the borrower put an OnHold request
 	public ArrayList<Book> getBookOnHold(int bid){
 		ArrayList<Book> books = new ArrayList<Book>();

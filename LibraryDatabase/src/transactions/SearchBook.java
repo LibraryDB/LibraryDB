@@ -5,11 +5,6 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
-import model.Book;
-import model.Borrowing;
-import ui.LibraryDB;
-
-import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +14,7 @@ public class SearchBook extends JFrame {
 	private int WIDTH = 300;
 	private int HEIGHT = 300;
 	private int flag;
+	private String value;
 	
 	public SearchBook() {
 		
@@ -93,7 +89,15 @@ public class SearchBook extends JFrame {
 		searchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				new SearchBookHelper(flag);	
+				// check if the search key is given
+				String searchKey = textFields.get(0).getText().trim();
+				if(searchKey.isEmpty()){
+					popMsg("Please provide a Search Key");
+					return;
+				}
+				
+				value = textFields.get(0).getText().trim();
+				new SearchBookHelper(flag,value);	
 			}
 		});
 		p.add(searchButton);

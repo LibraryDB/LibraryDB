@@ -5,10 +5,8 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
-import model.Borrower;
 import ui.LibraryDB;
 
-import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 

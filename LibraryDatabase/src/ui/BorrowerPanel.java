@@ -41,7 +41,7 @@ public class BorrowerPanel extends JPanel {
 			public void actionPerformed(ActionEvent e)
 			{
 				new SearchBook();
-				System.out.println("Add new Borrower");
+				System.out.println("Search Book");
 
 			}
 		});

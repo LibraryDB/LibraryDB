@@ -9,9 +9,9 @@ import model.Book;
 import model.Borrower;
 import model.Borrowing;
 import model.Fine;
+
 import ui.LibraryDB;
 
-import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
