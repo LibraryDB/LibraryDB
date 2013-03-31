@@ -22,6 +22,7 @@ import ui.LibraryDB;
 
 import model.Book;
 import model.Borrowing;
+import model.BorrowingFrequency;
 import model.HasSubject;
 
 public class ReportMostPopular extends JFrame{
@@ -40,7 +41,8 @@ public class ReportMostPopular extends JFrame{
 	private List<String> callNumberList = new ArrayList<String>();
 	//List<Integer> callNumberFreqList = new ArrayList<Integer>();
 	private Map<String, Integer> map = new HashMap<String, Integer>();
-	
+	private ArrayList<BorrowingFrequency> bf = new ArrayList<BorrowingFrequency>();
+
 	public ReportMostPopular(Integer year, Integer number) {
 		super("Report of most popular items");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //Exits the window when user clicks on "x"
@@ -59,44 +61,85 @@ public class ReportMostPopular extends JFrame{
 		setSize(WIDTH,HEIGHT);
 		setVisible(true);
 	}
-	
+
 	private List<Borrowing> getCheckedOutItemsInYear() {
 		ArrayList<Borrowing> result = new ArrayList<Borrowing>();
-		result = LibraryDB.getManager().getBorrowingByYear(this.year, this.number);
+		result = LibraryDB.getManager().getBorrowingByYear(this.year);
 		return result;
+	}
+	private Integer countUniqueItems(String callNumber) { 
+		int count = 0; 
+		for (int i = 0; i < checkedOutBooksInYear.size(); i++) { 
+			Borrowing b = checkedOutBooksInYear.get(i); 
+			if (b.getCallNumber() == callNumber) { 
+				count = count + 1; 
+			} 
+		} 
+		return count; 
 	}
 
 	private void initPanel(){
 		int disp = 20;
-		
+
 		JPanel p = new JPanel();
 		p.setLayout(null);
-       
 
-        // *********************** LIST **************************
+
+		// *********************** LIST **************************
 		initList();
-        list = new JList(listModel);
-        list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        list.setSelectedIndex(0);
- 
-        
-        JScrollPane listScrollPane = new JScrollPane(list);
-        listScrollPane.setBounds(WIDTH/9 - disp, HEIGHT/8 - disp, WIDTH , HEIGHT/2);
-        p.add(listScrollPane);
-        
+		list = new JList(listModel);
+		list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		list.setSelectedIndex(0);
+
+
+		JScrollPane listScrollPane = new JScrollPane(list);
+		listScrollPane.setBounds(WIDTH/9 - disp, HEIGHT/8 - disp, WIDTH , HEIGHT/2);
+		p.add(listScrollPane);
+
 		this.add(p);
-		
+
 	}	
 
-	
+
 	private void initList(){
 		listModel = new DefaultListModel();
-		
-	    for (int i=0;i<checkedOutBooksInYear.size();i++){
-	       	Borrowing b = checkedOutBooksInYear.get(i);
-	    	String msg = "CallNumber " + b.getCallNumber();
-		    listModel.addElement(msg);
-	    }        
+
+		for (int i=0;i<checkedOutBooksInYear.size();i++){
+			Borrowing b = checkedOutBooksInYear.get(i);
+			BorrowingFrequency bfr = new BorrowingFrequency(b, countUniqueItems(b.getCallNumber()));
+			bf.add(bfr);
+
+
+		}
+
+		for (int i = 0; i < number; i++) {
+			int index;
+			index = topN();
+			if (index != -1) {
+				BorrowingFrequency b = bf.get(index);
+				String msg = "CallNumber " + b.getB().getCallNumber();
+				listModel.addElement(msg);
+				bf.remove(index);
+			}
+
+		}
+
+
 	}
-		
+
+	private int topN() {
+		int max = 0;
+		int index = -1; // to ensure if n is empty then change
+		for (int i = 0; i < bf.size(); i++) {
+			BorrowingFrequency b = bf.get(i);
+			int bfCurrent = bf.get(i).getF();
+			if (bfCurrent > max ) {
+				max = bfCurrent;
+				index = i;
+			}
+
+		}
+		return index;
+	}
+
 }

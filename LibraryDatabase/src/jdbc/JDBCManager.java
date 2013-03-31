@@ -166,7 +166,7 @@ public class JDBCManager
 		{
 			ps = con.prepareStatement("SELECT * FROM bookcopy WHERE callNumber = ?");
 			ps.setString(1, callNumber);
-			
+
 			int rowCount = ps.executeUpdate();
 
 			return rowCount;
@@ -189,8 +189,8 @@ public class JDBCManager
 			}
 		}
 		return 0;
-		
-	
+
+
 	}
 	public void insertBorrower(Borrower b) throws SQLException
 	{
@@ -873,7 +873,7 @@ public class JDBCManager
 				sinOrStNo = rs.getInt("sinOrStNo");
 				expiryDate = rs.getString("expiryDate");
 				type = rs.getString("type");
-				
+
 				Borrower b = new Borrower(bid,password,name,address,phone,emailAddress,
 						sinOrStNo,expiryDate,type);
 				borrowers.add(b);
@@ -951,47 +951,70 @@ public class JDBCManager
 		}	
 		return borrowings;
 	}
-	
+
 	//=============================================================
 	//final static String DATE_FORMAT = "yyyy/MM/dd";
-	public ArrayList<Borrowing> getBorrowingByYear(Integer year, Integer n) {
+	public ArrayList<Borrowing> getBorrowingByYear(Integer year) {
 		ArrayList<Borrowing> borrowings = new ArrayList<Borrowing>();
+		ArrayList<BorrowingFrequency> bf = new ArrayList<BorrowingFrequency>();
 		Statement  stmt;
 		ResultSet  rs;
+		PreparedStatement ps;
 
 		try
 		{
 			stmt = con.createStatement();
-			Integer inYear = year + 1;
-			rs = stmt.executeQuery("SELECT * FROM borrowing WHERE outDate >= 01/01/ "+ year.toString() + ", outDate < 01/01" + inYear.toString() + " ORDER BY COUNT(callNumber) HAVING COUNT(*) > " + n.toString());
+			rs = stmt.executeQuery("SELECT * FROM borrowing");
 
 			while(rs.next())
 			{
-			Borrowing b = new Borrowing(rs.getInt("borid"),
-						rs.getInt("bid"),
-						rs.getString("callNumber"), 
-						rs.getInt("copyNo"), 
-						rs.getString("outDate"), 
-						rs.getString("inDate"));
-			
-			borrowings.add(b);
+
+				String out = rs.getString("outDate");
+				Integer iOut = stringToCalendarYear(out);
+				//Integer in = stringToCalendarYear(rs.getString("inDate")); 
+				if (iOut == year) { 
+					Borrowing b = new Borrowing(rs.getInt("borid"), 
+							rs.getInt("bid"), 
+							rs.getString("callNumber"),  
+							rs.getInt("copyNo"),  
+							rs.getString("outDate"),  
+							rs.getString("inDate")); 
+					borrowings.add(b);
 				}
 
-				
 
-			
 
-			stmt.close();
-		}
+
+
+				stmt.close();
+			}}
 		catch (SQLException ex)
 		{
 			System.out.println("Message: " + ex.getMessage());
 		}
+
 		return borrowings;
-		
+
 	}
-	
-	
+
+
+
+	private Integer stringToCalendarYear(String str){ 
+
+		String parts[] = str.split("/"); 
+
+		int year = Integer.parseInt(parts[0]); 
+
+		int month = Integer.parseInt(parts[1]) - 1; 
+
+		int date = Integer.parseInt(parts[2]); 
+
+		Calendar cal = Calendar.getInstance(); 
+		cal.set(year, month, date); 
+		return year; 
+	}
+
+
 	public ArrayList<Fine> getFine(){
 		ArrayList<Fine> fines = new ArrayList<Fine>();
 		Statement stmt;
@@ -1107,7 +1130,7 @@ public class JDBCManager
 		}	
 		return hasSubjects;
 	}
-	
+
 	public Boolean checkSubject(String callNumber, String subject) {
 		ArrayList<HasSubject> hasSubject = getHasSubject();
 		for (int i = 0; i < hasSubject.size(); i++) {
@@ -1119,7 +1142,7 @@ public class JDBCManager
 		}
 		return false;
 	}
-	
+
 	public ArrayList<Borrowing> getBorrowingAll(){
 		ArrayList<Borrowing> borrowing = new ArrayList<Borrowing>();
 		Statement  stmt;
@@ -1220,7 +1243,7 @@ public class JDBCManager
 
 	public void updateBorrowingInDate(int borid, String inDate){
 		PreparedStatement ps;
-		
+
 		try {
 			ps = con.prepareStatement("UPDATE borrowing SET inDate = ? WHERE borid = ?");
 			ps.setString(1, inDate);
@@ -1250,10 +1273,10 @@ public class JDBCManager
 			}
 		}
 	}
-	
+
 	public void updateBookCopy(String callNumber,int copyNo,String status){
 		PreparedStatement ps;
-		
+
 		try {
 			ps = con.prepareStatement("UPDATE bookcopy SET status = ? WHERE callnumber = ? AND copyno = ?");
 			ps.setString(1, status);
@@ -1333,8 +1356,8 @@ public class JDBCManager
 		}	
 		return false;
 	}
-	
-		
+
+
 	// check if password and borrowerid are matched
 	public boolean checkPassword(String password, int bid){
 		PreparedStatement ps;
@@ -1345,7 +1368,7 @@ public class JDBCManager
 			ps = con.prepareStatement("SELECT password FROM borrower WHERE bid = ?");
 			ps.setInt(1, bid);
 			rs = ps.executeQuery();
-			
+
 			if (rs.next()){
 				correctPassword = rs.getString("password");
 				if (password.equals(correctPassword)){
@@ -1370,25 +1393,25 @@ public class JDBCManager
 		PreparedStatement ps,ps2;
 		ResultSet rs,rs2;
 		String type;
-		
+
 		ps = con.prepareStatement("SELECT type FROM borrower WHERE bid = ?");
 		ps.setInt(1, bid);
 		rs = ps.executeQuery();
-		
+
 		if (rs.next()) {
 			type = rs.getString("type");
 		}
 		else {
 			throw new SQLException("No borrower matches!");
 		}	
-		
+
 		ps.close();
 		rs.close();
-		
+
 		ps2 = con.prepareStatement("SELECT bookTimeLimit FROM borrowertype WHERE type = ?");
 		ps2.setString(1, type);
 		rs2 = ps2.executeQuery();
-		
+
 		if (rs2.next()){
 			int result = rs2.getInt("bookTimeLimit");
 			ps2.close();
@@ -1398,12 +1421,12 @@ public class JDBCManager
 		else throw new SQLException("type is invalid");	
 
 	}
-	
+
 	public ArrayList<Borrowing> getOutBorrowings(){
 		ArrayList<Borrowing> result = new ArrayList<Borrowing>();
 		PreparedStatement ps;
 		ResultSet rs;
-		
+
 		try {
 			ps = con.prepareStatement("SELECT * FROM borrowing WHERE inDate is null");
 			rs = ps.executeQuery();
@@ -1419,11 +1442,11 @@ public class JDBCManager
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
-		
+
 		return result;
 
 	}
-	
+
 	// get Borrowing record by Borrower ID
 	public ArrayList<Borrowing> getBorrowingByID(int bid){
 		ArrayList<Borrowing> borrowings = new ArrayList<Borrowing>();
@@ -1457,12 +1480,12 @@ public class JDBCManager
 		}	
 		return borrowings;
 	}
-	
+
 	public Borrowing getBorrowing(String callNumber, int copyNo){
 		Borrowing b;
 		PreparedStatement ps;
 		ResultSet rs;
-		
+
 		try {
 			ps = con.prepareStatement("SELECT * FROM borrowing WHERE inDate is null AND callnumber = ? AND copyno = ?");
 			ps.setString(1, callNumber);
@@ -1481,21 +1504,21 @@ public class JDBCManager
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
-		
+
 		return null;
-		
+
 	}
-	
+
 	public ArrayList<HoldRequest> getHoldRequests(String callNumber){
 		PreparedStatement ps;
 		ResultSet rs;
 		ArrayList<HoldRequest> result = new ArrayList<HoldRequest>();
-		
+
 		try {
 			ps = con.prepareStatement("SELECT * FROM holdrequest WHERE callnumber = ?");
 			ps.setString(1, callNumber);
 			rs = ps.executeQuery();
-			
+
 			while (rs.next()){
 				result.add(new HoldRequest(
 						rs.getInt("hid"),
@@ -1504,25 +1527,25 @@ public class JDBCManager
 						rs.getString("issueDate")
 						));
 			}
-					
+
 		}catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
-		
+
 		return result;
 	}
-	
+
 	// search a book by its callNumber
 	public ArrayList<Book> searchBookByCallID(String callNumber) {
 		ArrayList<Book> books = new ArrayList<Book>();
 		PreparedStatement  ps;
 		ResultSet rs;
-		
+
 		try {
 			ps = con.prepareStatement("select * from book where callnumber = ?");
 			ps.setString(1, callNumber);
 			rs = ps.executeQuery();
-			
+
 			while(rs.next())
 			{
 
@@ -1541,20 +1564,20 @@ public class JDBCManager
 		}
 		return books;
 	}
-	
+
 	// search a book by its Author
 	public ArrayList<Book> searchBookByAuthor(String author) {
 		ArrayList<Book> books = new ArrayList<Book>();
 		PreparedStatement  ps;
 		ResultSet rs;
-		
+
 		try {
 			ps = con.prepareStatement("select * from book where mainauthor = ? ");
 			ps.setString(1, author);
 			rs = ps.executeQuery();
-			
+
 			System.out.println(author);
-			
+
 			while(rs.next())
 			{
 				Book b = new Book(rs.getString("callnumber"),
@@ -1571,7 +1594,7 @@ public class JDBCManager
 		}
 		return books;
 	}
-	
+
 	// search a book by subject
 	public ArrayList<HasSubject> getSubject(String subject) {
 		ArrayList<HasSubject> hasSubjects = new ArrayList<HasSubject>();
@@ -1583,7 +1606,7 @@ public class JDBCManager
 			ps = con.prepareStatement("SELECT * FROM hassubject WHERE subject = ?");
 
 			rs = ps.executeQuery();
-			
+
 			ps.setString(1, subject);
 			rs = ps.executeQuery();
 
@@ -1601,15 +1624,15 @@ public class JDBCManager
 		}	
 		return hasSubjects;
 	}
-		
-	
+
+
 	// given a borrower ID, return the list of books the borrower put an OnHold request
 	public ArrayList<Book> getBookOnHold(int bid){
 		ArrayList<Book> books = new ArrayList<Book>();
 		PreparedStatement ps;
 		ResultSet  rs;
 		String callNumber;
-		
+
 		try
 		{
 			ps = con.prepareStatement("SELECT callNumber FROM holdrequest WHERE bid = ?");
@@ -1630,12 +1653,12 @@ public class JDBCManager
 		}	
 		return books;
 	}
-	
+
 	// bid must be a valid borrower ID
 	public String getEmail(int bid){
 		PreparedStatement ps;
 		ResultSet rs;
-		
+
 		try {
 			ps = con.prepareStatement("Select emailaddress from borrower where bid = ?");
 			ps.setInt(1, bid);
@@ -1643,7 +1666,7 @@ public class JDBCManager
 			if (rs.next()){
 				return rs.getString("emailaddress");
 			}
-			
+
 		}catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
@@ -1662,7 +1685,7 @@ public class JDBCManager
 			ps.setString(2, callNumber);
 			rs = ps.executeQuery();
 			if(rs.next()) return rs.getString("hid");
-			
+
 			ps.close();
 		}
 		catch (SQLException ex)
@@ -1671,7 +1694,7 @@ public class JDBCManager
 		}	
 		return null;
 	}
-	
+
 	public boolean isValidBid(int bid){
 		PreparedStatement ps;
 
@@ -1688,7 +1711,7 @@ public class JDBCManager
 			System.out.println("Message: " + ex.getMessage());
 		}	
 		return false;
-	
+
 	}
 
 
