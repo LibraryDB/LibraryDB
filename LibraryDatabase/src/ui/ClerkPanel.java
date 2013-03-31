@@ -20,9 +20,10 @@ import transactions.ProcessReturn;
 
 public class ClerkPanel extends JPanel {
 
-	public ClerkPanel(){
-
-		super(new GridLayout(5,1)); 
+	ClerkFrame cf;
+	public ClerkPanel(ClerkFrame cf){
+		super(new GridLayout(6,1)); 
+		this.cf = cf;
 		init();
 
 	}
@@ -73,13 +74,23 @@ public class ClerkPanel extends JPanel {
 			}
 		});
 		
+		JButton backButton = new JButton("Back");		
+		backButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				new UserFrame();
+				cf.dispose();
+			}
+		});
+		
 		add(label);
 		add(addBorrowerButton);	
 		add(checkOutButton);
 		add(processReturnButton);
 		add(checkOverdueButton);
+		add(backButton);
 		
 	}
-
+	
 
 }

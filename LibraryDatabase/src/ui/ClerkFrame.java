@@ -22,7 +22,7 @@ public class ClerkFrame extends JFrame{
 	public ClerkFrame(){
 		super("Clerk");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		ClerkPanel cp = new ClerkPanel();
+		ClerkPanel cp = new ClerkPanel(this);
 		add(cp);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int x = screenSize.width/2;

@@ -17,9 +17,13 @@ import transactions.SearchBook;
 //import transactions.addBook;
 
 public class LibrarianPanel extends JPanel{
-	public LibrarianPanel(){
+	
+	LibrarianFrame lf;
+	
+	public LibrarianPanel(LibrarianFrame lf){
 
 		super(new GridLayout(5,1)); 
+		this.lf = lf;
 		init();
 
 	}
@@ -70,11 +74,23 @@ public class LibrarianPanel extends JPanel{
 
 			}
 		});
+		
+		JButton backButton = new JButton("Back");		
+		backButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				new UserFrame();
+				lf.dispose();
+			}
+		});
 				
 		add(label);
 		add(addBookButton);	
 		add(reportCheckedOut);
 		add(reportPopularButton);
+		add(backButton);
 		
 	}
+	
+	
 }

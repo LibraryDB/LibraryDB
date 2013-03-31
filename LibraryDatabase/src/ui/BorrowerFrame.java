@@ -22,7 +22,7 @@ public class BorrowerFrame extends JFrame{
 	public BorrowerFrame(){
 		super("Borrower");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		BorrowerPanel bp = new BorrowerPanel();
+		BorrowerPanel bp = new BorrowerPanel(this);
 		add(bp);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int x = screenSize.width/2;

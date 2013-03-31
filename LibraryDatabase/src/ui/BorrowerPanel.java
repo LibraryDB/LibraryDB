@@ -22,9 +22,12 @@ import transactions.PayFine;
 
 public class BorrowerPanel extends JPanel {
 
-	public BorrowerPanel(){
+	BorrowerFrame bf;
+	
+	public BorrowerPanel(BorrowerFrame bf){
 
-		super(new GridLayout(5,1)); 
+		super(new GridLayout(6,1)); 
+		this.bf = bf;
 		init();
 
 	}
@@ -79,11 +82,21 @@ public class BorrowerPanel extends JPanel {
 			}
 		});
 		
+		JButton backButton = new JButton("Back");		
+		backButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				new UserFrame();
+				bf.dispose();
+			}
+		});
+		
 		add(label);
 		add(addBorrowerButton);	
 		add(checkOutButton);
 		add(processReturnButton);
 		add(checkOverdueButton);
+		add(backButton);
 		
 	}
 

@@ -13,7 +13,7 @@ public class LibrarianFrame extends JFrame{
 	public LibrarianFrame(){
 		super("Borrower");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		LibrarianPanel lp = new LibrarianPanel();
+		LibrarianPanel lp = new LibrarianPanel(this);
 		add(lp);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int x = screenSize.width/2;
