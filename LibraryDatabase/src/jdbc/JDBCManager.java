@@ -954,7 +954,7 @@ public class JDBCManager
 	
 	//=============================================================
 	//final static String DATE_FORMAT = "yyyy/MM/dd";
-	public ArrayList<Borrowing> getBorrowingByYear(Integer year) {
+	public ArrayList<Borrowing> getBorrowingByYear(Integer year, Integer n) {
 		ArrayList<Borrowing> borrowings = new ArrayList<Borrowing>();
 		Statement  stmt;
 		ResultSet  rs;
@@ -962,28 +962,24 @@ public class JDBCManager
 		try
 		{
 			stmt = con.createStatement();
-
-			rs = stmt.executeQuery("SELECT * FROM borrowing");
+			Integer inYear = year + 1;
+			rs = stmt.executeQuery("SELECT * FROM borrowing WHERE outDate >= 01/01/ "+ year.toString() + ", outDate < 01/01" + inYear.toString() + " ORDER BY COUNT(callNumber) HAVING COUNT(*) > " + n.toString());
 
 			while(rs.next())
 			{
-				
-				Integer out = stringToCalendarYear(rs.getString("outDate"));
-				Integer in = stringToCalendarYear(rs.getString("inDate"));
-				
-				if (in == year & out == year) {
-					Borrowing b = new Borrowing(rs.getInt("borid"),
-							rs.getInt("bid"),
-							rs.getString("callNumber"), 
-							rs.getInt("copyNo"), 
-							rs.getString("outDate"), 
-							rs.getString("inDate"));
-					borrowings.add(b);
+			Borrowing b = new Borrowing(rs.getInt("borid"),
+						rs.getInt("bid"),
+						rs.getString("callNumber"), 
+						rs.getInt("copyNo"), 
+						rs.getString("outDate"), 
+						rs.getString("inDate"));
+			
+			borrowings.add(b);
 				}
 
 				
 
-			}
+			
 
 			stmt.close();
 		}
@@ -994,17 +990,6 @@ public class JDBCManager
 		return borrowings;
 		
 	}
-	private Integer stringToCalendarYear(String str){
-		String parts[] = str.split("/");
-		int year = Integer.parseInt(parts[0]);
-		int month = Integer.parseInt(parts[1]) - 1;
-		int date = Integer.parseInt(parts[2]);
-		Calendar cal = Calendar.getInstance();
-		cal.set(year, month, date);
-		return year;
-		
-	}
-	//=======================================
 	
 	
 	public ArrayList<Fine> getFine(){
@@ -1134,7 +1119,70 @@ public class JDBCManager
 		}
 		return false;
 	}
+	
+	public ArrayList<Borrowing> getBorrowingAll(){
+		ArrayList<Borrowing> borrowing = new ArrayList<Borrowing>();
+		Statement  stmt;
+		ResultSet  rs;
 
+		try
+		{
+			stmt = con.createStatement();
+
+			rs = stmt.executeQuery("SELECT * FROM borrowing ORDER BY callNumber");
+
+			while(rs.next())
+			{				
+				Borrowing b = new Borrowing(rs.getInt("borid"),
+						rs.getInt("bid"),
+						rs.getString("callNumber"), 
+						rs.getInt("copyNo"), 
+						rs.getString("outDate"), 
+						rs.getString("inDate"));
+				borrowing.add(b);
+
+			}
+
+			stmt.close();
+		}
+		catch (SQLException ex)
+		{
+			System.out.println("Message: " + ex.getMessage());
+		}	
+		return borrowing;
+	}
+
+	public ArrayList<Borrowing> getBorrowingAllBySubject(String subject){
+		ArrayList<Borrowing> borrowing = new ArrayList<Borrowing>();
+		Statement  stmt;
+		ResultSet  rs;
+
+		try
+		{
+			stmt = con.createStatement();
+
+			rs = stmt.executeQuery("SELECT * FROM borrowing, hassubject WHERE borrowing.callNumber = hassubject.callNumber, subject = " + subject + " ORDER BY callNumber");
+
+			while(rs.next())
+			{				
+				Borrowing b = new Borrowing(rs.getInt("borid"),
+						rs.getInt("bid"),
+						rs.getString("callNumber"), 
+						rs.getInt("copyNo"), 
+						rs.getString("outDate"), 
+						rs.getString("inDate"));
+				borrowing.add(b);
+
+			}
+
+			stmt.close();
+		}
+		catch (SQLException ex)
+		{
+			System.out.println("Message: " + ex.getMessage());
+		}	
+		return borrowing;
+	}
 	public ArrayList<HoldRequest> getHoldRequest(){
 		ArrayList<HoldRequest> holdRequest = new ArrayList<HoldRequest>();
 		Statement  stmt;

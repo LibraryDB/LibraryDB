@@ -3,8 +3,12 @@ package transactions;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.TimeZone;
+
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JList;
@@ -22,6 +26,7 @@ public class ReportCheckedOut extends JFrame{
 	private int HEIGHT = 500;
 	private JList list;
 	private DefaultListModel listModel;
+	private DefaultListModel listModelOverDue;
 	private List<Borrowing> checkedOutBooks;
 	private List<Integer> selected;
 	final JTextArea textArea = new JTextArea(5, 12);
@@ -49,37 +54,38 @@ public class ReportCheckedOut extends JFrame{
 	private void initList(){
 		
         listModel = new DefaultListModel();
-//        for (int i=0;i<checkedOutBooks.size();i++){
-//        	Borrowing b = checkedOutBooks.get(i);
-//        	String msg = 
-//        			"CallNumber " + b.getCallNumber() + 
-//        			" Checked Out: " + b.getOutDate() + 
-//        		        	" Due Date:" + b.getInDate();
-//        	listModel.addElement(msg);
-//        }
-        
-        DefaultListModel allCallNumber = new DefaultListModel();
-        ArrayList<String> allCallNumberAsString = new ArrayList<String>();
-        for (int i = 0; i < checkedOutBooks.size(); i++) {
+        listModelOverDue = new DefaultListModel();
+        for (int i=0;i<checkedOutBooks.size();i++){
         	Borrowing b = checkedOutBooks.get(i);
-        	String callNumber = b.getCallNumber();
-        	allCallNumber.addElement(callNumber);
-        	allCallNumberAsString.add(callNumber);
-        }
-        Collections.sort(allCallNumberAsString);
-        for (int i = 0; i < allCallNumberAsString.size(); i++) {
-        	for (int j = 0; j < checkedOutBooks.size(); j++) {
-        		if (allCallNumberAsString.get(i) == checkedOutBooks.get(j).getCallNumber()) {
-        			Borrowing b = checkedOutBooks.get(j);
-        			String msg = 
-                			"CallNumber " + b.getCallNumber() + 
-                			" Checked Out: " + b.getOutDate() + 
-                		        	" Due Date:" + b.getInDate();
-                	listModel.addElement(msg);
-        		}
+        	Calendar currentCal = new GregorianCalendar(TimeZone.getTimeZone("PST"));
+        	Calendar dueDate = new GregorianCalendar();
+        	dueDate = stringToCalendar(b.getOutDate());
+        	if (dueDate.after(currentCal)) {
+        		String msg = 
+            			"CallNumber " + b.getCallNumber() + 
+            			" Checked Out: " + b.getOutDate() + 
+            		        	" Due Date:" + b.getInDate();
+            	listModelOverDue.addElement(msg);
+        	}
+        	else {
+        	String msg = 
+        			"CallNumber " + b.getCallNumber() + 
+        			" Checked Out: " + b.getOutDate() + 
+        		        	" Due Date:" + b.getInDate();
+        	listModel.addElement(msg);
         	}
         }
-        
+                
+	}
+	private Calendar stringToCalendar(String str){
+		String parts[] = str.split("/");
+		int year = Integer.parseInt(parts[0]);
+		int month = Integer.parseInt(parts[1]) - 1;
+		int date = Integer.parseInt(parts[2]);
+		Calendar cal = Calendar.getInstance();
+		cal.set(year, month, date);
+		return cal;
+		
 	}
 	
 	private void initPanel(){
@@ -107,7 +113,7 @@ public class ReportCheckedOut extends JFrame{
 	// Returns list of overdue Borrowings
 	private ArrayList<Borrowing> getCheckedOutItems(){
 		ArrayList<Borrowing> result = new ArrayList<Borrowing>();
-		result = LibraryDB.getManager().getOutBorrowings();
+		result = LibraryDB.getManager().getBorrowingAll();
 		return result;
 	}
 	

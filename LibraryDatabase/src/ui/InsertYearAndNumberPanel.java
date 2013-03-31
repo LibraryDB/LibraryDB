@@ -41,8 +41,6 @@ public class InsertYearAndNumberPanel extends JPanel{
 				Integer number = Integer.parseInt(textFields.get(1).getText().trim());
 				
 				System.out.println(year + " " + number);
-				//new ReportCheckedOut();
-				//new AddBook();
 				new ReportMostPopular(year, number);
 				System.out.println("Possibly insert subject");
 

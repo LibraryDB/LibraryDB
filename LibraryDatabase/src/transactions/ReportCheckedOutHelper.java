@@ -51,42 +51,16 @@ public class ReportCheckedOutHelper extends JFrame{
 	// Creates the list of borrowed books to be displayed in the textbox
 	private void initList(){
 		listModel = new DefaultListModel();
-	        for (int i=0;i<checkedOutBooks.size();i++){
-	        	Borrowing b = checkedOutBooks.get(i);
-	        	if (LibraryDB.getManager().checkSubject(b.getCallNumber(), subject)) {
-	        		String msg = 
-		        			"CallNumber " + b.getCallNumber() + 
+	    for (int i=0;i<checkedOutBooks.size();i++){
+	    	Borrowing b = checkedOutBooks.get(i);
+	        String msg = "CallNumber " + b.getCallNumber() + 
 		        			" Checked Out: " + b.getOutDate() + 
 		        		        	" Due Date:" + b.getInDate();
 		        	listModel.addElement(msg);
 	        	}
 	        	
 	        }
-//	        
-//	        DefaultListModel allCallNumber = new DefaultListModel();
-//	        ArrayList<String> allCallNumberAsString = new ArrayList<String>();
-//	        for (int i = 0; i < checkedOutBooks.size(); i++) {
-//	        	Borrowing b = checkedOutBooks.get(i);
-//	        	String callNumber = b.getCallNumber();
-//	        	allCallNumber.addElement(callNumber);
-//	        	allCallNumberAsString.add(callNumber);
-//	        }
-//	        Collections.sort(allCallNumberAsString);
-//	        for (int i = 0; i < allCallNumberAsString.size(); i++) {
-//	        	for (int j = 0; j < checkedOutBooks.size(); j++) {
-//	        		if (allCallNumberAsString.get(i) == checkedOutBooks.get(j).getCallNumber()) {
-//	        			Borrowing b = checkedOutBooks.get(j);
-//	        			String msg = 
-//	                			"CallNumber " + b.getCallNumber() + 
-//	                			" Checked Out: " + b.getOutDate() + 
-//	                		        	" Due Date:" + b.getInDate();
-//	                	listModel.addElement(msg);
-//	        		}
-//	        	}
-//	        }
-	        
-		}
-		
+	
 		private void initPanel(){
 			int disp = 20;
 			
@@ -112,7 +86,7 @@ public class ReportCheckedOutHelper extends JFrame{
 		// Returns list of overdue Borrowings
 		private ArrayList<Borrowing> getCheckedOutItems(){
 			ArrayList<Borrowing> result = new ArrayList<Borrowing>();
-			result = LibraryDB.getManager().getOutBorrowings();
+			result = LibraryDB.getManager().getBorrowingAllBySubject(subject);
 			return result;
 		}
 		
