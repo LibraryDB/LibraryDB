@@ -1182,23 +1182,34 @@ public class JDBCManager
 		ArrayList<Borrowing> borrowing = new ArrayList<Borrowing>();
 		Statement  stmt;
 		ResultSet  rs;
-
+		PreparedStatement ps;
 		try
 		{
 			stmt = con.createStatement();
-
-			rs = stmt.executeQuery("SELECT * FROM borrowing, hassubject WHERE borrowing.callNumber = hassubject.callNumber, subject = " + subject + " ORDER BY callNumber");
+			//ps = con.prepareStatement("SELECT * FROM borrowing inner join hassubject WHERE borrowing.callNumber = hassubject.callNumber, subject =  ? ORDER BY callNumber");
+			ps = con.prepareStatement("SELECT * FROM borrowing ORDER BY callNumber");
+			//ps.setString(1, subject);
+			rs = ps.executeQuery();
+			
+			ArrayList<HasSubject> hs = new ArrayList<HasSubject>();
+			hs = getHasSubject();
 
 			while(rs.next())
-			{				
-				Borrowing b = new Borrowing(rs.getInt("borid"),
-						rs.getInt("bid"),
-						rs.getString("callNumber"), 
-						rs.getInt("copyNo"), 
-						rs.getString("outDate"), 
-						rs.getString("inDate"));
-				borrowing.add(b);
+			{
+				for (int i = 0; i < hs.size(); i++) {
+					String cn = rs.getString("callNumber");
+					if (hs.get(i).getSubject().equals(subject)) {
+						Borrowing b = new Borrowing(rs.getInt("borid"),
+								rs.getInt("bid"),
+								rs.getString("callNumber"), 
+								rs.getInt("copyNo"), 
+								rs.getString("outDate"), 
+								rs.getString("inDate"));
+						borrowing.add(b);
 
+					}
+				}
+				
 			}
 
 			stmt.close();
