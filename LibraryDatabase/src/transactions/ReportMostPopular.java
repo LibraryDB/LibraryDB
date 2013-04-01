@@ -133,10 +133,10 @@ public class ReportMostPopular extends JFrame{
 			
 			
 
-
+		int count = 0;
 		for (int i = 0; i < checkedOutBooksInYear.size(); i++) {
 			int index;
-			int count = 0;
+			
 			index = topN();
 			if (index != -1) {
 				BorrowingFrequency b = bf.get(index);
