@@ -143,7 +143,7 @@ public class LibraryDB implements ActionListener
 			loginFrame.dispose();
 			userFrame = new UserFrame();
 			new DisplayDB();
-			initTableValues(); 
+			//initTableValues(); 
 			//TODO
 		}
 		else

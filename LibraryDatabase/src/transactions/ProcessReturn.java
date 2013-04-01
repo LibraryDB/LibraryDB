@@ -134,8 +134,8 @@ public class ProcessReturn extends JFrame{
 		LibraryDB.getManager().updateBorrowingInDate(b.getBorid(), currentDate);
 		
 		//Check Overdue and create a new Fine if it is.
-		if (isOverDue(b)) {
-			Fine f = new Fine(0,0,currentDate,null,b.getBorid());
+		if (getOverDueTime(b) > 0) {
+			Fine f = new Fine(0,getOverDueTime(b),currentDate,null,b.getBorid());
 			LibraryDB.getManager().insertFine(f);
 			msg += "Fine is assessed. \n";
 		}
@@ -163,7 +163,7 @@ public class ProcessReturn extends JFrame{
 		
 	}
 	
-	private boolean isOverDue(Borrowing b) {
+	private int getOverDueTime(Borrowing b) {
 		int timeLimit = 0;
 		Calendar currentCal = new GregorianCalendar(TimeZone.getTimeZone("PST"));
 		
@@ -171,14 +171,14 @@ public class ProcessReturn extends JFrame{
 			timeLimit = LibraryDB.getManager().getTimeLimit(b.getBid());
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
-			return false;
+			return 0;
 		}
 		
 		Calendar dueCal = stringToCalendar(b.getOutDate());
 		dueCal.add(Calendar.DATE, timeLimit);
-		if (dueCal.before(currentCal)) return true;	
-		System.out.println(b.getBid());
-		return false;
+		int diffInDays = (int)( (currentCal.getTimeInMillis() - dueCal.getTimeInMillis()) 
+                / (1000 * 60 * 60 * 24) );
+		return diffInDays;
 	}
 
 	private String calendarToString(Calendar calendar) {

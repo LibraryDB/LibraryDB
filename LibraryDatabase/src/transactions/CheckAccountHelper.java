@@ -143,7 +143,7 @@ public class CheckAccountHelper extends JFrame {
 
 	private int PayFine() { 
 		String date = new java.text.SimpleDateFormat("yyyy/MM/dd").format(new java.util.Date());
-		int rate = 30;		
+		int rate = 1;		
 		int duration = 0;
 		int timeLimit = 0;
 		int borid = 0;
@@ -163,7 +163,8 @@ public class CheckAccountHelper extends JFrame {
 			String issueDate = LibraryDB.getManager().getIssueDate(borid);
 			if (issueDate==null) continue;
 			Calendar issueCal = stringToCalendar(issueDate);
-			int d = issueCal.compareTo(dueCal);
+			int d = (int)( (issueCal.getTimeInMillis() - dueCal.getTimeInMillis()) 
+	                / (1000 * 60 * 60 * 24) );
 			a = LibraryDB.getManager().updateFine(borid, date, d*rate);
 			duration += d;
 			
