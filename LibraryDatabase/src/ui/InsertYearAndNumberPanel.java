@@ -28,7 +28,7 @@ public class InsertYearAndNumberPanel extends JPanel{
 	private void init(){
 
 		// Label
-		JLabel label = new JLabel("Insert Year and Number");
+		JLabel label = new JLabel("Insert Year then Number");
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		// Search Book button
