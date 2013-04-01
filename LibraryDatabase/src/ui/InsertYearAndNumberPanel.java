@@ -60,7 +60,6 @@ public class InsertYearAndNumberPanel extends JPanel{
 			public void actionPerformed(ActionEvent e)
 			{
 				new UserFrame();
-				//lf.dispose();
 			}
 		});
 		

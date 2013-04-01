@@ -45,7 +45,6 @@ public class InsertSubjectPanel extends JPanel{
 				}
 				else
 					new ReportCheckedOut();
-				//new AddBook();
 				System.out.println("Possibly insert subject");
 
 			}
@@ -56,7 +55,6 @@ public class InsertSubjectPanel extends JPanel{
 			public void actionPerformed(ActionEvent e)
 			{
 				new UserFrame();
-				//lf.dispose();
 			}
 		});
 		JTextField tf = new JTextField();

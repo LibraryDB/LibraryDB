@@ -60,9 +60,6 @@ public class ReportCheckedOutHelper extends JFrame{
 
 			Borrowing b = checkedOutBooks.get(i);
 			Boolean due;
-			//Calendar currentCal = new GregorianCalendar(TimeZone.getTimeZone("PST"));
-			//Calendar dueDate = new GregorianCalendar();
-			//dueDate = stringToCalendar(b.getOutDate());
 			due = isNotOverDue(b);
 			if (!due) {
 				String msg = 

@@ -2,28 +2,28 @@ package model;
 
 public class BorrowingFrequency {
 	
-	private String b;
-	private int f;
+	private String callNumber;
+	private int frequency;
 
 	public BorrowingFrequency(String b, int f) {
-		this.b = b;
-		this.f = f;
+		this.callNumber = b;
+		this.frequency = f;
 	}
 
-	public String getB() {
-		return b;
+	public String getCallNumber() {
+		return callNumber;
 	}
 
-	public void setB(String b) {
-		this.b = b;
+	public void setCallNumber(String b) {
+		this.callNumber = b;
 	}
 
-	public int getF() {
-		return f;
+	public int getFrequency() {
+		return frequency;
 	}
 
-	public void setF(int f) {
-		this.f = f;
+	public void setFrequency(int f) {
+		this.frequency = f;
 	}
 	
 	

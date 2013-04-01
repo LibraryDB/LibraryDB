@@ -3,12 +3,7 @@ package transactions;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
@@ -20,27 +15,20 @@ import javax.swing.ListSelectionModel;
 
 import ui.LibraryDB;
 
-import model.Book;
 import model.Borrowing;
 import model.BorrowingFrequency;
-import model.HasSubject;
 
+@SuppressWarnings({"serial", "rawtypes", "unchecked"})
 public class ReportMostPopular extends JFrame{
 	// dimensions of the window
-	private int WIDTH = 150;
+	private int WIDTH = 300;
 	private int HEIGHT = 300;
 	private JList list;
 	private DefaultListModel listModel;
 	private List<Borrowing> checkedOutBooksInYear;
-	private List<Integer> selected;
 	final JTextArea textArea = new JTextArea(5, 12);
-	private List<HasSubject> allSubjects;
 	private Integer year;
 	private Integer number;
-	private List<Book> uniqueBooks;
-	private List<String> callNumberList = new ArrayList<String>();
-	//List<Integer> callNumberFreqList = new ArrayList<Integer>();
-	private Map<String, Integer> map = new HashMap<String, Integer>();
 	private ArrayList<BorrowingFrequency> bf = new ArrayList<BorrowingFrequency>();
 
 	public ReportMostPopular(Integer year, Integer number) {
@@ -49,7 +37,6 @@ public class ReportMostPopular extends JFrame{
 		this.year = year;
 		this.number = number;
 		checkedOutBooksInYear = getCheckedOutItemsInYear();
-		//selected = new ArrayList<Integer>();
 		initPanel();
 
 		// Center the window
@@ -78,8 +65,9 @@ public class ReportMostPopular extends JFrame{
 		return count; 
 	}
 
+
 	private void initPanel(){
-		int disp = 20;
+		//int disp = 20;
 
 		JPanel p = new JPanel();
 		p.setLayout(null);
@@ -107,63 +95,29 @@ public class ReportMostPopular extends JFrame{
 		for (int i=0;i<checkedOutBooksInYear.size();i++){
 			Borrowing b = checkedOutBooksInYear.get(i);
 			BorrowingFrequency bfr = new BorrowingFrequency(b.getCallNumber(), countUniqueItems(b.getCallNumber()));
-			//String callNumberC = bfr.getB().getCallNumber();
-			if (!bf.contains(bfr)) {
-				bf.add(bfr);
-			}
-//			for (int j = 0; j < bf.size() + 1; j++) {
-//				if (bf.size() == 0) {
-//					bf.add(bfr);
-//				} else if (bf.size() == j) {
-//					
-//				}
-//				else {
-//					BorrowingFrequency bfCheck = bf.get(j);
-//					if (!bfCheck.getB().equals(b.getCallNumber())) {
-//						bf.add(bfr);
-//					}
-//				}
-//					
-//			}
-//			if (!bf.contains(bfr)) {
-//				
-//			}
-			
-			}
-			
-			
+			bf.add(bfr);
+
+
+		}
+
+
 
 		int count = 0;
 		for (int i = 0; i < checkedOutBooksInYear.size(); i++) {
 			int index;
-			
+
 			index = topN();
 			if (index != -1) {
 				BorrowingFrequency b = bf.get(index);
-				String msg = "CallNumber " + b.getB();
+				String msg = "CallNumber " + b.getCallNumber() + " Borrowed " + b.getFrequency() + " times this year";
 				if (!listModel.contains(msg) && count < number) {
-				listModel.addElement(msg);
-				count = count + 1;
+					listModel.addElement(msg);
+					count = count + 1;
 				}
 				bf.remove(index);
 			}
 		}
 
-		
-
-//		for (int i = 0; i < number; i++) {
-//			int index;
-//			index = topN();
-//			if (index != -1) {
-//				BorrowingFrequency b = bf.get(index);
-//				String msg = "CallNumber " + b.getB();
-//				if (!listModel.contains(msg)) {
-//				listModel.addElement(msg);
-//				}
-//				bf.remove(index);
-//			}
-//
-//		}
 
 
 	}
@@ -173,7 +127,7 @@ public class ReportMostPopular extends JFrame{
 		int index = -1; // to ensure if n is empty then change
 		for (int i = 0; i < bf.size(); i++) {
 			BorrowingFrequency b = bf.get(i);
-			int bfCurrent = bf.get(i).getF();
+			int bfCurrent = b.getFrequency();
 			if (bfCurrent > max ) {
 				max = bfCurrent;
 				index = i;
