@@ -14,6 +14,8 @@ import model.Borrower;
 import model.BorrowerType;
 import model.Borrowing;
 import model.Fine;
+import model.HasAuthor;
+import model.HasSubject;
 import model.HoldRequest;
 
 import java.awt.*;
@@ -203,8 +205,11 @@ public class LibraryDB implements ActionListener
 			manager.insertHoldRequest(new HoldRequest(0,3,"QA2","2013/03/10"));
 			manager.insertFine(new Fine(0, 0, "2013/03/03", null, 3));
 			manager.insertFine(new Fine(0, 10,"2013/01/16","2013/02/26",2));
-			
-
+			manager.insertHasSubject(new HasSubject("QA1","math"));
+			manager.insertHasSubject(new HasSubject("QA1","ANIME"));
+			manager.insertHasSubject(new HasSubject("QA2","Japanese"));
+			manager.insertHasAuthor(new HasAuthor("QA1","Anmol"));
+			manager.insertHasAuthor(new HasAuthor("QA2","George"));
 			
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
