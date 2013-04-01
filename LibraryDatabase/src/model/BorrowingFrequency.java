@@ -2,19 +2,19 @@ package model;
 
 public class BorrowingFrequency {
 	
-	private Borrowing b;
+	private String b;
 	private int f;
 
-	public BorrowingFrequency(Borrowing b, int f) {
+	public BorrowingFrequency(String b, int f) {
 		this.b = b;
 		this.f = f;
 	}
 
-	public Borrowing getB() {
+	public String getB() {
 		return b;
 	}
 
-	public void setB(Borrowing b) {
+	public void setB(String b) {
 		this.b = b;
 	}
 

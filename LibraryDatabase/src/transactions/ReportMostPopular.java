@@ -106,23 +106,64 @@ public class ReportMostPopular extends JFrame{
 
 		for (int i=0;i<checkedOutBooksInYear.size();i++){
 			Borrowing b = checkedOutBooksInYear.get(i);
-			BorrowingFrequency bfr = new BorrowingFrequency(b, countUniqueItems(b.getCallNumber()));
-			bf.add(bfr);
+			BorrowingFrequency bfr = new BorrowingFrequency(b.getCallNumber(), countUniqueItems(b.getCallNumber()));
+			//String callNumberC = bfr.getB().getCallNumber();
+			if (!bf.contains(bfr)) {
+				bf.add(bfr);
+			}
+//			for (int j = 0; j < bf.size() + 1; j++) {
+//				if (bf.size() == 0) {
+//					bf.add(bfr);
+//				} else if (bf.size() == j) {
+//					
+//				}
+//				else {
+//					BorrowingFrequency bfCheck = bf.get(j);
+//					if (!bfCheck.getB().equals(b.getCallNumber())) {
+//						bf.add(bfr);
+//					}
+//				}
+//					
+//			}
+//			if (!bf.contains(bfr)) {
+//				
+//			}
+			
+			}
+			
+			
 
 
-		}
-
-		for (int i = 0; i < number; i++) {
+		for (int i = 0; i < checkedOutBooksInYear.size(); i++) {
 			int index;
+			int count = 0;
 			index = topN();
 			if (index != -1) {
 				BorrowingFrequency b = bf.get(index);
-				String msg = "CallNumber " + b.getB().getCallNumber();
+				String msg = "CallNumber " + b.getB();
+				if (!listModel.contains(msg) && count < number) {
 				listModel.addElement(msg);
+				count = count + 1;
+				}
 				bf.remove(index);
 			}
-
 		}
+
+		
+
+//		for (int i = 0; i < number; i++) {
+//			int index;
+//			index = topN();
+//			if (index != -1) {
+//				BorrowingFrequency b = bf.get(index);
+//				String msg = "CallNumber " + b.getB();
+//				if (!listModel.contains(msg)) {
+//				listModel.addElement(msg);
+//				}
+//				bf.remove(index);
+//			}
+//
+//		}
 
 
 	}
