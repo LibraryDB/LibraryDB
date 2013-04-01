@@ -24,7 +24,7 @@ public class InsertYearAndNumberPanel extends JPanel{
 		init();
 
 	}
-
+//
 	private void init(){
 
 		// Label
