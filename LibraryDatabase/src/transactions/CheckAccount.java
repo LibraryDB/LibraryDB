@@ -7,6 +7,7 @@ import javax.swing.*;
 
 import ui.LibraryDB;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,7 +75,7 @@ public class CheckAccount extends JFrame{
 		
         // Confirm Button
 		JButton confirmButton = new JButton("Confirm");
-		confirmButton.setBounds(WIDTH/8, 5*HEIGHT/8, WIDTH/4, HEIGHT/10);
+		confirmButton.setBounds(WIDTH/8, 5*HEIGHT/8, WIDTH/3, HEIGHT/10);
 		confirmButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
@@ -85,7 +86,7 @@ public class CheckAccount extends JFrame{
 		
 		// Cancel Button
 		JButton cancelButton = new JButton("Cancel");
-		cancelButton.setBounds(WIDTH*5/8, 5*HEIGHT/8, WIDTH/4, HEIGHT/10);
+		cancelButton.setBounds(WIDTH*4/8, 5*HEIGHT/8, WIDTH/3, HEIGHT/10);
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
@@ -99,17 +100,43 @@ public class CheckAccount extends JFrame{
 	
 	private void confirmOnClick(){
 		
+		if (!isNumeric(textFields.get(0).getText().trim()))
+		{
+			popMsg("bid is invalid!");
+			return;
+		}
+		
 		int bid = Integer.parseInt(textFields.get(0).getText().trim());
 		String password;
 		password = textFields.get(1).getText().trim();
 		
+		if (!LibraryDB.getManager().isValidBid(bid))
+		{
+			popMsg("bid is invalid!");
+			return;
+		}
+				
 		// Check if borrower ID and password match.
 		if(!LibraryDB.getManager().checkPassword(password,bid)){
-			popMsg("User ID and Password don't match!");
+			popMsg("Incorrect Password or BID \nPlease try again.");
 			return;
 		}
 		
 		new CheckAccountHelper(bid);
+	}
+	
+	
+	private boolean isNumeric(String str)  
+	{  
+		try  
+		{  
+			Integer.parseInt(str);  
+		}  
+		catch(NumberFormatException nfe)  
+		{  
+			return false;  
+		}  
+		return true;  
 	}
 	
 	public void cancelOnClick(){
