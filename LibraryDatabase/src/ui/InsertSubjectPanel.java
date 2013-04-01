@@ -50,6 +50,15 @@ public class InsertSubjectPanel extends JPanel{
 
 			}
 		});
+		
+		JButton backButton = new JButton("Back");		
+		backButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				new UserFrame();
+				//lf.dispose();
+			}
+		});
 		JTextField tf = new JTextField();
 		int tf_y = HEIGHT/11;
 		int tf_h = HEIGHT/15;
@@ -60,6 +69,6 @@ public class InsertSubjectPanel extends JPanel{
 		add(label);
 		add(tf);
 		add(addBookButton);	
-		
+		add(backButton);
 	}
 }

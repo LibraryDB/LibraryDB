@@ -20,6 +20,7 @@ import model.Book;
 import model.BookCopy;
 import model.Borrower;
 import ui.LibraryDB;
+import ui.UserFrame;
 
 public class AddBook extends JFrame{
 	
@@ -80,6 +81,14 @@ public class AddBook extends JFrame{
 					return;
 				}
 				
+				for (int i = 1; i <= 5; i++) {
+					String text = textFields.get(i).getText().trim();
+					if (text.equals("")) {
+						popMsg("A field is missing!");
+						return;
+				}
+				}
+				
 				//Execute when button is pressed
 				Book b = new Book(
 						textFields.get(1).getText().trim(),
@@ -94,7 +103,13 @@ public class AddBook extends JFrame{
 						1, "in");
 				System.out.println("Book has been created");
 				String callNumber = b.getCallNumber();
-				Integer countBook = LibraryDB.getManager().countBook(callNumber);
+				Integer countBook = 0;
+				try {
+					countBook = LibraryDB.getManager().countBook(callNumber);
+				} catch (SQLException e2) {
+					// TODO Auto-generated catch block
+					determineError(e2);
+				}
 				if (countBook > 0) { // returns true if book exists
 						try {
 							Integer countBookCopy = LibraryDB.getManager().countBookCopy(callNumber);
@@ -134,6 +149,15 @@ public class AddBook extends JFrame{
 
 			
 		});
+		JButton backButton = new JButton("Back");		
+		backButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				new UserFrame();
+				//lf.dispose();
+			}
+		});
+		p.add(backButton);
 		p.add(confirmButton);
 		this.add(p);
 		

@@ -93,10 +93,11 @@ public class JDBCManager
 			{
 				System.out.println("Message: " + ex2.getMessage());
 				System.exit(-1);
+				
 			}
 		}
 	}
-	public Integer countBook(String callNumber){
+	public Integer countBook(String callNumber) throws SQLException{
 		PreparedStatement  ps;
 
 		try
@@ -118,6 +119,7 @@ public class JDBCManager
 			try 
 			{
 				con.rollback();	
+				throw ex;
 			}
 			catch (SQLException ex2)
 			{
@@ -151,6 +153,7 @@ public class JDBCManager
 			{
 				// undo the insert
 				con.rollback();	
+				throw ex;
 			}
 			catch (SQLException ex2)
 			{

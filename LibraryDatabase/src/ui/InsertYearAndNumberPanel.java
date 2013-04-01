@@ -46,6 +46,16 @@ public class InsertYearAndNumberPanel extends JPanel{
 
 			}
 		});
+		
+		JButton backButton = new JButton("Back");		
+		backButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				new UserFrame();
+				//lf.dispose();
+			}
+		});
+		
 		JTextField tf = new JTextField();
 		int tf_y = HEIGHT/11;
 		int tf_h = HEIGHT/15;
@@ -60,7 +70,7 @@ public class InsertYearAndNumberPanel extends JPanel{
 		add(tf);
 		add(tf2);
 		add(addBookButton);	
-		
+		add(backButton);
 	}
 
 }
