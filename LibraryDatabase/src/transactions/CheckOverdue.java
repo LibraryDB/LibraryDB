@@ -195,6 +195,12 @@ public class CheckOverdue extends JFrame{
 	// Send email buttons
 	private void onClickSendSelected() {
 		int n = selected.size();
+		if (n == 0) 
+		{
+			popMsg("Must select at least one borrowing!");
+			return;
+		}
+		
 		popMsg("Email Sent to the borrowers of the " + n + " selected Borrowings");	
 		this.dispose();
 	}
