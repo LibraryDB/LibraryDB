@@ -30,14 +30,14 @@ public class ReportCheckedOut extends JFrame{
 	private List<Borrowing> checkedOutBooks;
 	private List<Integer> selected;
 	final JTextArea textArea = new JTextArea(5, 12);
-	
+
 	public ReportCheckedOut(){
 		super("Report of Checked out Items");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //Exits the window when user clicks on "x"
-		
+
 		checkedOutBooks = getCheckedOutItems();
 		selected = new ArrayList<Integer>();
-		
+
 		initPanel();
 
 		// Center the window
@@ -49,33 +49,34 @@ public class ReportCheckedOut extends JFrame{
 		setSize(WIDTH,HEIGHT);
 		setVisible(true);
 	}
-	
+
 	// Creates the list of borrowed books to be displayed in the textbox
 	private void initList(){
-		
-        listModel = new DefaultListModel();
-        listModelOverDue = new DefaultListModel();
-        for (int i=0;i<checkedOutBooks.size();i++){
-        	Borrowing b = checkedOutBooks.get(i);
-        	Calendar currentCal = new GregorianCalendar(TimeZone.getTimeZone("PST"));
-        	Calendar dueDate = new GregorianCalendar();
-        	dueDate = stringToCalendar(b.getOutDate());
-        	if (dueDate.after(currentCal)) {
-        		String msg = 
-            			"CallNumber " + b.getCallNumber() + 
-            			" Checked Out: " + b.getOutDate() + 
-            		        	" Due Date:" + b.getInDate();
-            	listModelOverDue.addElement(msg);
-        	}
-        	else {
-        	String msg = 
-        			"CallNumber " + b.getCallNumber() + 
-        			" Checked Out: " + b.getOutDate() + 
-        		        	" Due Date:" + b.getInDate();
-        	listModel.addElement(msg);
-        	}
-        }
-                
+
+		listModel = new DefaultListModel();
+		listModelOverDue = new DefaultListModel();
+		for (int i=0;i<checkedOutBooks.size();i++){
+			Borrowing b = checkedOutBooks.get(i);
+			Calendar currentCal = new GregorianCalendar(TimeZone.getTimeZone("PST"));
+			Calendar dueDate = new GregorianCalendar();
+			dueDate = stringToCalendar(b.getOutDate());
+			if (dueDate.after(currentCal)) {
+				String msg = 
+						"CallNumber " + b.getCallNumber() + 
+						" Checked Out: " + b.getOutDate() + 
+						" Due Date:" + b.getInDate() +
+						" Note: OVERDUE";
+				listModel.addElement(msg);
+			}
+			else {
+				String msg = 
+						"CallNumber " + b.getCallNumber() + 
+						" Checked Out: " + b.getOutDate() + 
+						" Due Date:" + b.getInDate();
+				listModel.addElement(msg);
+			}
+		}
+
 	}
 	private Calendar stringToCalendar(String str){
 		String parts[] = str.split("/");
@@ -85,37 +86,37 @@ public class ReportCheckedOut extends JFrame{
 		Calendar cal = Calendar.getInstance();
 		cal.set(year, month, date);
 		return cal;
-		
+
 	}
-	
+
 	private void initPanel(){
 		int disp = 20;
-		
+
 		JPanel p = new JPanel();
 		p.setLayout(null);
-       
 
-        // *********************** LIST **************************
+
+		// *********************** LIST **************************
 		initList();
-        list = new JList(listModel);
-        list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        list.setSelectedIndex(0);
- 
-        
-        JScrollPane listScrollPane = new JScrollPane(list);
-        listScrollPane.setBounds(WIDTH/9 - disp, HEIGHT/8 - disp, WIDTH , HEIGHT/2);
-        p.add(listScrollPane);
-        
+		list = new JList(listModel);
+		list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		list.setSelectedIndex(0);
+
+
+		JScrollPane listScrollPane = new JScrollPane(list);
+		listScrollPane.setBounds(WIDTH/9 - disp, HEIGHT/8 - disp, WIDTH , HEIGHT/2);
+		p.add(listScrollPane);
+
 		this.add(p);
-		
+
 	}	
-	
+
 	// Returns list of overdue Borrowings
 	private ArrayList<Borrowing> getCheckedOutItems(){
 		ArrayList<Borrowing> result = new ArrayList<Borrowing>();
 		result = LibraryDB.getManager().getBorrowingAll();
 		return result;
 	}
-	
+
 
 }
