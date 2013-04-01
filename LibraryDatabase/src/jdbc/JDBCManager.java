@@ -1206,6 +1206,8 @@ public class JDBCManager
 		}	
 		return borrowing;
 	}
+
+
 	public ArrayList<HoldRequest> getHoldRequest(){
 		ArrayList<HoldRequest> holdRequest = new ArrayList<HoldRequest>();
 		Statement  stmt;
@@ -1308,6 +1310,43 @@ public class JDBCManager
 			}
 		}
 	}
+
+	public void updateFinePayment(int fid, String paidDate,int amount){ 
+		PreparedStatement ps; 
+
+		try { 
+			System.out.println(fid); 
+			System.out.println(paidDate); 
+			System.out.println(amount); 
+			ps = con.prepareStatement("UPDATE fine SET paidDate = ?,  amount = amount - ? WHERE fid = ?"); 
+			ps.setString(1, paidDate); 
+			ps.setInt(2, amount); 
+			ps.setInt(3,fid); 
+			int rowCount = ps.executeUpdate(); 
+			if (rowCount == 0) 
+			{ 
+				System.out.println("Fine record does not exist!"); 
+			} 
+
+			con.commit(); 
+			ps.close();   
+		} 
+		catch (SQLException ex) 
+		{ 
+			System.out.println("Message: " + ex.getMessage()); 
+
+			try  
+			{ 
+				con.rollback();   
+			} 
+			catch (SQLException ex2) 
+			{ 
+				System.out.println("Message: " + ex2.getMessage()); 
+				System.exit(-1); 
+			} 
+		} 
+	} 
+
 
 	//**************************************************************
 	//************************ OTHER *******************************
