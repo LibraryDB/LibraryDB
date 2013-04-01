@@ -24,8 +24,8 @@ import model.HasSubject;
 
 public class ReportCheckedOutHelper extends JFrame{
 	// dimensions of the window
-	private int WIDTH = 400;
-	private int HEIGHT = 500;
+	private int WIDTH = 500;
+	private int HEIGHT = 300;
 	private JList list;
 	private DefaultListModel listModel;
 	private List<Borrowing> checkedOutBooks;
@@ -109,7 +109,7 @@ public class ReportCheckedOutHelper extends JFrame{
 
 
 		JScrollPane listScrollPane = new JScrollPane(list);
-		listScrollPane.setBounds(WIDTH/9 - disp, HEIGHT/8 - disp, WIDTH , HEIGHT/2);
+		listScrollPane.setBounds(0, 0, WIDTH , HEIGHT);
 		p.add(listScrollPane);
 
 		this.add(p);
