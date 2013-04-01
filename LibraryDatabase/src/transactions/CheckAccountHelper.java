@@ -109,9 +109,7 @@ public class CheckAccountHelper extends JFrame {
 		addBookButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				PayFine(bid);	
-				System.out.println("Pay Fine");
-				new CheckAccountHelper(bid);
+				PayFine();	
 			}
 		});
 		p.add(addBookButton);
@@ -143,7 +141,7 @@ public class CheckAccountHelper extends JFrame {
 
 	
 
-	private int PayFine(int bid) { 
+	private int PayFine() { 
 		String date = new java.text.SimpleDateFormat("yyyy/MM/dd").format(new java.util.Date());
 		int rate = 30;		
 		int duration = 0;
@@ -171,9 +169,14 @@ public class CheckAccountHelper extends JFrame {
 			
 		}
 		if (a){
-			popMsg("The total fine payment is: " + duration*rate);
+			popMsg("The total fine payment is: " + duration*rate + "cents");
+			new CheckAccountHelper(bid);	
+			this.dispose();
+			
 		}
+		
 		return duration;
+		
 	}
 	
 	// converts "yyyy/mm/dd" to Calendar.

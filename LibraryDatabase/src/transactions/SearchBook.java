@@ -13,7 +13,7 @@ public class SearchBook extends JFrame {
 	private List<JTextField> textFields = new ArrayList<JTextField>();	
 	private int WIDTH = 300;
 	private int HEIGHT = 300;
-	private int flag;
+	private int flag = -1;
 	private String value;
 	
 	public SearchBook() {
@@ -93,6 +93,11 @@ public class SearchBook extends JFrame {
 				String searchKey = textFields.get(0).getText().trim();
 				if(searchKey.isEmpty()){
 					popMsg("Please provide a Search Key");
+					return;
+				}
+				
+				if (flag == -1){
+					popMsg("What in the world are you searching by?");
 					return;
 				}
 				
