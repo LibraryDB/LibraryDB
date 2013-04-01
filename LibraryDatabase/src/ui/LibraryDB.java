@@ -181,37 +181,46 @@ public class LibraryDB implements ActionListener
 	
 		
 		try {
-
-			manager.insertBook(new Book("QA1","82746383","The Monster","Someone","pluto",1991));
-			manager.insertBook(new Book("QA2","18274","NHL","Jimmy Zhang","Sidney Crosby",2014));
-			manager.insertBook(new Book("QA3", "9999", "Private", "Anmol", "Dude", 2013));
-			manager.insertBorrower(new Borrower(0,"b","c","d",604,"f",735,"2014/01/01","student"));
-			manager.insertBorrower(new Borrower(0,"password","Jimmy Zhang","Surrey",604720,"jimmy@zhang.com",733,"9999/01/01","faculty"));
-			manager.insertBookCopy(new BookCopy("QA2",1,BookCopy.OUT));
-			manager.insertBookCopy(new BookCopy("QA2",2,BookCopy.OUT));
-			manager.insertBookCopy(new BookCopy("QA2",3,BookCopy.ON_HOLD));
-			manager.insertBookCopy(new BookCopy("QA2",4,BookCopy.OUT));
-			manager.insertBookCopy(new BookCopy("QA2",5,BookCopy.OUT));
-			manager.insertBookCopy(new BookCopy("QA2",6,BookCopy.ON_HOLD));
-			manager.insertBookCopy(new BookCopy("QA1",1,BookCopy.IN));
-			manager.insertBookCopy(new BookCopy("QA3",1,BookCopy.IN));
-			
-			manager.insertBorrowing(new Borrowing(0,3,"QA1",1,"2013/01/02","2013/02/26"));
-			manager.insertBorrowing(new Borrowing(0,2,"QA2",1,"2013/01/01",null)); 
-			manager.insertBorrowing(new Borrowing(0,2,"QA2",2,"2013/03/19",null));
-			manager.insertBorrowing(new Borrowing(0,2,"QA2",3,"2013/03/19","2013/03/20"));
-			manager.insertBorrowing(new Borrowing(0,2,"QA2",4,"2013/03/01",null));
-			manager.insertBorrowing(new Borrowing(0,2,"QA2",5,"2013/03/02",null));
-			manager.insertBorrowing(new Borrowing (0, 2, "QA3", 1, "2013/03/31", null));
-			manager.insertHoldRequest(new HoldRequest(0,2,"QA1","2013/03/22"));
-			manager.insertHoldRequest(new HoldRequest(0,3,"QA2","2013/03/10"));
-			manager.insertFine(new Fine(0, 0, "2013/03/03", null, 3));
-			manager.insertFine(new Fine(0, 10,"2013/01/16","2013/02/26",2));
-			manager.insertHasSubject(new HasSubject("QA1","math"));
-			manager.insertHasSubject(new HasSubject("QA1","ANIME"));
-			manager.insertHasSubject(new HasSubject("QA2","Japanese"));
-			manager.insertHasAuthor(new HasAuthor("QA1","Anmol"));
-			manager.insertHasAuthor(new HasAuthor("QA2","George"));
+			// Books
+			manager.insertBook(new Book("QA111","82746383","The Monster","Someone","pluto",1991));
+			manager.insertBook(new Book("QA222","0747581088","Harry Potter","J.K. Rowling","Bloomsbury",2005));
+			manager.insertBook(new Book("QA333", "9999", "Book name", "AuthorA", "PublisherB", 2013));
+			// Borrowers
+			manager.insertBorrower(new Borrower(0,"abcdefg","Kenny","Vancouver",604158,"a@b.com",73559098,"2014/01/01","student"));
+			manager.insertBorrower(new Borrower(0,"password","Jimmy","Surrey",604720,"jimmy@zhang.com",733232424,"2015/01/01","faculty"));
+			// BookCopies
+			manager.insertBookCopy(new BookCopy("QA222",1,BookCopy.OUT));
+			manager.insertBookCopy(new BookCopy("QA222",2,BookCopy.OUT));
+			manager.insertBookCopy(new BookCopy("QA222",3,BookCopy.ON_HOLD));
+			manager.insertBookCopy(new BookCopy("QA222",4,BookCopy.OUT));
+			manager.insertBookCopy(new BookCopy("QA222",5,BookCopy.OUT));
+			manager.insertBookCopy(new BookCopy("QA222",6,BookCopy.ON_HOLD));
+			manager.insertBookCopy(new BookCopy("QA111",1,BookCopy.IN));
+			manager.insertBookCopy(new BookCopy("QA111",2,BookCopy.OUT));
+			manager.insertBookCopy(new BookCopy("QA111",3,BookCopy.IN));
+			manager.insertBookCopy(new BookCopy("QA333",1,BookCopy.OUT));
+			manager.insertBookCopy(new BookCopy("QA333",2,BookCopy.IN));
+			// Borrowings
+			manager.insertBorrowing(new Borrowing(0,3,"QA111",1,"2013/01/02","2013/02/26"));
+			manager.insertBorrowing(new Borrowing(0,2,"QA222",1,"2013/01/01",null)); 
+			manager.insertBorrowing(new Borrowing(0,2,"QA222",2,"2013/03/19",null));
+			manager.insertBorrowing(new Borrowing(0,2,"QA222",3,"2013/03/01","2013/03/20"));
+			manager.insertBorrowing(new Borrowing(0,2,"QA222",4,"2013/03/01",null));
+			manager.insertBorrowing(new Borrowing(0,2,"QA222",5,"2013/03/02",null));
+			manager.insertBorrowing(new Borrowing(0,2,"QA111",2,"2013/03/02",null));
+			manager.insertBorrowing(new Borrowing (0, 2, "QA333", 1, "2013/03/31", null));
+			// Hold Request
+			manager.insertHoldRequest(new HoldRequest(0,3,"QA222","2013/03/10"));
+			// Fine
+			manager.insertFine(new Fine(0, 200, "2013/03/20", null, 5));
+			manager.insertFine(new Fine(0, 300,"2013/01/16","2013/02/26",2));
+			// Has Subject
+			manager.insertHasSubject(new HasSubject("QA111","Science"));
+			manager.insertHasSubject(new HasSubject("QA111","ANIME"));
+			manager.insertHasSubject(new HasSubject("QA222","Japanese"));
+			// Has Author
+			manager.insertHasAuthor(new HasAuthor("QA111","Peter"));
+			manager.insertHasAuthor(new HasAuthor("QA222","George"));
 			
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
