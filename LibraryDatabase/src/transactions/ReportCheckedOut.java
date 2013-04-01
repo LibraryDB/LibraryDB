@@ -2,6 +2,7 @@ package transactions;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -57,10 +58,11 @@ public class ReportCheckedOut extends JFrame{
 		listModelOverDue = new DefaultListModel();
 		for (int i=0;i<checkedOutBooks.size();i++){
 			Borrowing b = checkedOutBooks.get(i);
-			Calendar currentCal = new GregorianCalendar(TimeZone.getTimeZone("PST"));
-			Calendar dueDate = new GregorianCalendar();
-			dueDate = stringToCalendar(b.getOutDate());
-			if (dueDate.after(currentCal)) {
+			Boolean due = isNotOverDue(b);
+			//Calendar currentCal = new GregorianCalendar(TimeZone.getTimeZone("PST"));
+			//Calendar dueDate = new GregorianCalendar();
+			//dueDate = stringToCalendar(b.getOutDate());
+			if (!due) {
 				String msg = 
 						"CallNumber " + b.getCallNumber() + 
 						" Checked Out: " + b.getOutDate() + 
@@ -118,5 +120,23 @@ public class ReportCheckedOut extends JFrame{
 		return result;
 	}
 
+	private boolean isNotOverDue(Borrowing b) { // checks if book is not overdue... dun feel like refactoring
+		int timeLimit = 0;
+		Calendar currentCal = new GregorianCalendar(TimeZone.getTimeZone("PST"));
+		
+		try {
+			timeLimit = LibraryDB.getManager().getTimeLimit(b.getBid());
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			return false;
+		}
+		
+		Calendar dueCal = stringToCalendar(b.getOutDate());// get current time
+		dueCal.add(Calendar.DATE, timeLimit); 				// dueCal is now current time + timeLimit = due date
+		if (dueCal.after(currentCal)) return true;	
+		System.out.println(b.getBid());
+		return false;
+	}
+	
 
 }
