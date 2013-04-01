@@ -83,12 +83,11 @@ public class PlaceHoldRequest extends JFrame{
 		
         // Confirm Button
 		JButton confirmButton = new JButton("Confirm");
-		confirmButton.setBounds(WIDTH/8, 5*HEIGHT/8, WIDTH/4, HEIGHT/10);
+		confirmButton.setBounds(WIDTH/8, 5*HEIGHT/8, WIDTH/3, HEIGHT/10);
 		confirmButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				confirmOnClick();	
-				popMsg("An hold request is placed.");
+				confirmOnClick();					
 			}
 		});
 		p.add(confirmButton);
@@ -110,16 +109,55 @@ public class PlaceHoldRequest extends JFrame{
 	private void confirmOnClick(){
 		String date;
 		date = textFields.get(0).getText().trim();
+		
+		if (!isNumeric(textFields.get(1).getText().trim()))
+		{
+			popMsg("bid is invalid!");
+			return;
+		}
+		
 		int bid = Integer.parseInt(textFields.get(1).getText().trim());
 		String callNumber = textFields.get(2).getText().trim();
 		
-		HoldRequest hr = new HoldRequest(0,bid,callNumber,date);
-		LibraryDB.getManager().insertHoldRequest(hr);
+		if (!LibraryDB.getManager().isValidBid(bid))
+		{
+			popMsg("bid is invalid!");
+			return;
+		}
 		
-		// update book copy status
-		LibraryDB.getManager().updateBookCopyStatus(callNumber);
+		HoldRequest hr = new HoldRequest(0,bid,callNumber,date);
+		try {
+			LibraryDB.getManager().insertHoldRequest(hr);
+			LibraryDB.getManager().updateBookCopyStatus(callNumber);
+			popMsg("An hold request is placed.");
+			this.dispose();
+		} catch (SQLException e) {
+			determineError(e);
+			System.out.println(e.getMessage());
+		}
 	}
 
+	private void determineError(SQLException e){
+		if (e.getMessage().contains("ORA-01400"))
+			popMsg("Error! \nOne of the values are not given. \nPlease try again.");
+		if (e.getMessage().contains("ORA-02291"))
+			popMsg("Error! \nCallNumber is invalid! \n Please try again.");
+
+	}
+	
+	private boolean isNumeric(String str)  
+	{  
+		try  
+		{  
+			Integer.parseInt(str);  
+		}  
+		catch(NumberFormatException nfe)  
+		{  
+			return false;  
+		}  
+		return true;  
+	}
+	
 	public void cancelOnClick(){
 		this.dispose();
 	}

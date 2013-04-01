@@ -405,7 +405,7 @@ public class JDBCManager
 
 	}
 
-	public void insertHoldRequest(HoldRequest hr){
+	public void insertHoldRequest(HoldRequest hr) throws SQLException{
 		// hid, bid, CallNumber, IssueDate (hid primary keys)
 		PreparedStatement  ps;
 
@@ -429,11 +429,13 @@ public class JDBCManager
 			{
 				// undo the insert
 				con.rollback();	
+				throw ex;
 			}
 			catch (SQLException ex2)
 			{
 				System.out.println("Message: " + ex2.getMessage());
-				System.exit(-1);
+				throw ex;
+				//System.exit(-1);
 			}
 		}
 
@@ -1417,7 +1419,7 @@ public class JDBCManager
 		} 
 	} 
 	
-	public void updateBookCopyStatus(String callNumber){
+	public void updateBookCopyStatus(String callNumber) throws SQLException{
 		PreparedStatement ps; 
 
 		try { 
@@ -1426,26 +1428,20 @@ public class JDBCManager
 			ps.setString(2, callNumber); 
 			ps.setString(3,"in");
 			int rowCount = ps.executeUpdate(); 
-			if (rowCount == 0) 
-			{ 
-				System.out.println("Fine record does not exist!"); 
-			} 
 
 			con.commit(); 
 			ps.close();   
 		} 
 		catch (SQLException ex) 
 		{ 
-			System.out.println("Message: " + ex.getMessage()); 
-
 			try  
 			{ 
 				con.rollback();   
+				throw ex;
 			} 
 			catch (SQLException ex2) 
-			{ 
-				System.out.println("Message: " + ex2.getMessage()); 
-				System.exit(-1); 
+			{ 				
+				throw ex;
 			} 
 		} 
 	}
