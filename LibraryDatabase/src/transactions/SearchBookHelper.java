@@ -16,7 +16,7 @@ import java.util.List;
 
 public class SearchBookHelper extends JFrame{
 	// dimensions of the window
-	private int WIDTH = 800;
+	private int WIDTH = 900;
 	private int HEIGHT = 500;
 	private String value;
 	private int flag;
@@ -28,8 +28,7 @@ public class SearchBookHelper extends JFrame{
 		
 		this.flag = flag;
 		this.value = value;
-//		System.out.println(value);
-//		System.out.println(flag);
+
 		initPanel();
 
 		// Center the window
@@ -46,20 +45,13 @@ public class SearchBookHelper extends JFrame{
 		int scale = 10;
 		JPanel p = new JPanel();
 		p.setLayout(null);
-		
-//		// Search Result Label
-//		JLabel label0 = new JLabel("Search Results");
-//		label0.setBounds(WIDTH/4, 0, WIDTH/3, HEIGHT/scale);
-//		label0.setHorizontalAlignment(SwingConstants.CENTER);
-//		label0.setVerticalAlignment(SwingConstants.CENTER);
-//		p.add(label0);
-			
+
 		JTextArea ta0 = new JTextArea();
-		ta0.setBounds(scale, HEIGHT*1/scale , WIDTH-2*scale , HEIGHT*2/scale);
+		ta0.setBounds(scale, HEIGHT/10 , WIDTH-2*scale , HEIGHT/2);
 		ta0.setEditable(false);
 		switch(flag){
 		case 0:
-//			System.out.println(value);
+
 			ArrayList<Book> booksByID = LibraryDB.getManager().searchBookByCallID(value);
 			for (Book bookByID: booksByID){
 				ArrayList<BookCopy> ins = LibraryDB.getManager().searchBookCopyByCallID(bookByID.getCallNumber(),BookCopy.IN);

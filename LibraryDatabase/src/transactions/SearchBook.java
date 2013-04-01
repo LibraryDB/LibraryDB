@@ -85,7 +85,7 @@ public class SearchBook extends JFrame {
 
 		// Search Button
 		JButton searchButton = new JButton("Confirm");
-		searchButton.setBounds(WIDTH/8, 5*HEIGHT/8, WIDTH/4, HEIGHT/10);
+		searchButton.setBounds(WIDTH/8, 5*HEIGHT/8, WIDTH/3, HEIGHT/10);
 		searchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
@@ -101,8 +101,7 @@ public class SearchBook extends JFrame {
 					return;
 				}
 				
-				value = textFields.get(0).getText().trim();
-				new SearchBookHelper(flag,value);	
+				new SearchBookHelper(flag,searchKey);	
 			}
 		});
 		p.add(searchButton);
