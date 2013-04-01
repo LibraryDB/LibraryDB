@@ -148,7 +148,7 @@ public class AddBorrower extends JFrame{
 		if (e.getMessage().contains("ORA-01400"))
 			popMsg("Error! \nOne of the values are not given. \nPlease try again.");
 		if (e.getMessage().contains("ORA-00001"))
-			popMsg("Error! \nbid already exists! \nPlease try again.");
+			popMsg("Error! \nStudent # or SIN already exists in the system! \nPlease try again.");
 		if (e.getMessage().contains("ORA-02291"))
 			popMsg("Error! \ntype must be one of: \nstudent , faculty , or staff");
 

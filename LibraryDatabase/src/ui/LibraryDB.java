@@ -143,7 +143,7 @@ public class LibraryDB implements ActionListener
 			loginFrame.dispose();
 			userFrame = new UserFrame();
 			new DisplayDB();
-			//initTableValues(); 
+			initTableValues(); 
 			//TODO
 		}
 		else
@@ -186,7 +186,7 @@ public class LibraryDB implements ActionListener
 			manager.insertBook(new Book("QA2","18274","NHL","Jimmy Zhang","Sidney Crosby",2014));
 			manager.insertBook(new Book("QA3", "9999", "Private", "Anmol", "Dude", 2013));
 			manager.insertBorrower(new Borrower(0,"b","c","d",604,"f",735,"2014/01/01","student"));
-			manager.insertBorrower(new Borrower(0,"password","Jimmy Zhang","Surrey",604720,"jimmy@zhang.com",735,"9999/01/01","faculty"));
+			manager.insertBorrower(new Borrower(0,"password","Jimmy Zhang","Surrey",604720,"jimmy@zhang.com",733,"9999/01/01","faculty"));
 			manager.insertBookCopy(new BookCopy("QA2",1,BookCopy.OUT));
 			manager.insertBookCopy(new BookCopy("QA2",2,BookCopy.OUT));
 			manager.insertBookCopy(new BookCopy("QA2",3,BookCopy.ON_HOLD));
