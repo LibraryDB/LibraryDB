@@ -1346,6 +1346,39 @@ public class JDBCManager
 			} 
 		} 
 	} 
+	
+	public void updateBookCopyStatus(String callNumber){
+		PreparedStatement ps; 
+
+		try { 
+			ps = con.prepareStatement("UPDATE bookcopy SET status = ? WHERE callNumber = ? AND status = ?"); 
+			ps.setString(1, "on-hold");
+			ps.setString(2, callNumber); 
+			ps.setString(3,"in");
+			int rowCount = ps.executeUpdate(); 
+			if (rowCount == 0) 
+			{ 
+				System.out.println("Fine record does not exist!"); 
+			} 
+
+			con.commit(); 
+			ps.close();   
+		} 
+		catch (SQLException ex) 
+		{ 
+			System.out.println("Message: " + ex.getMessage()); 
+
+			try  
+			{ 
+				con.rollback();   
+			} 
+			catch (SQLException ex2) 
+			{ 
+				System.out.println("Message: " + ex2.getMessage()); 
+				System.exit(-1); 
+			} 
+		} 
+	}
 
 
 	//**************************************************************

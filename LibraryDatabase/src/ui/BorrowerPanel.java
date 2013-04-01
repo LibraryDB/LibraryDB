@@ -16,7 +16,7 @@ import javax.swing.SwingConstants;
 
 import transactions.SearchBook;
 import transactions.CheckAccount;
-import transactions.HoldRequest;
+import transactions.PlaceHoldRequest;
 import transactions.PayFine;
 
 
@@ -65,7 +65,7 @@ public class BorrowerPanel extends JPanel {
 		processReturnButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				new HoldRequest();
+				new PlaceHoldRequest();
 				System.out.println("Place a hold request");
 
 			}
