@@ -17,7 +17,6 @@ import javax.swing.SwingConstants;
 import transactions.SearchBook;
 import transactions.CheckAccount;
 import transactions.PlaceHoldRequest;
-import transactions.PayFine;
 
 
 public class BorrowerPanel extends JPanel {
@@ -39,8 +38,8 @@ public class BorrowerPanel extends JPanel {
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		// Search Book button
-		JButton addBorrowerButton = new JButton("Search Book");		
-		addBorrowerButton.addActionListener(new ActionListener() {
+		JButton searchBookrButton = new JButton("Search Book");		
+		searchBookrButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
 				new SearchBook();
@@ -50,8 +49,8 @@ public class BorrowerPanel extends JPanel {
 		});
 		
 		// Check Account button
-		JButton checkOutButton = new JButton("Check Account");		
-		checkOutButton.addActionListener(new ActionListener() {
+		JButton checkAccountButton = new JButton("Check Account");		
+		checkAccountButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
 				new CheckAccount();
@@ -61,8 +60,8 @@ public class BorrowerPanel extends JPanel {
 		});
 		
 		// Place a hold request
-		JButton processReturnButton = new JButton("Place a hold request");		
-		processReturnButton.addActionListener(new ActionListener() {
+		JButton holdRequestButton = new JButton("Place a hold request");		
+		holdRequestButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
 				new PlaceHoldRequest();
@@ -71,16 +70,16 @@ public class BorrowerPanel extends JPanel {
 			}
 		});
 		
-		// Pay Fine
-		JButton checkOverdueButton = new JButton("Pay Fine");		
-		checkOverdueButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e)
-			{
-				new PayFine();
-				System.out.println("Pay Fine");
-
-			}
-		});
+//		// Pay Fine
+//		JButton checkOverdueButton = new JButton("Pay Fine");		
+//		checkOverdueButton.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e)
+//			{
+//				new PayFine();
+//				System.out.println("Pay Fine");
+//
+//			}
+//		});
 		
 		JButton backButton = new JButton("Back");		
 		backButton.addActionListener(new ActionListener() {
@@ -92,10 +91,10 @@ public class BorrowerPanel extends JPanel {
 		});
 		
 		add(label);
-		add(addBorrowerButton);	
-		add(checkOutButton);
-		add(processReturnButton);
-		add(checkOverdueButton);
+		add(searchBookrButton);	
+		add(checkAccountButton);
+		add(holdRequestButton);
+//		add(checkOverdueButton);
 		add(backButton);
 		
 	}
