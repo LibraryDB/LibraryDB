@@ -178,8 +178,7 @@ public class LibraryDB implements ActionListener
 		manager.insertBorrowerType(new BorrowerType("student",14));
 		manager.insertBorrowerType(new BorrowerType("faculty",84));
 		manager.insertBorrowerType(new BorrowerType("staff",42));		
-		
-
+	
 		
 		try {
 

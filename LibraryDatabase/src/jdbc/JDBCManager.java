@@ -972,7 +972,7 @@ public class JDBCManager
 				String out = rs.getString("outDate");
 				Integer iOut = stringToCalendarYear(out);
 				//Integer in = stringToCalendarYear(rs.getString("inDate")); 
-				if (iOut == year) { 
+				if (iOut.equals(year)) { 
 					Borrowing b = new Borrowing(rs.getInt("borid"), 
 							rs.getInt("bid"), 
 							rs.getString("callNumber"),  
@@ -1676,9 +1676,6 @@ public class JDBCManager
 		try
 		{
 			ps = con.prepareStatement("SELECT * FROM hassubject WHERE subject = ?");
-
-			rs = ps.executeQuery();
-
 			ps.setString(1, subject);
 			rs = ps.executeQuery();
 
