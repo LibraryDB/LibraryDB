@@ -27,7 +27,7 @@ public class JDBCManager
 		{
 			// Load the Oracle JDBC driver
 			DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
-		}
+		}//
 		catch (SQLException ex)
 		{
 			System.out.println("Message: " + ex.getMessage());

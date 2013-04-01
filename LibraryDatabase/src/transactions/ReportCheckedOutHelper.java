@@ -94,7 +94,7 @@ public class ReportCheckedOutHelper extends JFrame{
 		int disp = 20;
 
 		JPanel p = new JPanel();
-		p.setLayout(null);
+		p.setLayout(null);//
 
 
 		// *********************** LIST **************************

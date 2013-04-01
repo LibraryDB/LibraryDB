@@ -94,7 +94,7 @@ public class ReportCheckedOut extends JFrame{
 
 		JPanel p = new JPanel();
 		p.setLayout(null);
-
+//
 
 		// *********************** LIST **************************
 		initList();
