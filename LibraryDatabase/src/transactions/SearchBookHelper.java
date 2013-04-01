@@ -62,12 +62,17 @@ public class SearchBookHelper extends JFrame{
 //			System.out.println(value);
 			ArrayList<Book> booksByID = LibraryDB.getManager().searchBookByCallID(value);
 			for (Book bookByID: booksByID){
+				ArrayList<BookCopy> ins = LibraryDB.getManager().searchBookCopyByCallID(bookByID.getCallNumber(),BookCopy.IN);
+				ArrayList<BookCopy> outs = LibraryDB.getManager().searchBookCopyByCallID(bookByID.getCallNumber(),BookCopy.OUT);
+				int in = ins.size(); int out = outs.size();
 				ta0.append("Call Number: " + bookByID.getCallNumber()
 						+ " || ISBN: " + bookByID.getIsbn() 
 						+ " || Title: " + bookByID.getTitle()
 						+ " || Main Author: " + bookByID.getMainAuthor()
 						+ " || Publisher: " + bookByID.getPublisher()
-						+ " || Year: " + bookByID.getYear() + "\n");
+						+ " || Year: " + bookByID.getYear() 
+						+ " || in: " + in
+						+ " || out: " + out + "\n");
 			}
 			break;
 		case 1:
@@ -103,12 +108,17 @@ public class SearchBookHelper extends JFrame{
 			}
 			
 			for (Book bookBySubject: booksBySubject){
+				ArrayList<BookCopy> ins = LibraryDB.getManager().searchBookCopyByCallID(bookBySubject.getCallNumber(),BookCopy.IN);
+				ArrayList<BookCopy> outs = LibraryDB.getManager().searchBookCopyByCallID(bookBySubject.getCallNumber(),BookCopy.OUT);
+				int in = ins.size(); int out = outs.size();
 				ta0.append("Call Number: " + bookBySubject.getCallNumber()
 						+ " || ISBN: " + bookBySubject.getIsbn() 
 						+ " || Title: " + bookBySubject.getTitle()
 						+ " || Main Author: " + bookBySubject.getMainAuthor()
 						+ " || Publisher: " + bookBySubject.getPublisher()
-						+ " || Year: " + bookBySubject.getYear() + "\n");
+						+ " || Year: " + bookBySubject.getYear() 
+						+ " || in: " + in
+						+ " || out: " + out + "\n");
 			}
 			break;
 		default:
