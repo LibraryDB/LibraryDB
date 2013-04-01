@@ -1637,6 +1637,34 @@ public class JDBCManager
 		return books;
 	}
 
+	public ArrayList<BookCopy> searchBookCopyByCallID(String callNumber, String status) {
+		ArrayList<BookCopy> bookcopies = new ArrayList<BookCopy>();
+		PreparedStatement  ps;
+		ResultSet rs;
+
+		try {
+			ps = con.prepareStatement("select * from bookcopy where callnumber = ? AND status = ?");
+			ps.setString(1, callNumber);
+			ps.setString(2, status);
+			rs = ps.executeQuery();
+
+			while(rs.next())
+			{
+
+				BookCopy b = new BookCopy(rs.getString("callnumber"),
+						rs.getInt("copyno"),
+						rs.getString("status"));
+
+				bookcopies.add(b);
+
+			}
+			ps.close();
+		} catch (SQLException ex) {
+			System.out.println("Message: " + ex.getMessage());
+		}
+		return bookcopies;
+	}
+	
 	// search a book by its Author
 	public ArrayList<Book> searchBookByAuthor(String author) {
 		ArrayList<Book> books = new ArrayList<Book>();

@@ -5,6 +5,7 @@ import java.awt.event.*;
 import javax.swing.*;
 
 import model.Book;
+import model.BookCopy;
 import model.Borrowing;
 import model.HasSubject;
 import ui.LibraryDB;
@@ -73,12 +74,17 @@ public class SearchBookHelper extends JFrame{
 			ArrayList<Book> booksByAuthor = LibraryDB.getManager().searchBookByAuthor(value);
 			System.out.println(value);
 			for (Book bookByAuthor: booksByAuthor){
+				ArrayList<BookCopy> ins = LibraryDB.getManager().searchBookCopyByCallID(bookByAuthor.getCallNumber(),BookCopy.IN);
+				ArrayList<BookCopy> outs = LibraryDB.getManager().searchBookCopyByCallID(bookByAuthor.getCallNumber(),BookCopy.OUT);
+				int in = ins.size(); int out = outs.size();
 				ta0.append("Call Number: " + bookByAuthor.getCallNumber()
 						+ " || ISBN: " + bookByAuthor.getIsbn() 
 						+ " || Title: " + bookByAuthor.getTitle()
 						+ " || Main Author: " + bookByAuthor.getMainAuthor()
 						+ " || Publisher: " + bookByAuthor.getPublisher()
-						+ " || Year: " + bookByAuthor.getYear() + "\n");
+						+ " || Year: " + bookByAuthor.getYear() 
+						+ " || in: " + in
+						+ " || out: " + out + "\n");
 			}
 			break;
 		case 2:
