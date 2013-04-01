@@ -1643,9 +1643,6 @@ public class JDBCManager
 		try
 		{
 			ps = con.prepareStatement("SELECT * FROM hassubject WHERE subject = ?");
-
-			rs = ps.executeQuery();
-
 			ps.setString(1, subject);
 			rs = ps.executeQuery();
 

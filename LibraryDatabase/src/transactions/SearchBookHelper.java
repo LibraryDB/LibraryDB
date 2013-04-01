@@ -6,6 +6,7 @@ import javax.swing.*;
 
 import model.Book;
 import model.Borrowing;
+import model.HasSubject;
 import ui.LibraryDB;
 
 import java.sql.*;
@@ -81,8 +82,20 @@ public class SearchBookHelper extends JFrame{
 			}
 			break;
 		case 2:
-			String callNumber = LibraryDB.getManager().getSubject(value).get(0).getCallNumber();
-			ArrayList<Book> booksBySubject = LibraryDB.getManager().searchBookByCallID(callNumber);
+			ArrayList<HasSubject> hasSubjects = LibraryDB.getManager().getSubject(value);
+			ArrayList<String> callnumbers = new ArrayList<String>();
+			for (HasSubject hs: hasSubjects)
+			{
+				if (!callnumbers.contains(hs.getCallNumber())) callnumbers.add(hs.getCallNumber());
+			}
+			
+			ArrayList<Book> booksBySubject = new ArrayList<Book>();
+
+			for (String c :callnumbers)
+			{
+				booksBySubject.addAll(LibraryDB.getManager().searchBookByCallID(c));
+			}
+			
 			for (Book bookBySubject: booksBySubject){
 				ta0.append("Call Number: " + bookBySubject.getCallNumber()
 						+ " || ISBN: " + bookBySubject.getIsbn() 
