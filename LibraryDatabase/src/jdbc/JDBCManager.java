@@ -1291,6 +1291,60 @@ public class JDBCManager
 			}
 		}
 	}
+	
+	public String getIssueDate(int borid){
+		String issueDate = null;
+		ResultSet  rs;
+		PreparedStatement ps;
+		try{
+			ps = con.prepareStatement("SELECT issueDate FROM fine WHERE borid=?");
+			ps.setInt(1, borid);
+			rs = ps.executeQuery();
+			if(rs.next()){
+				issueDate = rs.getString("issueDate");
+			}
+			ps.close();
+		}
+		catch (SQLException ex)
+		{
+			System.out.println("Message: " + ex.getMessage());
+		}	
+		return issueDate;
+	}
+	
+	public boolean updateFine(int borid, String date, int amount){
+		PreparedStatement ps; 
+
+		try { 
+			ps = con.prepareStatement("UPDATE fine SET paidDate = ?, amount = ? WHERE borid = ? AND paidDate is null"); 
+			ps.setString(1, date); 
+			ps.setInt(2,amount);
+			ps.setInt(3, borid); 
+			int rowCount = ps.executeUpdate(); 
+			if (rowCount == 0) 
+			{
+				return false;
+			} 
+
+			con.commit(); 
+			ps.close();   
+		} 
+		catch (SQLException ex) 
+		{ 
+			System.out.println("Message: " + ex.getMessage()); 
+
+			try  
+			{ 
+				con.rollback();   
+			} 
+			catch (SQLException ex2) 
+			{ 
+				System.out.println("Message: " + ex2.getMessage()); 
+				System.exit(-1); 
+			} 
+		}
+		return true;
+	}
 
 	public void updateBookCopy(String callNumber,int copyNo,String status){
 		PreparedStatement ps;

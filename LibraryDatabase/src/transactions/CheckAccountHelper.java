@@ -12,8 +12,12 @@ import model.Fine;
 
 import ui.LibraryDB;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.TimeZone;
 
 
 public class CheckAccountHelper extends JFrame {
@@ -79,7 +83,12 @@ public class CheckAccountHelper extends JFrame {
 		JTextArea ta1 = new JTextArea();
 		ta1.setBounds(scale, HEIGHT*4/scale , WIDTH-2*scale , HEIGHT*2/scale);
 		ta1.setEditable(false);
+//		ArrayList<Borrowing>  bors = LibraryDB.getManager().getBorrowingByID(bid);
 		int borid = LibraryDB.getManager().getBorrowingByID(bid).get(0).getBorid();
+//		for (Borrowing bor: bors){
+//			int borid = bors.get(0).getBorid();
+//		
+//		}
 		ArrayList<Fine> fines = LibraryDB.getManager().getFineByID(borid);
 		for (Fine fine: fines){
 			// show fines that are not paid yet
@@ -100,8 +109,9 @@ public class CheckAccountHelper extends JFrame {
 		addBookButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				new PayFine();	
+				PayFine(bid);	
 				System.out.println("Pay Fine");
+				new CheckAccountHelper(bid);
 			}
 		});
 		p.add(addBookButton);
@@ -129,5 +139,55 @@ public class CheckAccountHelper extends JFrame {
 		p.add(ta2);
 		
 		this.add(p);
+	}
+
+	
+
+	private int PayFine(int bid) { 
+		String date = new java.text.SimpleDateFormat("yyyy/MM/dd").format(new java.util.Date());
+		int rate = 30;		
+		int duration = 0;
+		int timeLimit = 0;
+		int borid = 0;
+		boolean a = false;
+		try {
+			timeLimit = LibraryDB.getManager().getTimeLimit(bid);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		
+		ArrayList<Borrowing> borrowings = LibraryDB.getManager().getBorrowingByID(bid);
+		for (Borrowing borrowing: borrowings){
+			Calendar dueCal = stringToCalendar(borrowing.getOutDate());
+			dueCal.add(Calendar.DATE, timeLimit); 
+			borid = borrowing.getBorid();
+
+			String issueDate = LibraryDB.getManager().getIssueDate(borid);
+			if (issueDate==null) continue;
+			Calendar issueCal = stringToCalendar(issueDate);
+			int d = issueCal.compareTo(dueCal);
+			a = LibraryDB.getManager().updateFine(borid, date, d*rate);
+			duration += d;
+			
+		}
+		if (a){
+			popMsg("The total fine payment is: " + duration*rate);
+		}
+		return duration;
+	}
+	
+	// converts "yyyy/mm/dd" to Calendar.
+	private Calendar stringToCalendar(String str){
+		String parts[] = str.split("/");
+		int year = Integer.parseInt(parts[0]);
+		int month = Integer.parseInt(parts[1]) - 1;
+		int date = Integer.parseInt(parts[2]);
+		Calendar cal = Calendar.getInstance();
+		cal.set(year, month, date);
+		return cal;
+		
+	}
+	private void popMsg(String msg){
+		JOptionPane.showMessageDialog (this, msg);
 	}
 }
