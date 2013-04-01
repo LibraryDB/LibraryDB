@@ -37,9 +37,10 @@ public class ReportCheckedOutHelper extends JFrame{
 	public ReportCheckedOutHelper(String subject) {
 		super("Report of checked out items by subject");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //Exits the window when user clicks on "x"
+		this.subject = subject;
 		checkedOutBooks = getCheckedOutItems();
 		//selected = new ArrayList<Integer>();
-		this.subject = subject;
+		
 		initPanel();
 
 		// Center the window

@@ -1197,8 +1197,10 @@ public class JDBCManager
 			while(rs.next())
 			{
 				for (int i = 0; i < hs.size(); i++) {
-					String cn = rs.getString("callNumber");
-					if (hs.get(i).getSubject().equals(subject)) {
+					String subjectItem = hs.get(i).getSubject();
+					String callNumber = hs.get(i).getCallNumber();
+					
+					if (subjectItem.equals(subject) && callNumber.equals(rs.getString("callNumber"))) {
 						Borrowing b = new Borrowing(rs.getInt("borid"),
 								rs.getInt("bid"),
 								rs.getString("callNumber"), 
