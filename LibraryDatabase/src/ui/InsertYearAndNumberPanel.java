@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -37,8 +38,15 @@ public class InsertYearAndNumberPanel extends JPanel{
 			public void actionPerformed(ActionEvent e)
 			{
 				//Execute when button is pressed
+				String yearS = textFields.get(0).getText().trim();
+				String numberS = textFields.get(1).getText().trim();
+				if (!isNumeric(yearS) || !isNumeric(numberS)) {
+					popMsg("Year or Number needs to be a number!");
+					return;
+				}
 				Integer year = Integer.parseInt(textFields.get(0).getText().trim());
 				Integer number = Integer.parseInt(textFields.get(1).getText().trim());
+				
 				
 				System.out.println(year + " " + number);
 				new ReportMostPopular(year, number);
@@ -71,6 +79,21 @@ public class InsertYearAndNumberPanel extends JPanel{
 		add(tf2);
 		add(addBookButton);	
 		add(backButton);
+	}
+	private boolean isNumeric(String str)  
+	{  
+	  try  
+	  {  
+	    int i = Integer.parseInt(str);  
+	  }  
+	  catch(NumberFormatException nfe)  
+	  {  
+	    return false;  
+	  }  
+	  return true;  
+	}
+	private void popMsg(String msg){
+		JOptionPane.showMessageDialog (this, msg);
 	}
 
 }
