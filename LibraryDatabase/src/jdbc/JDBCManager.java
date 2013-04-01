@@ -983,14 +983,14 @@ public class JDBCManager
 							rs.getString("outDate"),  
 							rs.getString("inDate")); 
 					borrowings.add(b);
-				}
+				}}
 
 
 
 
 
 				stmt.close();
-			}}
+			}
 		catch (SQLException ex)
 		{
 			System.out.println("Message: " + ex.getMessage());

@@ -71,7 +71,7 @@ public class ReportMostPopular extends JFrame{
 		int count = 0; 
 		for (int i = 0; i < checkedOutBooksInYear.size(); i++) { 
 			Borrowing b = checkedOutBooksInYear.get(i); 
-			if (b.getCallNumber() == callNumber) { 
+			if (b.getCallNumber().equals(callNumber)) { 
 				count = count + 1; 
 			} 
 		} 
