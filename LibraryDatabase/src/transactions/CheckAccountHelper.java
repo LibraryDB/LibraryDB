@@ -85,10 +85,7 @@ public class CheckAccountHelper extends JFrame {
 		ta1.setEditable(false);
 //		ArrayList<Borrowing>  bors = LibraryDB.getManager().getBorrowingByID(bid);
 		int borid = LibraryDB.getManager().getBorrowingByID(bid).get(0).getBorid();
-//		for (Borrowing bor: bors){
-//			int borid = bors.get(0).getBorid();
-//		
-//		}
+
 		ArrayList<Fine> fines = LibraryDB.getManager().getFineByID(borid);
 		for (Fine fine: fines){
 			// show fines that are not paid yet

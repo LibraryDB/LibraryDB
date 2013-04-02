@@ -782,6 +782,38 @@ public class JDBCManager
 	// ********************* FETCH DATA *************************
 	// **********************************************************
 
+	public ArrayList<Book> getBookByCallNumber(String callNumber){
+		ArrayList<Book> books = new ArrayList<Book>();
+		PreparedStatement ps;
+		ResultSet  rs;
+
+		try
+		{
+			ps = con.prepareStatement("SELECT * FROM book where callnumber = ?");
+			ps.setString(1, callNumber);
+			rs = ps.executeQuery();
+			while(rs.next())
+			{
+
+				Book b = new Book(rs.getString("callnumber"),
+						rs.getString("isbn"),
+						rs.getString("title"),
+						rs.getString("mainauthor"),
+						rs.getString("publisher"),
+						rs.getInt("year"));
+				books.add(b);
+
+			}
+
+			ps.close();
+		}
+		catch (SQLException ex)
+		{
+			System.out.println("Message: " + ex.getMessage());
+		}	
+		return books;
+	}
+	
 	public ArrayList<Book> getBook(){
 		ArrayList<Book> books = new ArrayList<Book>();
 		Statement  stmt;
@@ -1731,6 +1763,24 @@ public class JDBCManager
 		return bookcopies;
 	}
 	
+	
+	
+	public ArrayList<String> getCallNumberByCoAuthor(String author){
+		ArrayList<String> result = new ArrayList<String>();
+		PreparedStatement ps;
+		ResultSet rs;
+		try {
+			ps = con.prepareStatement("select * from hasauthor where name = ?");
+			ps.setString(1, author);
+			rs = ps.executeQuery();
+			while (rs.next()){
+				result.add(rs.getString("callnumber"));
+			}
+		} catch(SQLException ex){
+			;
+		}
+		return result;
+	}
 	// search a book by its Author
 	public ArrayList<Book> searchBookByAuthor(String author) {
 		ArrayList<Book> books = new ArrayList<Book>();

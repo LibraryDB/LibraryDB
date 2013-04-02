@@ -69,6 +69,11 @@ public class SearchBookHelper extends JFrame{
 			break;
 		case 1:
 			ArrayList<Book> booksByAuthor = LibraryDB.getManager().searchBookByAuthor(value);
+			ArrayList<String> cns = LibraryDB.getManager().getCallNumberByCoAuthor(value);
+			for (String cn : cns){
+				booksByAuthor.addAll(LibraryDB.getManager().getBookByCallNumber(cn));
+			}
+			
 			System.out.println(value);
 			for (Book bookByAuthor: booksByAuthor){
 				ArrayList<BookCopy> ins = LibraryDB.getManager().searchBookCopyByCallID(bookByAuthor.getCallNumber(),BookCopy.IN);

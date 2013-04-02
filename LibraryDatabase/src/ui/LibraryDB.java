@@ -212,8 +212,8 @@ public class LibraryDB implements ActionListener
 			// Hold Request
 			manager.insertHoldRequest(new HoldRequest(0,3,"QA222","2013/03/10"));
 			// Fine
-			manager.insertFine(new Fine(0, 200, "2013/03/20", null, 5));
-			manager.insertFine(new Fine(0, 300,"2013/01/16","2013/02/26",2));
+			manager.insertFine(new Fine(0, 5, "2013/03/20", null, 5));
+			manager.insertFine(new Fine(0, 10,"2013/01/16","2013/02/26",2));
 			// Has Subject
 			manager.insertHasSubject(new HasSubject("QA111","Science"));
 			manager.insertHasSubject(new HasSubject("QA111","ANIME"));
