@@ -8,13 +8,26 @@
 :- dynamic couldHave/4. % player,card,card,card
 :- dynamic currentLocation/1. % room , only 1 instance.
 
+% for debugging purposes, lists all the stored dynamic predicates
+
+listingall:-
+	listing(playerNumber),
+	listing(player),
+	listing(mainPlayer),
+	listing(knowncard),
+	listing(doesNotHave),
+	listing(suggestion),
+	listing(accusation),
+	listing(couldHave),
+	listing(currentLocation).
+
 setup :-
- assert(knowncard(scarlet,a)),
- assert(knowncard(white,a)),
- assert(knowncard(knife,a)),
- assert(knowncard(pistol,a)),
- assert(knowncard(kitchen,a)),
- assert(knowncard(ballroom,a)),
+ assert(knowncard(scarlet,1)),
+ assert(knowncard(white,1)),
+ assert(knowncard(knife,2)),
+ assert(knowncard(pistol,2)),
+ assert(knowncard(kitchen,3)),
+ assert(knowncard(ballroom,3)),
  assert(currentLocation(conservatory)). 
  
 flush :-
@@ -36,8 +49,6 @@ clue :-
 	setPlayers(X);
 	writeln('minimum player number is 3'),
 	clue.
-
-
 
 gameOption :-
 	writeln('Choose from following options:'),
