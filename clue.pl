@@ -5,11 +5,45 @@
 :- dynamic doesNotHave/2. % card player
 :- dynamic suggestion/4. % player,card,card,card
 :- dynamic accusation/4. % player,card,card,card
+:- dynamic couldHave/3. % player,card,card
 :- dynamic couldHave/4. % player,card,card,card
 :- dynamic currentLocation/1. % room , only 1 instance.
 
-% for debugging purposes, lists all the stored dynamic predicates
 
+% removes redundant data
+remove_redundant:-
+
+	% if we know player P has C1 , C2, or C3, then retract couldHave(P,C1,C2,C3)
+	(couldHave(P,C1,C2,C3),knowncard(C1,P) -> retract(couldHave(P,C1,C2,C3));
+	couldHave(P,C1,C2,C3),knowncard(C2,P) -> retract(couldHave(P,C1,C2,C3));
+	couldHave(P,C1,C2,C3),knowncard(C3,P) -> retract(couldHave(P,C1,C2,C3));
+	couldHave(P,C1,C2),knowncard(C1,P) -> retract(couldHave(P,C1,C2));
+	couldHave(P,C1,C2),knowncard(C2,P) -> retract(couldHave(P,C1,C2));
+
+	% if we know player 2 has a card that was one of the cards player 1 has, then we can reduce the cards player 1 could have.
+	couldHave(P,C1,C2,C3),knowncard(C1,P2) -> retract(couldHave(P,C1,C2,C3)),checkassert(couldHave(P,C2,C3));
+	couldHave(P,C1,C2,C3),knowncard(C2,P2) -> retract(couldHave(P,C1,C2,C3)),checkassert(couldHave(P,C1,C3));
+	couldHave(P,C1,C2,C3),knowncard(C3,P2) -> retract(couldHave(P,C1,C2,C3)),checkassert(couldhave(P,C1,C2));
+	couldHave(P,C1,C2),knowncard(C1,P2) -> retract(couldHave(P,C1,C2)),checkassert(knowncard(C2,P));
+	couldHave(P,C1,C2),knowncard(C2,P2) -> retract(couldHave(P,C1,C2)),checkassert(knowncard(C1,P));
+	
+	% if we know player 1 does not have a card, then we can reduce the couldHave cards.
+	couldHave(P,C1,C2,C3),doesNotHave(C1,P) -> retract(couldHave(P,C1,C2,C3)),checkassert(couldHave(P,C2,C3));
+	couldHave(P,C1,C2,C3),doesNotHave(C2,P) -> retract(couldHave(P,C1,C2,C3)),checkassert(couldHave(P,C1,C3));
+	couldHave(P,C1,C2,C3),doesNotHave(C3,P) -> retract(couldHave(P,C1,C2,C3)),checkassert(couldhave(P,C1,C2));
+	couldHave(P,C1,C2),doesNotHave(C1,P) -> retract(couldHave(P,C1,C2)),checkassert(knowncard(C2,P));
+	couldHave(P,C1,C2),doesNotHave(C2,P) -> retract(couldHave(P,C1,C2)),checkassert(knowncard(C1,P))).
+	
+% updates doesNotHave clause.	
+% if we know P has card C, then other players can't have card C	
+updateDNH:-
+	knowncard(C,P),player(P2,P2),P =\= P2,not(doesNotHave(C,P2)) -> checkassert(doesNotHave(C,P2)),updateDNH; true.
+	
+checkassert(X):-
+	not(X),
+	assert(X).
+
+% for debugging purposes, lists all the stored dynamic predicates
 listingall:-
 	listing(playerNumber),
 	listing(player),
@@ -21,14 +55,27 @@ listingall:-
 	listing(couldHave),
 	listing(currentLocation).
 
+listingsome:-	
+	listing(playerNumber),
+	listing(player),
+	listing(mainPlayer),
+	listing(knowncard),
+	listing(suggestion),
+	listing(accusation),
+	listing(couldHave),
+	listing(currentLocation).
+	
+
 setup :-
- assert(knowncard(scarlet,1)),
- assert(knowncard(white,1)),
- assert(knowncard(knife,2)),
- assert(knowncard(pistol,2)),
- assert(knowncard(kitchen,3)),
- assert(knowncard(ballroom,3)),
- assert(currentLocation(conservatory)). 
+ playerNumber(4).
+ player(1,1),player(2,2),player(3,3),player(4,4),
+ checkassert(knowncard(scarlet,1)),
+ checkassert(knowncard(white,1)),
+ checkassert(knowncard(knife,2)),
+ checkassert(knowncard(pistol,2)),
+ checkassert(knowncard(kitchen,3)),
+ checkassert(knowncard(ballroom,3)),
+ checkassert(currentLocation(conservatory)). 
  
 flush :-
  	retractall(knowncard(_,_)),
@@ -69,7 +116,7 @@ makeSuggestion :-
 	findall(X,weapon(X),Lweapon),
 	findall(X,room(X),Lroom),
 	
-	findall(X, knowncard(X,Y),Lknown),
+	findall(X, knowncard(X,_),Lknown),
 	
 	filterP(Lknown,KnownP),	
 	filterW(Lknown,KnownW),
@@ -91,38 +138,38 @@ makeAccusation :-
 	countKnownCards(N),
 	N =:= 18 ->
 	findall(X, validcard(X),L1),
-	findall(X, knowncard(X,Y),L2),
+	findall(X, knowncard(X,_),L2),
 	subtract(L1,L2,L),
 	writeln(L);
 	writeln('not enough cards to make accusation'),nl, gameOption.
 
 countKnownCards(N) :-
-	findall(X, knowncard(X,Y),L),
+	findall(X, knowncard(X,_),L),
 	length(L,N).
 
 % ************************ Setters **************************	
-set_does_not_have(I,F,Person,Weapon,Room):- 
+set_does_not_have(I,F,_,_,_):- 
 	F =:= 1, 
 	playerNumber(PN),
  	I =:= PN,!.
  
-set_does_not_have(I,F,Person,Weapon,Room):-
+set_does_not_have(I,F,_,_,_):-
 	I1 is I+1,
 	I1 =:= F,!.
  
 set_does_not_have(I,F,Person,Weapon,Room):-
  	playerNumber(PN),
  	I =:= PN,!,
- 	assert(doesNotHave(Person,1)),
- 	assert(doesNotHave(Weapon,1)),
- 	assert(doesNotHave(Room,1)),
+ 	checkassert(doesNotHave(Person,1)),
+ 	checkassert(doesNotHave(Weapon,1)),
+ 	checkassert(doesNotHave(Room,1)),
  	set_does_not_have(1,F,Person,Weapon,Room). 
  
 set_does_not_have(I,F,Person,Weapon,Room):-
  	I1 is I + 1,
- 	assert(doesNotHave(Person,I1)),
- 	assert(doesNotHave(Weapon,I1)),
- 	assert(doesNotHave(Room,I1)),
+ 	checkassert(doesNotHave(Person,I1)),
+ 	checkassert(doesNotHave(Weapon,I1)),
+ 	checkassert(doesNotHave(Room,I1)),
  	set_does_not_have(I1,F,Person,Weapon,Room).
 
 setPlayers(0) :- setMainPlayer.
@@ -133,14 +180,14 @@ setPlayers(N) :-
 	writeln('enter player name'),
 	read(Y),
 	W is X-N+1,
-	assert(player(Y,W)),
+	checkassert(player(Y,W)),
 	N1 is N-1,
 	setPlayers(N1).
 
 setMainPlayer :-
 	writeln('which is my turn'),
 	read(X),
-	assert(mainPlayer(X)), nl,
+	checkassert(mainPlayer(X)), nl,
 	setMyCards.
 
 setKnownCards :-
@@ -150,13 +197,13 @@ setKnownCards :-
  	read(Y),
  	(X = done -> nl, gameOption;
  	Y = done -> nl, gameOption;
- 	validcard(X), player(Y,_) , not(knowncard(X,_))-> assert(knowncard(X,Y)),setKnownCards;
+ 	validcard(X), player(Y,_) , not(knowncard(X,_))-> checkassert(knowncard(X,Y)),setKnownCards;
  	writeln('invalid card or player or known already'), setKnownCards).
  
 setMyCards :- 
  	writeln('input my cards: '),
  	read(X),
- 	(validcard(X) ,not(knowncard(X,_))-> mainPlayer(Y), assert(knowncard(X,Y)),setMyCards;
+ 	(validcard(X) ,not(knowncard(X,_))-> mainPlayer(Y), checkassert(knowncard(X,Y)),setMyCards;
  	X = done -> gameOption;
  	writeln('invalid or known'),setMyCards).
 
@@ -169,7 +216,7 @@ setAccusation :-
 	read(W),
 	writeln('where'),
 	read(R),
-	player(X,_), validperson(P),validweapon(W),validroom(R) -> assert(accusation(X,P,W,R));
+	player(X,_), validperson(P),validweapon(W),validroom(R) -> checkassert(accusation(X,P,W,R));
 	writeln('invalid player or card').
 
 % set suggestion and couldhave, simple version
@@ -183,10 +230,10 @@ setSuggestion :-
 	writeln('where'),
 	read(R),
 	(player(X,_),validperson(P),validweapon(W),validroom(R) -> 
-	assert(suggestion(X,P,W,R)), 
+	checkassert(suggestion(X,P,W,R)), 
 	writeln('enter the player who shown a card'),
 	read(A),
-	player(A,_) -> assert(couldHave(A,P,W,R)), set_does_not_have(X,A,P,W,R),
+	player(A,_) -> checkassert(couldHave(A,P,W,R)), set_does_not_have(X,A,P,W,R),
 	setKnownCards, nl,gameOption;
 	writeln('something is invalid'), setSuggestion).
 
@@ -194,10 +241,10 @@ setCurrentLocation:-
 	write('enter current room: '),
 	read(X),
 	retractall(currentLocation(_)),
-	assert(currentLocation(X)).
+	checkassert(currentLocation(X)).
  
 head([],null).	
-head([H|L],H).
+head([H|_],H).
 
 % ************************ Filters **************************	
 % filter person list
@@ -205,21 +252,21 @@ filterP([],[]).
 filterP([L|List],[L|Filtered]) :-
     person(L),!,
     filterP(List,Filtered).
-filterP([L|List],Filtered) :-
+filterP([_|List],Filtered) :-
     filterP(List,Filtered).	
 	
 filterW([],[]).
 filterW([L|List],[L|Filtered]) :-
     weapon(L),!,
     filterW(List,Filtered).
-filterW([L|List],Filtered) :-
+filterW([_|List],Filtered) :-
     filterW(List,Filtered).
 	
 filterR([],[]).
 filterR([L|List],[L|Filtered]) :-
     room(L),!,
     filterR(List,Filtered).
-filterR([L|List],Filtered) :-
+filterR([_|List],Filtered) :-
     filterR(List,Filtered).
 
 % *********************** Valic Cards ***************************
