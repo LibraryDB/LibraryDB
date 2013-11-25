@@ -8,10 +8,12 @@
 :- dynamic couldHave/3. % player,card,card
 :- dynamic couldHave/4. % player,card,card,card
 :- dynamic currentLocation/1. % room , only 1 instance.
+:- dynamic goalCard/1. % card
 
-
-% removes redundant data
-remove_redundant:-
+% prolog performs calculations to
+% 1. removes redundant data
+% 2. update data based on current knowledge
+simplify:-
 
 	% if we know player P has C1 , C2, or C3, then retract couldHave(P,C1,C2,C3)
 	(couldHave(P,C1,C2,C3),knowncard(C1,P) -> retract(couldHave(P,C1,C2,C3));
@@ -33,6 +35,56 @@ remove_redundant:-
 	couldHave(P,C1,C2,C3),doesNotHave(C3,P) -> retract(couldHave(P,C1,C2,C3)),checkassert(couldhave(P,C1,C2));
 	couldHave(P,C1,C2),doesNotHave(C1,P) -> retract(couldHave(P,C1,C2)),checkassert(knowncard(C2,P));
 	couldHave(P,C1,C2),doesNotHave(C2,P) -> retract(couldHave(P,C1,C2)),checkassert(knowncard(C1,P))).
+
+% updates goalCard
+updateGoalCard:-
+	updateGoalCard1,updateGoalCardP,updateGoalCardW,updateGoalCardR.
+
+% updates goalCards by looking at the doesNotHave.
+% if all the players do not have card C, then C is a goalCard.	
+updateGoalCard1:-
+	validcard(C),
+	not(goalCard(C)),
+	findall(P,doesNotHave(C,P),L),
+	length(L,Length),
+	playerNumber(PN),
+	Length =:= PN -> checkassert(goalCard(C)),updateGoalCard1;
+	true.	
+	
+% Updates by looking at suspects, if we know 5 of 6 suspects, then the missing one is a goalCard.	
+updateGoalCardP:-
+	findall(Card,knowncard(Card,_),L),
+	findall(Card,person(Card),LP),
+	filterP(L,FP),
+	subtract(LP,FP,UP),
+	length(UP,Length),
+	head(UP,H),
+	not(goalCard(H)),
+	Length =:= 1 -> checkassert(goalCard(H)); true.
+	
+updateGoalCardW:-
+	findall(Card,knowncard(Card,_),L),
+	findall(Card,weapon(Card),LW),
+	filterW(L,FW),
+	subtract(LW,FW,UW),
+	length(UW,Length),
+	head(UW,H),
+	not(goalCard(H)),
+	Length =:= 1 -> checkassert(goalCard(H)); true.
+	
+updateGoalCardR:-
+	findall(Card,knowncard(Card,_),L),
+	findall(Card,room(Card),LR),
+	filterR(L,FR),
+	subtract(LR,FR,UR),
+	length(UR,Length),
+	head(UR,H),
+	not(goalCard(H)),
+	Length =:= 1 -> checkassert(goalCard(H)); true.
+
+
+	
+
 	
 % updates doesNotHave clause.	
 % if we know P has card C, then other players can't have card C	
@@ -40,8 +92,9 @@ updateDNH:-
 	knowncard(C,P),player(P2,P2),P =\= P2,not(doesNotHave(C,P2)) -> checkassert(doesNotHave(C,P2)),updateDNH; true.
 	
 checkassert(X):-
-	not(X),
-	assert(X).
+	not(X) ->
+	assert(X);
+	true.
 
 % for debugging purposes, lists all the stored dynamic predicates
 listingall:-
@@ -53,7 +106,8 @@ listingall:-
 	listing(suggestion),
 	listing(accusation),
 	listing(couldHave),
-	listing(currentLocation).
+	listing(currentLocation),
+	listing(goalCard).
 
 listingsome:-	
 	listing(playerNumber),
@@ -63,19 +117,26 @@ listingsome:-
 	listing(suggestion),
 	listing(accusation),
 	listing(couldHave),
-	listing(currentLocation).
+	listing(currentLocation),
+	listing(goalCard).
 	
-
 setup :-
- playerNumber(4).
- player(1,1),player(2,2),player(3,3),player(4,4),
+ checkassert(playerNumber(4)),
+ checkassert(player(1,1)),
+ checkassert(player(2,2)),
+ checkassert(player(3,3)),
+ checkassert(player(4,4)),
+ checkassert(mainPlayer(1)),
  checkassert(knowncard(scarlet,1)),
  checkassert(knowncard(white,1)),
  checkassert(knowncard(knife,2)),
  checkassert(knowncard(pistol,2)),
  checkassert(knowncard(kitchen,3)),
  checkassert(knowncard(ballroom,3)),
- checkassert(currentLocation(conservatory)). 
+ checkassert(currentLocation(conservatory)),
+ checkassert(doesNotHave(ax,2)), 
+ checkassert(doesNotHave(ax,3)),
+ checkassert(doesNotHave(ax,4)).
  
 flush :-
  	retractall(knowncard(_,_)),
@@ -86,7 +147,8 @@ flush :-
  	retractall(accusation(_,_,_,_)),
  	retractall(couldHave(_,_,_,_)),
  	retractall(doesNotHave(_,_)),
- 	retractall(currentLocation(_)).
+ 	retractall(currentLocation(_)),
+	retractall(goalCard(_)).
 	
 clue :- 
 	writeln('enter player number'),
@@ -131,17 +193,18 @@ makeSuggestion :-
 	head(UnknownW,HeadW),
 	head(UnknownR,HeadR),
 	
-	writeln(HeadP),writeln(HeadW),writeln(HeadR),nl,
+	writeln('This is what your loyal advisor recommends:'), 
+	write(' person: '),writeln(HeadP),
+	write(' weapon: '),writeln(HeadW),
+	write(' room: '),writeln(HeadR),
 	setSuggestion.
 	
 makeAccusation :-
-	countKnownCards(N),
-	N =:= 18 ->
-	findall(X, validcard(X),L1),
-	findall(X, knowncard(X,_),L2),
-	subtract(L1,L2,L),
+	findall(X,goalCard(X),L),
+	length(L,N),
+	N =:= 3,
 	writeln(L);
-	writeln('not enough cards to make accusation'),nl, gameOption.
+	writeln('not yet'),nl, gameOption.
 
 countKnownCards(N) :-
 	findall(X, knowncard(X,_),L),
@@ -172,6 +235,10 @@ set_does_not_have(I,F,Person,Weapon,Room):-
  	checkassert(doesNotHave(Room,I1)),
  	set_does_not_have(I1,F,Person,Weapon,Room).
 
+% sets doesNotHave for main player.	
+setMainDNH:-
+	mainPlayer(N),validcard(C),not(knowncard(C,N)),not(doesNotHave(C,N)) -> checkassert(doesNotHave(C,N)),setMainDNH; true.	
+	
 setPlayers(0) :- setMainPlayer.
 
 setPlayers(N) :-
@@ -204,7 +271,7 @@ setMyCards :-
  	writeln('input my cards: '),
  	read(X),
  	(validcard(X) ,not(knowncard(X,_))-> mainPlayer(Y), checkassert(knowncard(X,Y)),setMyCards;
- 	X = done -> gameOption;
+ 	X = done -> setMainDNH,gameOption;
  	writeln('invalid or known'),setMyCards).
 
 setAccusation :-
