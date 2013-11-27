@@ -1,30 +1,32 @@
 
 % prolog performs calculations to
 % 1. removes redundant data
-% 2. update data based on current knowledge
+% 2. updates data based on current knowledge
 simplify:-
 
 	% if we know player P has C1 , C2, or C3, then retract couldHave(P,C1,C2,C3)
-	(couldHave(P,C1,C2,C3),knowncard(C1,P) -> retract(couldHave(P,C1,C2,C3));
-	couldHave(P,C1,C2,C3),knowncard(C2,P) -> retract(couldHave(P,C1,C2,C3));
-	couldHave(P,C1,C2,C3),knowncard(C3,P) -> retract(couldHave(P,C1,C2,C3));
-	couldHave(P,C1,C2),knowncard(C1,P) -> retract(couldHave(P,C1,C2));
-	couldHave(P,C1,C2),knowncard(C2,P) -> retract(couldHave(P,C1,C2));
+	(couldHave(P,C1,C2,C3),knowncard(C1,P) -> retract(couldHave(P,C1,C2,C3)),simplify;
+	couldHave(P,C1,C2,C3),knowncard(C2,P) -> retract(couldHave(P,C1,C2,C3)),simplify;
+	couldHave(P,C1,C2,C3),knowncard(C3,P) -> retract(couldHave(P,C1,C2,C3)),simplify;
+	couldHave(P,C1,C2),knowncard(C1,P) -> retract(couldHave(P,C1,C2)),simplify;
+	couldHave(P,C1,C2),knowncard(C2,P) -> retract(couldHave(P,C1,C2)),simplify;
 
 	% if we know player 2 has a card that was one of the cards player 1 has, then we can reduce the cards player 1 could have.
-	couldHave(P,C1,C2,C3),knowncard(C1,P2) -> retract(couldHave(P,C1,C2,C3)),checkassert(couldHave(P,C2,C3));
-	couldHave(P,C1,C2,C3),knowncard(C2,P2) -> retract(couldHave(P,C1,C2,C3)),checkassert(couldHave(P,C1,C3));
-	couldHave(P,C1,C2,C3),knowncard(C3,P2) -> retract(couldHave(P,C1,C2,C3)),checkassert(couldhave(P,C1,C2));
-	couldHave(P,C1,C2),knowncard(C1,P2) -> retract(couldHave(P,C1,C2)),checkassert(knowncard(C2,P));
-	couldHave(P,C1,C2),knowncard(C2,P2) -> retract(couldHave(P,C1,C2)),checkassert(knowncard(C1,P));
+	couldHave(P,C1,C2,C3),knowncard(C1,P2) -> retract(couldHave(P,C1,C2,C3)),checkassert(couldHave(P,C2,C3)),simplify;
+	couldHave(P,C1,C2,C3),knowncard(C2,P2) -> retract(couldHave(P,C1,C2,C3)),checkassert(couldHave(P,C1,C3)),simplify;
+	couldHave(P,C1,C2,C3),knowncard(C3,P2) -> retract(couldHave(P,C1,C2,C3)),checkassert(couldhave(P,C1,C2)),simplify;
+	couldHave(P,C1,C2),knowncard(C1,P2) -> retract(couldHave(P,C1,C2)),checkassert(knowncard(C2,P)),simplify;
+	couldHave(P,C1,C2),knowncard(C2,P2) -> retract(couldHave(P,C1,C2)),checkassert(knowncard(C1,P)),simplify;
 	
 	% if we know player 1 does not have a card, then we can reduce the couldHave cards.
-	couldHave(P,C1,C2,C3),doesNotHave(C1,P) -> retract(couldHave(P,C1,C2,C3)),checkassert(couldHave(P,C2,C3));
-	couldHave(P,C1,C2,C3),doesNotHave(C2,P) -> retract(couldHave(P,C1,C2,C3)),checkassert(couldHave(P,C1,C3));
-	couldHave(P,C1,C2,C3),doesNotHave(C3,P) -> retract(couldHave(P,C1,C2,C3)),checkassert(couldhave(P,C1,C2));
-	couldHave(P,C1,C2),doesNotHave(C1,P) -> retract(couldHave(P,C1,C2)),checkassert(knowncard(C2,P));
-	couldHave(P,C1,C2),doesNotHave(C2,P) -> retract(couldHave(P,C1,C2)),checkassert(knowncard(C1,P))).
-
+	couldHave(P,C1,C2,C3),doesNotHave(C1,P) -> retract(couldHave(P,C1,C2,C3)),checkassert(couldHave(P,C2,C3)),simplify;
+	couldHave(P,C1,C2,C3),doesNotHave(C2,P) -> retract(couldHave(P,C1,C2,C3)),checkassert(couldHave(P,C1,C3)),simplify;
+	couldHave(P,C1,C2,C3),doesNotHave(C3,P) -> retract(couldHave(P,C1,C2,C3)),checkassert(couldhave(P,C1,C2)),simplify;
+	couldHave(P,C1,C2),doesNotHave(C1,P) -> retract(couldHave(P,C1,C2)),checkassert(knowncard(C2,P)),simplify;
+	couldHave(P,C1,C2),doesNotHave(C2,P) -> retract(couldHave(P,C1,C2)),checkassert(knowncard(C1,P)),simplify;
+	
+	true).	
+	
 % updates goalCard
 updateGoalCard:-
 	updateGoalCard1,updateGoalCardP,updateGoalCardW,updateGoalCardR.
@@ -173,3 +175,4 @@ distanceToAdjacentRoom(ballroom,kitchen,7).
 distanceToAdjacentRoom(ballroom,diningroom,7).
 distanceToAdjacentRoom(ballroom,conservatory,4).
 distanceToAdjacentRoom(ballroom,billiardroom,6).
+
