@@ -46,6 +46,11 @@ setup :-
  checkassert(player(3,3)),
  checkassert(player(4,4)),
  checkassert(mainPlayer(1)),
+ 
+ checkassert(couldHave(1,scarlet,pistol,kitchen)),
+ checkassert(couldHave(2,green,billiardroom)),
+ checkassert(couldHave(3,green,wrench)),
+ checkassert(knowncard(wrench,4)),
  checkassert(knowncard(scarlet,1)),
  checkassert(knowncard(white,1)),
  checkassert(knowncard(knife,2)),
