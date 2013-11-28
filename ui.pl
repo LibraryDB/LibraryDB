@@ -40,6 +40,7 @@ gameOption :-
 	% at the start of each turn we perform backend logic computations
 	simplify,  			% see clue.pl
 	updateGoalCard, 	% see clue.pl
+	updateDNH,			% see clue.pl
 	makeAccusation,		% see below
 
 	writeln('Choose from following options:'),
