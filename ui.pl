@@ -81,8 +81,8 @@ subOption4b :-
 	writeln('d. return to Option 4'),
 	read(X),
  	(X = a -> listing(doesNotHave), nl, subOption4b;
- 		X = b -> read(X), findAll(A,doesNotHave(X,A),L), write(L), nl, subOption4b;
- 		X = c -> read(X), findAll(A,doesNotHave(A,X),L), write(L), nl, subOption4b;
+ 		X = b -> writeln('enter players number: '),read(Y), findall(A,doesNotHave(A,Y),L), write(L), nl, subOption4b;
+ 		X = c -> read(Y), findall(A,doesNotHave(Y,A),L), write(L), nl, subOption4b;
  		X = d -> subOption4).
 
 subOption4c :-
@@ -92,8 +92,8 @@ subOption4c :-
 	writeln('d. return to Option 4'),
 	read(X),
  	(X = a -> listing(couldHave), nl, subOption4c;
- 		X = b -> read(X), findAll(A,couldHave(X,A),L), write(L), nl, subOption4c;
- 		X = c -> read(X), findAll(A,couldHave(A,X),L), write(L), nl, subOption4c;
+ 		X = b -> read(Y), findall(A,couldHave(Y,A),L), write(L), nl, subOption4c;
+ 		X = c -> read(Y), findall(A,couldHave(A,Y),L), write(L), nl, subOption4c;
  		X = d -> subOption4).
 
 subOption5 :-

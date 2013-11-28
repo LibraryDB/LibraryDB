@@ -14,7 +14,7 @@ simplify:-
 	% if we know player 2 has a card that was one of the cards player 1 has, then we can reduce the cards player 1 could have.
 	couldHave(P,C1,C2,C3),knowncard(C1,P2) -> retract(couldHave(P,C1,C2,C3)),checkassert(couldHave(P,C2,C3)),simplify;
 	couldHave(P,C1,C2,C3),knowncard(C2,P2) -> retract(couldHave(P,C1,C2,C3)),checkassert(couldHave(P,C1,C3)),simplify;
-	couldHave(P,C1,C2,C3),knowncard(C3,P2) -> retract(couldHave(P,C1,C2,C3)),checkassert(couldhave(P,C1,C2)),simplify;
+	couldHave(P,C1,C2,C3),knowncard(C3,P2) -> retract(couldHave(P,C1,C2,C3)),checkassert(couldHave(P,C1,C2)),simplify;
 	couldHave(P,C1,C2),knowncard(C1,P2) -> retract(couldHave(P,C1,C2)),checkassert(knowncard(C2,P)),simplify;
 	couldHave(P,C1,C2),knowncard(C2,P2) -> retract(couldHave(P,C1,C2)),checkassert(knowncard(C1,P)),simplify;
 	
@@ -26,6 +26,14 @@ simplify:-
 	couldHave(P,C1,C2),doesNotHave(C2,P) -> retract(couldHave(P,C1,C2)),checkassert(knowncard(C1,P)),simplify;
 	
 	true).	
+	
+countCouldHave(C,N):-
+	findall(P,couldHave(P,C,_,_),L1),length(L1,N1),
+	findall(P,couldHave(P,_,C,_),L2),length(L2,N2),
+	findall(P,couldHave(P,_,_,C),L3),length(L3,N3),
+	findall(P,couldHave(P,C,_),L4),length(L4,N4),
+	findall(P,couldHave(P,_,C),L5),length(L5,N5),
+	N is N1 + N2 + N3 + N4 + N5.
 	
 % updates goalCard
 updateGoalCard:-

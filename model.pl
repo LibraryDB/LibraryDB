@@ -60,7 +60,12 @@ setup :-
  checkassert(currentLocation(conservatory)),
  checkassert(doesNotHave(ax,2)), 
  checkassert(doesNotHave(ax,3)),
- checkassert(doesNotHave(ax,4)).
+ checkassert(doesNotHave(ax,4)),
+ 
+ checkassert(couldHave(2,plum,ax,ballroom)),
+ checkassert(couldHave(3,plum,pistol,hall)),
+ checkassert(couldHave(3,green,wrench)),
+ checkassert(couldHave(2,plum,wrench)).
  
 flush :-
  	retractall(knowncard(_,_)),
