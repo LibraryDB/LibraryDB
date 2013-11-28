@@ -133,29 +133,14 @@ subOption6 :-
 	
 
 makeSuggestion :-
-	findall(X, person(X),Lperson), % all valid persons
-	findall(X,weapon(X),Lweapon),
-	findall(X,room(X),Lroom),
+	get_most_could_have_p(Person),
+	get_most_could_have_w(Weapon),
+	get_most_could_have_r(Room),
 	
-	findall(X, knowncard(X,_),Lknown),
-	
-	filterP(Lknown,KnownP),	
-	filterW(Lknown,KnownW),
-	
-	filterR(Lknown,KnownR),
-	
-	subtract(Lperson,KnownP,UnknownP),
-	subtract(Lweapon,KnownW,UnknownW),
-	subtract(Lroom,KnownR,UnknownR),	
-	
-	head(UnknownP,HeadP),
-	head(UnknownW,HeadW),
-	head(UnknownR,HeadR),
-	
-	writeln('This is what your loyal advisor recommends:'), 
-	write(' person: '),writeln(HeadP),
-	write(' weapon: '),writeln(HeadW),
-	write(' room: '),writeln(HeadR),
+	writeln('This is what your loyal assistant recommends:'), 
+	write(' person: '),writeln(Person),
+	write(' weapon: '),writeln(Weapon),
+	write(' room: '),writeln(Room),
 	setSuggestion.
 	
 makeAccusation :-

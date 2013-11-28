@@ -1,7 +1,14 @@
+/* 
+ Jinzhou Zhang 	71620090	s0f7
+ Xue Qi Xu		52732104	p8t7
+*/
 
-% prolog performs calculations to
-% 1. removes redundant data
-% 2. updates data based on current knowledge
+/*
+ * prolog performs calculations to
+ * 1. removes redundant data
+ * 2. updates database based on current knowledge
+ */
+ 
 simplify:-
 
 	% if we know player P has C1 , C2, or C3, then retract couldHave(P,C1,C2,C3)
@@ -27,6 +34,9 @@ simplify:-
 	
 	true).	
 	
+/*
+ * countCouldHave(C,N) is true if N is the number of times card C appears in some couldHave(...) clause
+ */ 
 countCouldHave(C,N):-
 	findall(P,couldHave(P,C,_,_),L1),length(L1,N1),
 	findall(P,couldHave(P,_,C,_),L2),length(L2,N2),
@@ -35,12 +45,60 @@ countCouldHave(C,N):-
 	findall(P,couldHave(P,_,C),L5),length(L5,N5),
 	N is N1 + N2 + N3 + N4 + N5.
 	
-% updates goalCard
+/* 
+ * Our own max(List,Max) predicate. Max is the maximum value of the elements in List.
+ */		
+max([],0).	
+max([A],A).	
+max([A,B],N):-
+	A > B,!, N is A.
+max([A,B],N):-
+	A =< B,!, N is B.
+max([H1,H2|T],N):-
+	H1 > H2,!,max([H1|T],N).
+max([_,H2|T],N):-
+	max([H2|T],N).
+
+/* 
+ * get_most_could_have_p(C) is true if C is a person and the couldHave clauses involving card C is the most among all suspect cards
+ */ 
+get_most_could_have_p(C):-
+	findall(P,person(P),ListofPerson),
+	maplist(countCouldHave,ListofPerson,ListofCounts),
+	max(ListofCounts,Max),
+	person(C),countCouldHave(C,Count),
+	Count =:= Max,!.
+	
+/* 
+ * get_most_could_have_w(C) is true if C is a weapon and the couldHave clauses involving card C is the most among all weapon cards
+ */ 	
+get_most_could_have_w(C):-
+	findall(P,weapon(P),ListofWeapons),
+	maplist(countCouldHave,ListofWeapons,ListofCounts),
+	max(ListofCounts,Max),
+	weapon(C),countCouldHave(C,Count),
+	Count =:= Max,!.
+
+/* 
+ * get_most_could_have_p(C) is true if C is a room and the couldHave clauses involving card C is the most among all room cards
+ */ 	
+get_most_could_have_r(C):-
+	findall(P,room(P),ListofRooms),
+	maplist(countCouldHave,ListofRooms,ListofCounts),
+	max(ListofCounts,Max),
+	room(C),countCouldHave(C,Count),
+	Count =:= Max,!.	
+
+/*	
+ * updates goalCard, refer to the top of model.pl for meaning of the goalCard predicate
+ */
 updateGoalCard:-
 	updateGoalCard1,updateGoalCardP,updateGoalCardW,updateGoalCardR.
 
-% updates goalCards by looking at the doesNotHave.
-% if all the players do not have card C, then C is a goalCard.	
+/*	
+ * updates goalCards by looking at the doesNotHave predicate.
+ * if no player has card C, then C is a goalCard.	
+ */
 updateGoalCard1:-
 	validcard(C),
 	not(goalCard(C)),
@@ -49,8 +107,9 @@ updateGoalCard1:-
 	playerNumber(PN),
 	Length =:= PN -> checkassert(goalCard(C)),updateGoalCard1;
 	true.	
-	
-% Updates by looking at suspects, if we know 5 of 6 suspects, then the missing one is a goalCard.	
+/*	
+ * Updates by looking at suspects, if we know all but one suspect, then the missing one is a goalCard.	
+ */
 updateGoalCardP:-
 	findall(Card,knowncard(Card,_),L),
 	findall(Card,person(Card),LP),
@@ -61,6 +120,9 @@ updateGoalCardP:-
 	not(goalCard(H)),
 	Length =:= 1 -> checkassert(goalCard(H)); true.
 	
+/*	
+ * Updates by looking at weapons, if we know all but one weapon, then the missing one is a goalCard.	
+ */	
 updateGoalCardW:-
 	findall(Card,knowncard(Card,_),L),
 	findall(Card,weapon(Card),LW),
@@ -71,6 +133,9 @@ updateGoalCardW:-
 	not(goalCard(H)),
 	Length =:= 1 -> checkassert(goalCard(H)); true.
 	
+/*	
+ * Updates by looking at rooms, if we know all but one room, then the missing one is a goalCard.	
+ */	
 updateGoalCardR:-
 	findall(Card,knowncard(Card,_),L),
 	findall(Card,room(Card),LR),
@@ -80,18 +145,22 @@ updateGoalCardR:-
 	head(UR,H),
 	not(goalCard(H)),
 	Length =:= 1 -> checkassert(goalCard(H)); true.
-
-% updates doesNotHave clause.	
-% if we know P has card C, then other players can't have card C	
+	
+/*
+ * updates doesNotHave clause.	
+ * if we know P has card C, then other players cannot have card C	
+ */
 updateDNH:-
 	knowncard(C,P),player(P2,P2),P =\= P2,not(doesNotHave(C,P2)) -> checkassert(doesNotHave(C,P2)),updateDNH; true.
-
  
+% used to extract the head of a list 
 head([],null).	
 head([H|_],H).
 
 % ************************ Filters **************************	
-% filter person list
+/*
+ * filterP(L1,L2) is true if L2 is a sublist of L1 and contains all the suspects in L1
+ */
 filterP([],[]).
 filterP([L|List],[L|Filtered]) :-
     person(L),!,
@@ -99,6 +168,9 @@ filterP([L|List],[L|Filtered]) :-
 filterP([_|List],Filtered) :-
     filterP(List,Filtered).	
 	
+/*
+ * filterW(L1,L2) is true if L2 is a sublist of L1 and contains all the weapons in L1
+ */	
 filterW([],[]).
 filterW([L|List],[L|Filtered]) :-
     weapon(L),!,
@@ -106,6 +178,10 @@ filterW([L|List],[L|Filtered]) :-
 filterW([_|List],Filtered) :-
     filterW(List,Filtered).
 	
+	
+/*
+ * filterR(L1,L2) is true if L2 is a sublist of L1 and contains all the rooms in L1
+ */	
 filterR([],[]).
 filterR([L|List],[L|Filtered]) :-
     room(L),!,
