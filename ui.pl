@@ -60,19 +60,10 @@ subOption4 :-
 	writeln('c. view couldHave'),
 	writeln('d. return to main menu'),
 	read(X),
- 	(X = a -> subOption4a, nl, subOption4;
+ 	(X = a -> listing(knowncard), nl, subOption4;
  		X = b -> subOption4b, nl, subOption4;
 		X = c -> subOption4c, nl, subOption4;
  		X = d -> gameOption).
-
-subOption4a :-
-	writeln('a. view knowncard by player'),
-	writeln('b. view knowncard by cardtype'),
-	writeln('c. return to Option 4'),
-	read(X),
- 	(X = a -> listing(knowncard), nl, subOption4a;
- 		X = b -> listing(knowncard), nl, subOption4a;
- 		X = c -> subOption4).
 
 subOption4b :- 
 	writeln('a. display all doesNotHave'),
@@ -81,9 +72,15 @@ subOption4b :-
 	writeln('d. return to Option 4'),
 	read(X),
  	(X = a -> listing(doesNotHave), nl, subOption4b;
- 		X = b -> read(X), findAll(A,doesNotHave(X,A),L), write(L), nl, subOption4b;
- 		X = c -> read(X), findAll(A,doesNotHave(A,X),L), write(L), nl, subOption4b;
+ 		X = b -> doesNotHaveByPlayer, nl, subOption4b;
+ 		X = c -> doesNotHaveByCard, nl, subOption4b;
  		X = d -> subOption4).
+
+ doesNotHaveByPlayer :-
+ 	read(X), findall(A,doesNotHave(A,X),L), write(L).
+
+ doesNotHaveByCard :-
+ 	read(X), findall(A,doesNotHave(X,A),L), write(L).
 
 subOption4c :-
 	writeln('a. display all couldHave'),
@@ -92,9 +89,27 @@ subOption4c :-
 	writeln('d. return to Option 4'),
 	read(X),
  	(X = a -> listing(couldHave), nl, subOption4c;
- 		X = b -> read(X), findAll(A,couldHave(X,A),L), write(L), nl, subOption4c;
- 		X = c -> read(X), findAll(A,couldHave(A,X),L), write(L), nl, subOption4c;
+ 		X = b -> couldHaveByPlayer, nl, subOption4c;
+ 		X = c -> couldHaveByCard, nl, subOption4c;
  		X = d -> subOption4).
+
+couldHaveByPlayer :-
+	read(X),
+	findall(A,couldHave(X,A,_,_),L1),
+	findall(A,couldHave(X,_,A,_),L2),
+	findall(A,couldHave(X,_,_,A),L3),
+	append(L1,L2,L4),
+	append(L4,L3,L), 
+	write(L).
+
+couldHaveByCard :- 
+	read(X), 
+	findall(A,couldHave(A,X,_,_),L1),
+	findall(A,couldHave(A,_,X,_),L2),
+	findall(A,couldHave(A,_,_,X),L3),
+	append(L1,L2,L4),
+	append(L4,L3,L), 
+	write(L).
 
 subOption5 :-
 	writeln('a. assert knowncard'),
@@ -103,20 +118,32 @@ subOption5 :-
 	writeln('d. assert goal card'),
 	writeln('e. return to main menu'),
 	read(X),
- 	(X = a -> writeln('enter card name'), read(X), 
+ 	(X = a -> assertKnown, nl, subOption5;
+ 		X = b -> assertDoesNotHave, nl, subOption5;
+		X = c -> assertCouldHave, nl, subOption5;
+	X = d -> assertGoal, nl, subOption5;
+	X = e -> gameOption).
+
+assertKnown :-
+	writeln('enter card name'), read(X), 
  		writeln('enter player name'), read(Y),
- 		checkassert(knowncard(X,Y)), nl, subOption5;
- 	X = b -> writeln('enter card name'), read(X), 
+ 		checkassert(knowncard(X,Y)).
+
+assertDoesNotHave :-
+	writeln('enter card name'), read(X), 
  		writeln('enter player name'), read(Y),
- 		checkassert(doesNotHave(X,Y)), nl, subOption5;
-	X = c -> writeln('enter player name'), read(X),
+ 		checkassert(doesNotHave(X,Y)).
+
+assertCouldHave :-
+	writeln('enter player name'), read(X),
 		writeln('enter card1 name'), read(Y1),
 		writeln('enter card2 name'), read(Y2),
 		writeln('enter card3 name'), read(Y3),
-		checkassert(couldHave(X,Y1,Y2,Y3)), nl, subOption5;
-	X = d -> writeln('enter card name'), read(X),
-		checkassert(goalCard(X)), nl, subOption5;
-	X = e -> gameOption).
+		checkassert(couldHave(X,Y1,Y2,Y3)).
+
+assertGoal :-
+	writeln('enter card name'), read(X),
+		checkassert(goalCard(X)).
 
 subOption6 :-
 	writeln('a. retract knowncard'),
@@ -125,12 +152,15 @@ subOption6 :-
 	writeln('d. retract goal card'),
 	writeln('e. return to main menu'),
 	read(X),
- 	(X = a -> writeln('which card do you want to delete'), read(X), retract(knowncard(X,_)), nl, subOption5;
+ 	(X = a -> retractKnownCard, nl, subOption5;
  		X = b -> retract(doesNotHave(_,_)), nl, subOption5;
 		X = c -> retract(couldHave(_,_,_,_)), nl, subOption5;
 		X = d -> retract(goalCard(_)), nl, subOption5;
 		X = e -> gameOption).
 	
+retractKnownCard :-
+	writeln('which card do you want to delete'), 
+	read(X), retract(knowncard(X,_)).
 
 makeSuggestion :-
 	findall(X, person(X),Lperson), % all valid persons
