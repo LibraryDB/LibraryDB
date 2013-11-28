@@ -77,12 +77,12 @@ subOption4a :-
 subOption4b :- 
 	writeln('a. display all doesNotHave'),
 	writeln('b. display cards player X does not have'),
-	writeln('c. display players who do not have Card'),
+	writeln('c. display players who do not have card'),
 	writeln('d. return to Option 4'),
 	read(X),
  	(X = a -> listing(doesNotHave), nl, subOption4b;
- 		X = b -> writeln('b. display cards player X does not have'), nl, subOption4b;
- 		X = c -> writeln('c. display players who do not have Card'), nl, subOption4b;
+ 		X = b -> read(X), findAll(A,doesNotHave(X,A),L), write(L), nl, subOption4b;
+ 		X = c -> read(X), findAll(A,doesNotHave(A,X),L), write(L), nl, subOption4b;
  		X = d -> subOption4).
 
 subOption4c :-
@@ -92,8 +92,8 @@ subOption4c :-
 	writeln('d. return to Option 4'),
 	read(X),
  	(X = a -> listing(couldHave), nl, subOption4c;
- 		X = b -> writeln('b. display all cards player X might have'), nl, subOption4c;
- 		X = c -> writeln('c. display all players who might have Card'), nl, subOption4c;
+ 		X = b -> read(X), findAll(A,couldHave(X,A),L), write(L), nl, subOption4c;
+ 		X = c -> read(X), findAll(A,couldHave(A,X),L), write(L), nl, subOption4c;
  		X = d -> subOption4).
 
 subOption5 :-
@@ -103,11 +103,20 @@ subOption5 :-
 	writeln('d. assert goal card'),
 	writeln('e. return to main menu'),
 	read(X),
- 	(X = a -> setKnownCards, nl, subOption5;
- 		X = b -> set_does_not_have, nl, subOption5;
-		X = c -> writeln('c. assert couldHave'), nl, subOption5;
-		X = d -> writeln('d. assert goal card'), nl, subOption5;
-		X = e -> gameOption).
+ 	(X = a -> writeln('enter card name'), read(X), 
+ 		writeln('enter player name'), read(Y),
+ 		checkassert(knowncard(X,Y)), nl, subOption5;
+ 	X = b -> writeln('enter card name'), read(X), 
+ 		writeln('enter player name'), read(Y),
+ 		checkassert(doesNotHave(X,Y)), nl, subOption5;
+	X = c -> writeln('enter player name'), read(X),
+		writeln('enter card1 name'), read(Y1),
+		writeln('enter card2 name'), read(Y2),
+		writeln('enter card3 name'), read(Y3),
+		checkassert(couldHave(X,Y1,Y2,Y3)), nl, subOption5;
+	X = d -> writeln('enter card name'), read(X),
+		checkassert(goalCard(X)), nl, subOption5;
+	X = e -> gameOption).
 
 subOption6 :-
 	writeln('a. retract knowncard'),
@@ -116,10 +125,10 @@ subOption6 :-
 	writeln('d. retract goal card'),
 	writeln('e. return to main menu'),
 	read(X),
- 	(X = a -> retractall(knowncard(_,_)), nl, subOption5;
- 		X = b -> retractall(doesNotHave(_,_)), nl, subOption5;
-		X = c -> retractall(couldHave(_,_,_,_)), nl, subOption5;
-		X = d -> retractall(goalCard(_)), nl, subOption5;
+ 	(X = a -> writeln('which card do you want to delete'), read(X), retract(knowncard(X,_)), nl, subOption5;
+ 		X = b -> retract(doesNotHave(_,_)), nl, subOption5;
+		X = c -> retract(couldHave(_,_,_,_)), nl, subOption5;
+		X = d -> retract(goalCard(_)), nl, subOption5;
 		X = e -> gameOption).
 	
 
