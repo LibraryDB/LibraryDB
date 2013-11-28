@@ -17,13 +17,13 @@ clue :-
  4. View Record
 	-> a. view knowncard
 	-> b. view doesNotHave		
-		-> all. display all doesNotHave
-		-> X. display cards player X does not have 
-		-> Card. display players who do not have Card
+		-> a. display all doesNotHave
+		-> b. display cards player X does not have 
+		-> c. display players who do not have Card
 	-> c. view couldHave
-		-> all. display all couldHave
-		-> X. display all cards player X might have
-		-> Card. display all players who might have Card
+		-> a. display all couldHave
+		-> b. display all cards player X might have
+		-> c. display all players who might have Card
 	-> d. view goal card(s)	
  5. Set Values (Admin)
 	-> a. assert knowncard
@@ -37,7 +37,11 @@ clue :-
 	-> d. retract goal card 
 */ 
 gameOption :-
-	simplify,
+	% at the start of each turn we perform backend logic computations
+	simplify,  			% see clue.pl
+	updateGoalCard, 	% see clue.pl
+	makeAccusation,		% see below
+
 	writeln('Choose from following options:'),
 	writeln('1. Set Current Room'),
 	writeln('2. Make Suggestion'),
@@ -49,9 +53,9 @@ gameOption :-
  	(X = 1 -> setCurrentLocation,write('current room is now set to: '),currentLocation(R),write(R),nl,nl,gameOption;
  		X = 2 -> makeSuggestion,nl,setSuggestion;
 		X = 3 -> setSuggestion;
-		X = 4 -> subOption4;
-		X = 5 -> subOption5;
-		X = 6 -> subOption6).
+		X = 4 -> nl,subOption4;
+		X = 5 -> nl,subOption5;
+		X = 6 -> nl,subOption6).
 
 subOption4 :-
 	writeln('a. view knowncard'),
@@ -169,22 +173,32 @@ makeSuggestion :-
 	writeln('This is what your loyal assistant recommends:'), 
 	write(' person: '),writeln(Person),
 	write(' weapon: '),writeln(Weapon),
-	write(' room: '),writeln(Room).
+	write(' room: '),writeln(Room),nl.
 	
+/*
+ * When we have 3 goalCards, then tell user that program has already solved the game
+ */ 
 makeAccusation :-
 	findall(X,goalCard(X),L),
 	length(L,N),
-	N =:= 3,
-	writeln(L);
-	writeln('not yet'),nl, gameOption.
+	N =:= 3,nl,
+	writeln('HEY I SOLVED IT ALREADY, THESE ARE THE CARDS IN THE ENVELOPE: '),
+	writeln(L),nl;
+	true.
 
 countKnownCards(N) :-
 	findall(X, knowncard(X,_),L),
 	length(L,N).
 
 /* 
- *  Setters
+ **************************  Setters ***************************
  */
+
+/*
+ * Sets doesNotHave clause 
+ * set_does_not_have(I,F,P,W,R) will update the doesNotHave for all the players between I and F
+ * for example, set_does_not_have(1,3,P,W,R) will assert doesNotHave(2,P), doesNotHave(2,W), doesNotHave(2,R)
+ */ 
 set_does_not_have(I,F,_,_,_):- 
 	F =:= 1, 
 	playerNumber(PN),
@@ -226,7 +240,7 @@ setPlayers(N) :-
 	setPlayers(N1).
 
 setMainPlayer :-
-	writeln('which is my turn'),
+	writeln('which number am I?'),
 	read(X),
 	checkassert(mainPlayer(X)), nl,
 	setMyCards.
@@ -238,7 +252,7 @@ setKnownCards :-
  	read(Y),
  	(X = done -> nl, gameOption;
  	Y = done -> nl, gameOption;
- 	validcard(X), player(Y,_) , not(knowncard(X,_))-> checkassert(knowncard(X,Y)),setKnownCards;
+ 	validcard(X), player(_,Y) , not(knowncard(X,_))-> checkassert(knowncard(X,Y)),setKnownCards;
  	writeln('invalid card or player or known already'), setKnownCards).
  
 setMyCards :- 
@@ -249,34 +263,34 @@ setMyCards :-
  	writeln('invalid or known'),setMyCards).
 
 setAccusation :-
-	writeln('enter player'),
+	writeln('enter the player number of the player who is making the suggestion'),
 	read(X),
-	writeln('who?'),
+	writeln('which suspect?'),
 	read(P),
-	writeln('what?'),
+	writeln('which weapon?'),
 	read(W),
-	writeln('where'),
+	writeln('which room?'),
 	read(R),
 	player(_,X), validperson(P),validweapon(W),validroom(R) -> checkassert(accusation(X,P,W,R));
 	writeln('invalid player or card').
 
 % set suggestion and couldhave, simple version
 setSuggestion :-
-	writeln('enter player'),
+	writeln('enter the player number of the player who is making the suggestion'),
 	read(X),
-	writeln('who?'),
+	writeln('which suspect?'),
 	read(P),
-	writeln('what?'),
+	writeln('which weapon?'),
 	read(W),
-	writeln('where'),
+	writeln('which room?'),
 	read(R),
-	(mainPlayer(X),validperson(P),validweapon(W),validroom(R) -> showCardToMe(X,P,W,R);
-	player(_,X),validperson(P),validweapon(W),validroom(R) -> showCard(X,P,W,R);
+	(mainPlayer(X),validperson(P),validweapon(W),validroom(R) -> checkassert(suggestion(X,P,W,R)),showCardToMe(X,P,W,R);
+	player(_,X),validperson(P),validweapon(W),validroom(R) -> checkassert(suggestion(X,P,W,R)),showCard(X,P,W,R);
 	writeln('something is invalid'),setSuggestion).
 
 % the case when the disproving card is shown to someone else	
 showCard(X,P,W,R):-
-	writeln('enter the player who showed a card'),
+	writeln('enter the player who showed a card (enter "noone" if no one showed a card)'),
 	read(A),
 	(player(_,A) -> checkassert(couldHave(A,P,W,R)), set_does_not_have(X,A,P,W,R),
 					nl,gameOption;
@@ -285,7 +299,7 @@ showCard(X,P,W,R):-
 	
 % when the card is shown to me	
 showCardToMe(X,P,W,R):-
-	writeln('enter the player who showed me a card'),
+	writeln('enter the player who showed me a card? (enter "noone" if no one showed a card, and enter anything for the followup question)'),
 	read(A),
 	writeln('which card did he show me?'),
 	read(C),

@@ -13,6 +13,9 @@
 % doesNotHave(C,P) means Player P does not have the card C 
 :- dynamic doesNotHave/2. % card player
 
+% suggestion(P,C1,C2,C3) means player P made the suggestion C1,C2,C3
+:- dynamic suggestion/4. % player,card,card,card
+
 % accusation(P,C1,C2,C3) means player P made the accusation C1,C2,C3
 :- dynamic accusation/4. % player,card,card,card
 
@@ -46,6 +49,7 @@ listingall:-
 	listing(mainPlayer),
 	listing(knowncard),
 	listing(doesNotHave),
+	listing(suggestion),
 	listing(accusation),
 	listing(couldHave),
 	listing(currentLocation),
@@ -59,6 +63,7 @@ listingsome:-
 	listing(player),
 	listing(mainPlayer),
 	listing(knowncard),
+	listing(suggestion),
 	listing(accusation),
 	listing(couldHave),
 	listing(currentLocation),
@@ -103,6 +108,8 @@ flush :-
  	retractall(player(_,_)),
  	retractall(mainPlayer(_)),
  	retractall(playerNumber(_)),
+ 	retractall(suggestion(_,_,_,_)),
+ 	retractall(accusation(_,_,_,_)),
  	retractall(couldHave(_,_,_,_)),
  	retractall(doesNotHave(_,_)),
  	retractall(currentLocation(_)),

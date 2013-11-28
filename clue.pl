@@ -151,7 +151,7 @@ updateGoalCardR:-
  * if we know P has card C, then other players cannot have card C	
  */
 updateDNH:-
-	knowncard(C,P),player(P2,P2),P =\= P2,not(doesNotHave(C,P2)) -> checkassert(doesNotHave(C,P2)),updateDNH; true.
+	knowncard(C,P),player(_,P2),P =\= P2,not(doesNotHave(C,P2)) -> checkassert(doesNotHave(C,P2)),updateDNH; true.
  
 % used to extract the head of a list 
 head([],null).	
