@@ -3,6 +3,7 @@
  Xue Qi Xu		52732104	p8t7
 */
 
+
 /*
  * prolog performs calculations to
  * 1. removes redundant data
